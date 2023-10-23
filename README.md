@@ -31,4 +31,4 @@ Run all docker commands in the root directory.
 ## Postgres Help
 The directory `pg_data` contains the data for your local postgres server. If you delete the contents of this folder, your database will be wiped! If you want to rebuild your database after wiping it, run `docker-compose rm database`.
 
-There are a few ways to connect to the database. The `psql` command can be used to establish a connection an enter the shell. Looking up the documentation for this command is useful. You can run `psql` from your local machine and connect over the exposed port `5432`, or 
+There are a few ways to connect to the database. The `psql` command can be used to establish a connection an enter the shell. Looking up the documentation for this command is useful. You can run `psql` from your local machine and connect over the exposed port `5432`, or by entering a container's shell and establishing the connection from there.
