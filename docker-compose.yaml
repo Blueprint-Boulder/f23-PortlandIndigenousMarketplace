@@ -1,0 +1,39 @@
+version: '3'
+services:
+  # Node.js + Express Backend
+  backend:
+    image: node:alpine3.17
+    container_name: backend
+    working_dir: /app
+    command: npm run dev
+    ports:
+      - "3001:3000"  
+    volumes:
+      - ./backend:/app
+    environment:
+      - NODE_ENV=development
+
+  # PostgreSQL
+  database:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+      - ./sql-scripts:/docker-entrypoint-initdb.d  # Mount directory for initial SQL files
+
+  # React.js Frontend
+  frontend:
+    image: node:alpine3.17
+    container_name: frontend
+    working_dir: /app
+    command: npm start
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"  
