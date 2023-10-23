@@ -3,34 +3,33 @@ import Login from './routes/login';
 import Vendor from './routes/vendor';
 import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {createBrowserRouter, RouterProvider } from 'react-router-dom';
-const session  = false
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+const session = false
 let path
 let el
-if(!session){
-   path  = '/login'
-  el = <Login/>
-}else{
+if (!session) {
+  path = '/login'
+  el = <Login />
+} else {
   path = '/vendor'
-  el = <Vendor/>
+  el = <Vendor />
 }
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root path={path}/>,
-    children:[ 
-    {
-      path: path,
-      element: el
-    }]
+    element: <Root path={path} />,
+    children: [
+      {
+        path: path,
+        element: el
+      }]
   }
 ])
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router = {router}/>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
