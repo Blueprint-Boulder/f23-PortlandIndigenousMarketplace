@@ -1,4 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
+import Footer from "../components/footer.jsx"
 
 export default function Root({path}){
 
@@ -8,6 +9,7 @@ export default function Root({path}){
         <Link to={path}>Go somewhere based on session</Link>
         <div id="content">
             <Outlet/> 
+            <Footer/>
         </div>
         </>
     )
