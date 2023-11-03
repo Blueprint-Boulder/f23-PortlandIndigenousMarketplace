@@ -1,0 +1,35 @@
+.Footer-links {
+    font-size: 14px;
+    color:aqua;
+    width: 100%;
+    bottom:0%;
+    position:relative;
+    text-align:center;
+    word-spacing: 0.5px;
+    margin-top:49%;
+    /* 
+    - need to add line separation to each of the links
+    - add a border maybe
+    - align the text in the bottom
+    - look into some property which handles scrolling / different sized screens
+    - think about using an id for each individual element opposed to the entire div elem
+    */
+}
+
+#home {
+    padding-right:3px;
+    margin-right:1%;
+  
+    color:rgba(122, 118, 118, 0.576);
+}
+#insta {
+    padding-left: 3px;
+    margin-right:1%;
+    color:rgba(122, 118, 118, 0.576);
+
+}
+#fb {
+    padding-left:3px;
+    margin-right:1%;
+    color:rgba(122, 118, 118, 0.576);
+}
