@@ -1,5 +1,5 @@
 export default function Vendor(){
     return(
-        <div> You are on the vendor route</div>
+        <div className="color-red-300">  You are on the vendor route</div>
     )
 }

@@ -3,29 +3,47 @@ import Login from './routes/login';
 import Vendor from './routes/vendor';
 import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
+import "./App.css";
 import {createBrowserRouter, RouterProvider } from 'react-router-dom';
-const session  = false
-let path
-let el
-if(!session){
-   path  = '/login'
-  el = <Login/>
-}else{
-  path = '/vendor'
-  el = <Vendor/>
+import axios from 'axios';
+import Register from './routes/register';
+import ResetPassword from './routes/reset_password';
+let isadmin = true
+
+// if(!session){
+//    path  = '/login'
+//   el = <Login/>
+// }else{
+//   path = '/vendor'
+//   el = <Vendor/>
+// }
+function loaderfunc(){
+  axios.get("/").then((res) => console.log(res) ).catch(err =>  console.log('there was an error:', err))
 }
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root path={path}/>,
+    loader: loaderfunc(),
+    element: <Root admin = {isadmin}/>,
     children:[ 
     {
-      path: path,
-      element: el
+        path: "/vendor",
+        element: <Vendor />
+    },
+    {
+      path: '/login',
+      element: <Login/> 
+    },
+    {
+      path: '/register',
+      element: <Register/>
+    },
+    {
+      path: '/reset_password',
+      element: <ResetPassword/>
     }]
-  }
+  },
 ])
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

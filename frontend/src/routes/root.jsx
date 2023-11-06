@@ -1,14 +1,20 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLoaderData } from "react-router-dom";
 
-export default function Root({path}){
-
+export default function Root({admin, res}){
+    const data = useLoaderData()
     return(
-        <>
-        <h1>You are on the root route.</h1>
-        <Link to={path}>Go somewhere based on session</Link>
-        <div id="content">
+        <div className="bg-slate-200 w-screen h-screen">
+        <Link to='/vendor'>Go to vendors</Link>
+        <div>
+        <Link to='/login'>Login</Link>
+        {data?
+         <div>Response from the backend: {data}</div>:
+        <div>No response from the backend</div>
+        }
+        </div>
+        <div id="content" >
             <Outlet/> 
         </div>
-        </>
+        </div>
     )
 }
