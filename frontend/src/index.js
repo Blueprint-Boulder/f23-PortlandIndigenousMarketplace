@@ -9,7 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import "./App.css";
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-let isAdmin = true; 
+let isAdmin = false; 
 // const session = false
 // let path
 // let el
