@@ -26,7 +26,7 @@ export default function Login(){
     
     function handleLogin(){
         const data = {username: user, password: pass}
-        axios.post("/login", data).then(() => redirect('/events')).catch(err => setMessage('There was an error: ' + err), setErr(true))
+        // axios.post("/login", data).then(() => redirect('/events')).catch(err => setMessage('There was an error: ' + err), setErr(true))
     }
 
     return(
