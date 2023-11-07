@@ -2,12 +2,14 @@ const express = require('express');
 
 const router = express.Router();
 
-const {getUser, createUser} = require('VendorController.js');
+const {getVendor, createVendor} = require('../controllers/VendorController');
 
 //Logs in vendor
-router.post('/login', getUser);
+router.post('/login', getVendor);
 
-//Registers vendor
-router.post('/register', createUser);
+//Creates a new vendor
+router.post('/', createVendor, (req, res) =>{
+    res.status(200).json({status: 'success'});
+});
 
 module.exports = router;
