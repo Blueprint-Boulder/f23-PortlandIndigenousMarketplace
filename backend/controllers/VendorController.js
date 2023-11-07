@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('../database');
 
-const {hash, genSalt} = require('bcrypt');
+var { hash, genSalt } = require('bcryptjs');
 
 const getVendor = (req, res, next) => {
 
@@ -23,14 +23,14 @@ const createVendor = async (req, res, next) => {
     try {
         const salt = await genSalt(10);
         password_hash = await hash(password, salt);
-    } catch(err){
+    } catch (err) {
         console.log(err);
-        res.status(500).json({error: err});
+        res.status(500).json({ error: err });
         return;
     }
 
     //Inserts the vendor into the database
-    try{
+    try {
         await db.none(
             'INSERT INTO Vendors (\
                 name, \
@@ -38,22 +38,22 @@ const createVendor = async (req, res, next) => {
                 phone_number, \
                 password, \
                 website\
-            ) VALUES ($1, $2, $3, $4, $5)', 
+            ) VALUES ($1, $2, $3, $4, $5)',
             [name, email, phone_number, password_hash, website]
         );
-    } catch(err){
-        if(err.code === '23505'){
-            res.status(400).json({error: 'A vendor with that email already exists'});
+    } catch (err) {
+        if (err.code === '23505') {
+            res.status(400).json({ error: 'A vendor with that email already exists' });
             return;
         }
 
         console.log(err);
-        res.status(500).json({error: err});
+        res.status(500).json({ error: err });
         return;
     }
-    
+
     next();
 };
 
 
-module.exports = {getVendor, createVendor}
+module.exports = { getVendor, createVendor }
