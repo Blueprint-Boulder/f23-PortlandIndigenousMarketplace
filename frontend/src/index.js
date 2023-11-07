@@ -1,28 +1,41 @@
 import React from 'react';
 import Login from './routes/login';
 import Vendor from './routes/vendor';
+import Events from './routes/events';
+import Profile from './routes/profile';
 import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
+import "./App.css";
+
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-const session = false
-let path
-let el
-if (!session) {
-  path = '/login'
-  el = <Login />
-} else {
-  path = '/vendor'
-  el = <Vendor />
-}
+let isAdmin = true; 
+// const session = false
+// let path
+// let el
+// if (!session) {
+//   path = '/login'
+//   el = <Login />
+// } else {
+//   path = '/vendor'
+//   el = <Vendor />
+// }
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root path={path} />,
+    element: <Root admin = {isAdmin}/>,
     children: [
       {
-        path: path,
-        element: el
+        path: "/vendor",
+        element: <Vendor/>
+      },
+      {
+        path: "/events",
+        element: <Events />
+      },
+      {
+        path: "/profile",
+        element: <Profile />
       }]
   }
 ])

@@ -1,12 +1,11 @@
 import { Outlet, Link } from "react-router-dom";
-
-export default function Root({path}){
+import Header from "../components/headervendor";
+export default function Root({admin}){
 
     return(
-        <>
-        <h1>You are on the root route.</h1>
-        <Link to={path}>Go somewhere based on session</Link>
+        <>      
         <div id="content">
+            <Header admin={admin}/>
             <Outlet/> 
         </div>
         </>
