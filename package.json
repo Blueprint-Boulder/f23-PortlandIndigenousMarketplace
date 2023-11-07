@@ -1,0 +1,14 @@
+{
+  "name": "f23-portlandindigenousmarketplace",
+  "version": "1.0.0",
+  "description": "Open source mobile web application to help Portland Indigenous Marketplace manage vendors and events.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}

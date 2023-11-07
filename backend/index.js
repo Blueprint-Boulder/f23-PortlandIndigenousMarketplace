@@ -9,7 +9,7 @@ if(require('dotenv').config().parsed === undefined)
 const db = require('./database');
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.status(202).send('Hello World!')
 })
 
 //The backend should be listening on port 3000 within its container, but the container's port 3000 is mapped externally to 3001.
