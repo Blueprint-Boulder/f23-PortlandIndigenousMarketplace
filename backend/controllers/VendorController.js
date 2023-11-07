@@ -18,6 +18,12 @@ const createVendor = async (req, res, next) => {
         website
     } = req.body;
 
+    //Checks if the required fields are present
+    if(!password || !email || !name ) {
+        console.log(req.body);
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
     //Hashes the password using bcrypt
     let password_hash = undefined;
     try {

@@ -15,6 +15,7 @@ services:
 
   # PostgreSQL
   database:
+    hostname: database
     image: postgres:latest
     container_name: postgres
     ports:
