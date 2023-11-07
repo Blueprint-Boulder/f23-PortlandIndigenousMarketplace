@@ -19,7 +19,7 @@ let isadmin = true
 //   el = <Vendor/>
 // }
 function loaderfunc(){
-  axios.get("/").then((res) => console.log(res) ).catch(err =>  console.log('there was an error:', err))
+  axios.get("localhost:3001").then((res) => console.log(res) ).catch(err =>  console.log('there was an error:', err))
 }
 const router = createBrowserRouter([
   {
