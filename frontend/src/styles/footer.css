@@ -1,17 +1,11 @@
 .Footer-links {
     width: 100%;
     bottom:30px;
+    text-align: center;
     position:fixed;
     word-spacing: 0.5px;
     margin-top:auto;
     font-family: 'FontAwesome';
-    /* 
-    - need to add line separation to each of the links
-    - add a border maybe
-    - align the text in the bottom
-    - look into some property which handles scrolling / different sized screens
-    - think about using an id for each individual element opposed to the entire div elem
-    */
 }
 
 .Link {
