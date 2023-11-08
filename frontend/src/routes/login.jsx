@@ -1,14 +1,14 @@
-import axios from "axios"
+// import axios from "axios"
 import { useState } from "react"
-import { redirect} from "react-router"
+// import { redirect} from "react-router"
 import logo from "./../assets/PIM_logo_black.png"
 import { Link } from "react-router-dom"
 
 
-function Banner({content, bad}){
+function Banner({content, error}){
     return(
         <>
-        {bad ? 
+        {error ? 
         <div className="bg-red-600">{content}</div>
         :
         <div className="bg-slate-600">{content}</div>
@@ -26,7 +26,7 @@ export default function Login(){
     
     function handleLogin(){
         const data = {username: user, password: pass}
-        axios.post("/login", data).then(() => redirect('/events')).catch(err => setMessage('There was an error: ' + err), setErr(true))
+        // axios.post("/login", data).then(() => redirect('/events')).catch(err => setMessage('There was an error: ' + err), setErr(true))
     }
 
     return(

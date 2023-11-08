@@ -4,11 +4,14 @@ import Vendor from './routes/vendor';
 import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
+import ServiceExample from './routes/serviceexample';
 import "./App.css";
 import {createBrowserRouter, RouterProvider } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
+import MockVendorService from './services/MockServices/MockVendorService.js';
+
 let isadmin = true
 
 // if(!session){
@@ -18,13 +21,17 @@ let isadmin = true
 //   path = '/vendor'
 //   el = <Vendor/>
 // }
-function loaderfunc(){
-  axios.get("localhost:3001").then((res) => console.log(res) ).catch(err =>  console.log('there was an error:', err))
-}
+// function loaderfunc(){
+//   axios.get("localhost:3001").then((res) => console.log(res) ).catch(err =>  console.log('there was an error:', err))
+// }
+
+//Instance of the vendor service
+const VendorService = new MockVendorService();
+
 const router = createBrowserRouter([
   {
     path: "/",
-    loader: loaderfunc(),
+    // loader: loaderfunc(),
     element: <Root admin = {isadmin}/>,
     children:[ 
     {
@@ -42,6 +49,10 @@ const router = createBrowserRouter([
     {
       path: '/reset_password',
       element: <ResetPassword/>
+    },
+    {
+      path: '/service-example',
+      element: <ServiceExample VendorService={VendorService}/>
     }]
   },
 ])
