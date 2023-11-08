@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { getVendor, getVendors, createVendor, getVendorById, authenticateVendor } = require('../controllers/VendorController');
-const bcrypt = require('bcryptjs');
 const sendSuccessResponse = require('../middleware/successResponse');
 
 

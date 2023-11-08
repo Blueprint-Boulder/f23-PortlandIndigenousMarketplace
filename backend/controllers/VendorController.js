@@ -2,6 +2,7 @@ const express = require('express');
 const db = require('../database');
 
 var { hash, genSalt } = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
 const getVendor = async (req, res, next) => {
     try {
