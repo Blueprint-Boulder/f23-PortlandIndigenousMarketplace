@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getVendor, getVendors, createVendor, getVendorById, authenticateVendor } = require('../controllers/VendorController');
 const bcrypt = require('bcryptjs');
-const sendSuccessResponse = require('./middleware/successResponse'); // The path should be relative to where this file is located
+const sendSuccessResponse = require('../middleware/successResponse');
 
 
 //Logs in vendor
