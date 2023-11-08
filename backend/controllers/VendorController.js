@@ -3,8 +3,82 @@ const db = require('../database');
 
 var { hash, genSalt } = require('bcryptjs');
 
-const getVendor = (req, res, next) => {
+const getVendor = async (req, res, next) => {
+    try {
+        const data = await db.oneOrNone('SELECT * FROM Vendors WHERE email = $1', [req.body.email]);
+        if (data) {
+            res.locals.data = data;
+            next();
+        } else {
+            res.status(401).json({ message: "Email does not exist." });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
 
+// Middleware to authenticate the vendor
+const authenticateVendor = async (req, res, next) => {
+    try {
+        const vendor = res.locals.data;
+        const match = await bcrypt.compare(req.body.password, vendor.password);
+        if (match) {
+            // If the password matches, store a success message and relevant vendor data
+            res.locals.data = {
+                status: 'success',
+                message: 'Successful login.',
+                vendorDetails: {
+                    id: vendor.id,
+                    email: vendor.email,
+                    // TODO: Include any other vendor details we need
+                }
+            };
+            next();
+        } else {
+            res.status(401).json({ message: "Incorrect email or password." });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+const getVendors = async (req, res, next) => {
+    try {
+        // Retrieve all vendors from the database
+        const vendors = await db.manyOrNone('SELECT * FROM Vendors');
+
+        // If vendors are found, add them to res.locals.data
+        if (vendors.length) {
+            res.locals.data = vendors;
+            next(); // Proceed to the next middleware or route handler
+        } else {
+            // If no vendors are found, send a message indicating this
+            res.status(404).json({ message: "No vendors found" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+const getVendorById = async (req, res, next) => {
+    const { user_id } = req.params;
+
+    try {
+        const vendor = await db.oneOrNone('SELECT * FROM Vendors WHERE id = $1', [user_id]);
+        if (vendor) {
+            // Store the vendor data in res.locals.data for the middleware
+            res.locals.data = vendor;
+            next(); // Pass control to the next middleware
+        } else {
+            res.status(404).json({ message: "Vendor not found" });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 };
 
 //Registers the vendor in the database
@@ -19,7 +93,7 @@ const createVendor = async (req, res, next) => {
     } = req.body;
 
     //Checks if the required fields are present
-    if(!password || !email || !name ) {
+    if (!password || !email || !name) {
         console.log(req.body);
         return res.status(400).json({ error: 'Missing required fields' });
     }
@@ -62,4 +136,4 @@ const createVendor = async (req, res, next) => {
 };
 
 
-module.exports = { getVendor, createVendor }
+module.exports = { getVendor, getVendors, createVendor, getVendorById, authenticateVendor }
