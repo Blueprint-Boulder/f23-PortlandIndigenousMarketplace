@@ -1,13 +1,26 @@
 .Footer-links {
-    width: 100%;
-    bottom:30px;
+    width:100%;
+    bottom:0;
+    left:0;
+    height:36px;
     text-align: center;
     position:fixed;
-    word-spacing: 0.5px;
+    padding-top: 2%;
+    padding-bottom:2%;
     margin-top:auto;
     font-family: 'FontAwesome';
+    background-color:#382E2D;
+    font-size: 30px;
 }
 
-.Link {
-    margin: 4px;
+.link-style {
+    margin:7%;
+    color:#E8E3E2;
 }
+
+/* to do
+    - make hovering of icons
+    - perhaps add circles as backgrounds to icons so I can use the different version
+    - ensure correct spacing
+    - maybe add top border, view instagram for instance
+    - show Harley */
