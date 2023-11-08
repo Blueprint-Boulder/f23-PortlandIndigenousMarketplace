@@ -11,7 +11,7 @@ router.post('/login', getVendor, authenticateVendor, sendSuccessResponse);
 router.get('/', getVendors, sendSuccessResponse);
 
 // Fetches a single vendor by ID
-router.get('/:user_id', getVendorById, sendSuccessResponse);
+router.get('/:vendor_id', getVendorById, sendSuccessResponse);
 
 //Creates a new vendor
 router.post('/', createVendor, (req, res) => {

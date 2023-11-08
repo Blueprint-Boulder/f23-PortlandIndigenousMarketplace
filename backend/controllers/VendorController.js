@@ -64,10 +64,10 @@ const getVendors = async (req, res, next) => {
 };
 
 const getVendorById = async (req, res, next) => {
-    const { user_id } = req.params;
+    const { vendor_id } = req.params;
 
     try {
-        const vendor = await db.oneOrNone('SELECT * FROM Vendors WHERE id = $1', [user_id]);
+        const vendor = await db.oneOrNone('SELECT * FROM Vendors WHERE vendor_id = $1', [vendor_id]);
         if (vendor) {
             // Store the vendor data in res.locals.data for the middleware
             res.locals.data = vendor;
