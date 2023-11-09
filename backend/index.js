@@ -1,12 +1,26 @@
-const express = require('express')
-const app = express();
-
 // Load the environment variables from the .env file in the backend root folder 
 if(require('dotenv').config().parsed === undefined) 
   throw new Error("Could not load environment variables");
 
+
 // Import the database object from the database.js file
 const db = require('./database');
+
+//Import Express and initialize our app
+const express = require('express')
+const app = express();
+
+const errorHandler = require('errorhandler')
+app.use(errorHandler({dumbExceptions: true, showStack: true}));
+
+
+//Parse Json requests
+app.use(express.json());
+
+//Import router objects and direct the app to use them
+const VendorRouter = require('./routes/VendorRouter');
+
+app.use('/vendors', VendorRouter);
 
 app.get('/', (req, res) => {
   res.status(202).send('Hello World!')
