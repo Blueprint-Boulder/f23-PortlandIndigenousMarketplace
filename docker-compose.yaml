@@ -12,7 +12,6 @@ services:
       - ./backend:/app
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@database:5432/${DATABASE_NAME}
     depends_on:
       - database
 
