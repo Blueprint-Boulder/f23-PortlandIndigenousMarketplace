@@ -123,11 +123,13 @@ const createVendor = async (req, res, next) => {
             [name, email, phone_number, password_hash, website]
         );
     } catch (err) {
+        //Duplicate emails are not allowed
         if (err.code === '23505') {
             res.status(400).json({ error: 'A vendor with that email already exists' });
             return;
         }
 
+        //Other internal error
         console.log(err);
         res.status(500).json({ error: err });
         return;
