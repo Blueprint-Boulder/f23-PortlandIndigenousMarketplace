@@ -1,15 +1,21 @@
 const express = require('express');
-
 const router = express.Router();
+const { getVendor, getVendors, createVendor, getVendorById, authenticateVendor } = require('../controllers/VendorController');
+const sendSuccessResponse = require('../middleware/successResponse');
 
-const {getVendor, createVendor} = require('../controllers/VendorController');
 
-//Logs in vendor
-router.post('/login', getVendor);
+// Logs in vendor
+router.post('/login', getVendor, authenticateVendor, sendSuccessResponse);
 
-//Creates a new vendor
-router.post('/', createVendor, (req, res) =>{
-    res.status(200).json({status: 'success'});
+// Fetches all vendors
+router.get('/', getVendors, sendSuccessResponse);
+
+// Fetches a single vendor by ID
+router.get('/:vendor_id', getVendorById, sendSuccessResponse);
+
+// Creates a new vendor
+router.post('/', createVendor, (req, res) => {
+    res.status(200).json({ status: 'success' });
 });
 
 module.exports = router;
