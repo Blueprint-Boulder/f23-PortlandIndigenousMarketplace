@@ -12,6 +12,8 @@ import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
 
+import config from './config.js';
+
 let isadmin = true
 
 // if(!session){
@@ -25,8 +27,9 @@ let isadmin = true
 //   axios.get("localhost:3001").then((res) => console.log(res) ).catch(err =>  console.log('there was an error:', err))
 // }
 
-//Instance of the vendor service
-const VendorService = new MockVendorService();
+// Setup the mock vendor service
+if(config.environment === "dev")
+  MockVendorService.init();
 
 const router = createBrowserRouter([
   {
@@ -50,12 +53,13 @@ const router = createBrowserRouter([
       path: '/reset_password',
       element: <ResetPassword/>
     },
-    {
+    config.environment === "dev" && {
       path: '/service-example',
-      element: <ServiceExample VendorService={VendorService}/>
+      element: <ServiceExample VendorService={MockVendorService}/>
     }]
   },
 ])
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
