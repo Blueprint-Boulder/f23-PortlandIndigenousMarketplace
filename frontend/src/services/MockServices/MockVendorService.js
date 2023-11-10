@@ -1,4 +1,4 @@
-const Vendor = require('../../objects/Vendor.js');
+import Vendor from '../../objects/Vendor.js';
 
 /*
 Provides an interface to retrieve vendor data from the backend.
@@ -8,7 +8,7 @@ export default class MockVendorService {
     static mockvendors = [];
 
     //Creates many mock vendors. Generated with chatgpt!
-    constructor(){
+    static init(){
         if(this.mockvendors === undefined) this.mockvendors = [];
 
         if(this.mockvendors.length === 0){
@@ -36,24 +36,28 @@ export default class MockVendorService {
     }
 
     //Fetches all vendors from the backend
-    getVendors(){
+    static getVendors(){
         return this.mockvendors;
     }
 
     //Fetches the vendor with the given id from the backend
-    getVendorbyId(id){
+    static getVendorbyId(id){
         const v = this.mockvendors.filter(vendor => vendor.id === id);
         return v.length > 0 ? v[0] : null;
     }
 
     //Fetches the vendor with the given email from the backend
-    getVendorbyEmail(email){
+    static getVendorbyEmail(email){
         const v = this.mockvendors.filter(vendor => vendor.email === email);
         return v.length > 0 ? v[0] : null;
     }
 
+    static getLastVendorId(){
+        return this.mockvendors.length;
+    }
+
     //Sends backend request to create a vendor from the local vendor object
-    createVendor(vendor){
+    static createVendor(vendor){
         this.mockvendors.push(vendor);
     }
 }
