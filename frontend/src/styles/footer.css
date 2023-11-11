@@ -2,19 +2,19 @@
     width:100%;
     bottom:0;
     left:0;
-    height:36px;
+    height: vmax;
     text-align: center;
     position:fixed;
     padding-top: 2%;
-    padding-bottom:2%;
+    padding-bottom:1%;
     margin-top:auto;
     font-family: 'FontAwesome';
     background-color:#382E2D;
-    font-size: 30px;
+    font-size: 8vw;
 }
 
 .link-style {
-    margin:7%;
+    margin:12%;
     color:#E8E3E2;
 }
 
