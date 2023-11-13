@@ -18,9 +18,10 @@
     flex-direction: column;
     width: 20%;
     color:#382E2D;
-    font-size:26px;
+    font-size:16px;
     margin-left: 3%;
-    margin-top: 0%;
+    margin-top:auto;
+    margin-bottom: auto;
     text-decoration:underline;
     font-weight:700;
 }
@@ -50,10 +51,11 @@
     width:max-content;
 }
 #homepage-link {
-    font-size:26px;
+    font-size:16px;
     font-weight: 700;
     color:#382E2D;
-    margin-top:8%;
+    margin-top:auto;
+    margin-bottom: auto;
     margin-left:8%;
     text-decoration:underline;
 }
