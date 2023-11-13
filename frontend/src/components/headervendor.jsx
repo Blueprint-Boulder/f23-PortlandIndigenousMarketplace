@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Headervendor({ admin }) {
+export default function Header({ admin }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -9,13 +9,13 @@ export default function Headervendor({ admin }) {
   };
 
   return (
-    <div className="flex justify-end bg-slate-400 ">
+    <div className="flex justify-end ">
       <div className="max-w-screen-xlflex flex-wrap p-4 ml-auto">
         <div className="flex md:order-2">
           <button
             type="button"
             onClick={toggleMenu}
-            className="inline-flex ml-20 p-2 w-10 h-10 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            className="inline-flex ml-20 p-2 w-10 h-10 text-sm text-gray-500 rounded-lg  bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
           >
             <span className="sr-only">Open main menu</span>
             <svg
