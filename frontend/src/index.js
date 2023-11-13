@@ -1,6 +1,8 @@
 import React from 'react';
 import Login from './routes/login';
 import Vendor from './routes/vendor';
+import Events from './routes/events';
+import Profile from './routes/profile';
 import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
@@ -38,8 +40,8 @@ const router = createBrowserRouter([
     element: <Root admin = {isadmin}/>,
     children:[ 
     {
-        path: "/vendor",
-        element: <Vendor />
+      path: "/vendor",
+      element: <Vendor />
     },
     {
       path: '/login',
@@ -52,6 +54,14 @@ const router = createBrowserRouter([
     {
       path: '/reset_password',
       element: <ResetPassword/>
+    },
+    {
+      path: '/profile',
+      element: <Profile/>
+    },
+    {
+      path: '/events',
+      element: <Events/>
     },
     config.environment === "dev" && {
       path: '/service-example',
