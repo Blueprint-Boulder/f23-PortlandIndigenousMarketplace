@@ -7,8 +7,8 @@ import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import ServiceExample from './routes/serviceexample';
-import "./App.css";
-import {createBrowserRouter, RouterProvider } from 'react-router-dom';
+import './App.css';
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 // import axios from 'axios';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
@@ -16,7 +16,7 @@ import MockVendorService from './services/MockServices/MockVendorService.js';
 
 import config from './config.js';
 
-let isadmin = true
+const isadmin = true;
 
 // if(!session){
 //    path  = '/login'
@@ -30,51 +30,52 @@ let isadmin = true
 // }
 
 // Setup the mock vendor service
-if(config.environment === "dev")
+if (config.environment === 'dev') {
   MockVendorService.init();
+}
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     // loader: loaderfunc(),
     element: <Root admin = {isadmin}/>,
-    children:[ 
-    {
-      path: "/vendor",
-      element: <Vendor />
-    },
-    {
-      path: '/login',
-      element: <Login/> 
-    },
-    {
-      path: '/register',
-      element: <Register/>
-    },
-    {
-      path: '/reset_password',
-      element: <ResetPassword/>
-    },
-    {
-      path: '/profile',
-      element: <Profile/>
-    },
-    {
-      path: '/events',
-      element: <Events/>
-    },
-    config.environment === "dev" && {
-      path: '/service-example',
-      element: <ServiceExample VendorService={MockVendorService}/>
-    }]
+    children: [
+      {
+        path: '/vendor',
+        element: <Vendor />,
+      },
+      {
+        path: '/login',
+        element: <Login/>,
+      },
+      {
+        path: '/register',
+        element: <Register/>,
+      },
+      {
+        path: '/reset_password',
+        element: <ResetPassword/>,
+      },
+      {
+        path: '/profile',
+        element: <Profile/>,
+      },
+      {
+        path: '/events',
+        element: <Events/>,
+      },
+      config.environment === 'dev' && {
+        path: '/service-example',
+        element: <ServiceExample VendorService={MockVendorService}/>,
+      }],
   },
-])
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 export default Root = root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
