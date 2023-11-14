@@ -1,4 +1,6 @@
-.env
 pg_data
 
 node_modules
+
+.DS_Store
+frontend/.DS_Store

@@ -8,7 +8,6 @@
     position:fixed;
     padding-top: 1%;
     margin-top:auto;
-    background-color:#E8E3E2;
     border-top-style: solid;
     border-top-color:#382E2D;
 }
@@ -17,8 +16,7 @@
     display:flex;
     flex-direction: column;
     width: 20%;
-    color:#382E2D;
-    font-size:16px;
+    font-size:.9rem;
     margin-left: 3%;
     margin-top:auto;
     margin-bottom: auto;
@@ -38,10 +36,8 @@
 #insta {
     padding-right:8px; 
     padding-left:6px;
-    color:#382E2D;
 }
 #facebook{
-    color:#382E2D;
 }
 
 .pim-link {
@@ -51,16 +47,14 @@
     width:max-content;
 }
 #homepage-link {
-    font-size:16px;
+    font-size:1rem;
     font-weight: 700;
-    color:#382E2D;
     margin-top:auto;
     margin-bottom: auto;
     margin-left:8%;
     text-decoration:underline;
 }
 #pim-home {
-    color:#382E2D;
     font-size:38px;
     margin-top:4%;
     margin-left:8%;
