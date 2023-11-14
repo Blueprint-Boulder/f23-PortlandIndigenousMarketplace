@@ -1,10 +1,11 @@
-import Vendor from '../../models/Vendor.js';
+import Vendor from '../../objects/Vendor.js';
 import MockVendorService from './MockVendorService.js';
 
 /*
 Provides an interface to login / register with the backend.
 */
-export default class MockLoginService {
+export default class MockLoginService{
+    
     //Attempts to login the user. Returns a Vendor object on success, or null on failure
     static login({email, password}) {
         //Get the vendor with the given email

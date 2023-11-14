@@ -13,6 +13,8 @@ import {createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
+import MockLoginService from './services/MockServices/MockLoginService';
+
 
 import config from './config.js';
 
@@ -45,11 +47,11 @@ const router = createBrowserRouter([
     },
     {
       path: '/login',
-      element: <Login/> 
+      element: <Login loginService = {MockLoginService}/> 
     },
     {
       path: '/register',
-      element: <Register/>
+      element: <Register registerService = {MockLoginService}/>
     },
     {
       path: '/reset_password',

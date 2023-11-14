@@ -3,22 +3,11 @@ import { useState } from "react"
 // import { redirect} from "react-router"
 import logo from "./../assets/PIM_logo_black.png"
 import { Link } from "react-router-dom"
+import Alert from '../components/alert'
 
 
-function Banner({content, error}){
-    return(
-        <>
-        {error ? 
-        <div className="bg-red-600">{content}</div>
-        :
-        <div className="bg-slate-600">{content}</div>
-        }
-        </>
-        
-    )
-}
 
-export default function Login(){
+export default function Login({loginService}){
     const [user, setUser] = useState('')
     const [pass, setPass] = useState('')
     const [message, setMessage] = useState('')
@@ -34,7 +23,7 @@ export default function Login(){
             {
             message
             ? 
-            <Banner content = {message} bad = {err}/>
+            <Alert content = {message} error = {err}/>
             :
             <></>
             }
