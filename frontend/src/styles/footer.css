@@ -65,14 +65,15 @@
     flex-direction:row;
     width:100%;
     height:2rem;
-    bottom:0;
+    bottom:2rem;
     left:0;
-    position:fixed;
+    position:absolute;
     padding-top: 1rem;
-    padding-bottom:1rem;
-    background-color:#E8E3E2;
+    /* padding-bottom:rem; */
+    /* background-color:#E8E3E2; */
     border-top-style: solid;
     border-top-color:#382E2D;
+    padding-top:1.5rem;
 }
 #Footer-content {
     display:flexbox;
@@ -82,7 +83,7 @@
 }
 .social-links {
    color:#382E2D;
-   margin-left:1rem;
-   margin-right:1rem;
-   font-size:34px;
+   margin-left:.75rem;
+   margin-right:.75rem;
+   font-size:28px;
 }
