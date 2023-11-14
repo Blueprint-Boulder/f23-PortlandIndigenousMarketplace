@@ -6,10 +6,9 @@ const bcrypt = require('bcryptjs');
 
 const getVendor = async (req, res, next) => {
   try {
-    const data = await db.oneOrNone(
-        'SELECT * FROM Vendors WHERE email = $1',
-        [req.body.email],
-    );
+    const data = await db.oneOrNone('SELECT * FROM Vendors WHERE email = $1', [
+      req.body.email,
+    ]);
 
     if (data) {
       res.locals.data = data;
@@ -92,13 +91,7 @@ const getVendorById = async (req, res, next) => {
 // Registers the vendor in the database
 const createVendor = async (req, res, next) => {
   // Get the values from the request body
-  const {
-    name,
-    email,
-    phone_number,
-    password,
-    website,
-  } = req.body;
+  const {name, email, phone_number, password, website} = req.body;
 
   // Checks if the required fields are present
   if (!password || !email || !name) {
@@ -132,7 +125,9 @@ const createVendor = async (req, res, next) => {
   } catch (err) {
     // Duplicate emails are not allowed
     if (err.code === '23505') {
-      res.status(400).json({error: 'A vendor with that email already exists'});
+      res
+          .status(400)
+          .json({error: 'A vendor with that email already exists'});
       return;
     }
 
@@ -145,4 +140,71 @@ const createVendor = async (req, res, next) => {
   next();
 };
 
-module.exports = {getVendor, getVendors, createVendor, getVendorById, authenticateVendor};
+const createEventRequest = async (req, res, next) => {
+  const {vendorId, eventId} = req.body;
+
+  try {
+    await db.none(
+        'INSERT INTO EventRequests (vendor_id, event_id) VALUES ($1, $2)',
+        [vendorId, eventId],
+    );
+    next();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({error: 'Internal Server Error'});
+  }
+};
+
+const getEventRequest = async (req, res, next) => {
+  const {requestId, vendorId, eventId} = req.body;
+  if (requestId) {
+    try {
+      const eventRequest = db.oneOrNone(
+          'SELECT * FROM Event_Requests WHERE request_id = $1',
+          [requestIdId],
+      );
+      if (eventRequest) {
+        // Store the vendor data in res.locals.data for the middleware
+        res.locals.data = eventRequest;
+        next(); // Pass control to the next middleware
+      } else {
+        res.status(404).json({message: 'Event Request not found'});
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({error: 'Internal Server Error'});
+    }
+  }
+  else if (vendorId && eventId) {
+    try {
+      const eventRequest = db.oneOrNone(
+          'SELECT * FROM Event_Requests WHERE vendor_id = $1 AND event_id = $2',
+          [vendorId, eventId],
+      );
+      if (eventRequest) {
+        // Store the vendor data in res.locals.data for the middleware
+        res.locals.data = eventRequest;
+        next(); // Pass control to the next middleware
+      } else {
+        res.status(404).json({message: 'Event Request not found'});
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({error: 'Internal Server Error'});
+    }
+  }
+  else {
+    res.status(400).json({error: 'Missing required fields'});
+  }
+};
+
+
+module.exports = {
+  getVendor,
+  getVendors,
+  createVendor,
+  getVendorById,
+  authenticateVendor,
+  createEventRequest,
+  getEventRequest,
+};
