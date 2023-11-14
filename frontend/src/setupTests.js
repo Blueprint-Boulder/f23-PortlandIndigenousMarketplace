@@ -5,11 +5,11 @@
 import '@testing-library/jest-dom';
 import React from 'react'; // so that we can use JSX syntax
 import {
- render,
- cleanup,
- waitForElement
+  render,
+  cleanup,
+  waitForElement,
 } from '@testing-library/react'; // testing helpers
-import userEvent from '@testing-library/user-event' // testing helpers for imitating user events
+import userEvent from '@testing-library/user-event'; // testing helpers for imitating user events
 import 'jest-dom/extend-expect'; // to extend Jest's expect with DOM assertions
 
 import './helpers/initTestLocalization'; // to configure i18n for tests
