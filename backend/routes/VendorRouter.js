@@ -6,6 +6,7 @@ const {
   createVendor,
   getVendorById,
   authenticateVendor,
+  updateVendor,
 } = require('../controllers/VendorController');
 const sendSuccessResponse = require('../middleware/successResponse');
 
@@ -22,5 +23,7 @@ router.get('/:vendorId', getVendorById, sendSuccessResponse);
 router.post('/', createVendor, (req, res) => {
   res.status(200).json({status: 'success'});
 });
+
+router.put('/:vendorId', updateVendor, sendSuccessResponse);
 
 module.exports = router;

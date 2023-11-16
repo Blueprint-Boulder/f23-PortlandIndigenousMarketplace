@@ -145,4 +145,58 @@ const createVendor = async (req, res, next) => {
   next();
 };
 
-module.exports = {getVendor, getVendors, createVendor, getVendorById, authenticateVendor};
+const updateVendor = async (req, res, next) => {
+  const {vendorId} = req.params;
+  const {
+    name,
+    email,
+    phone_number,
+    password,
+    website,
+  } = req.body;
+
+  // Checks if the required fields are present
+  if (!password || !email || !name) {
+    console.log(req.body);
+    return res.status(400).json({error: 'Missing required fields'});
+  }
+
+  // Hashes the password using bcrypt
+  let passwordHash;
+  try {
+    const salt = await genSalt(10);
+    passwordHash = await hash(password, salt);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({error: err});
+    return;
+  }
+
+  try {
+    await db.none(
+        'UPDATE Vendors SET \
+                name = $1, \
+                email = $2, \
+                phone_number = $3, \
+                password = $4, \
+                website = $5 \
+            WHERE vendor_id = $6',
+        [name, email, phone_number, passwordHash, website, vendorId],
+    );
+  } catch (err) {
+    // Duplicate emails are not allowed
+    if (err.code === '23505') {
+      res.status(400).json({error: 'A vendor with that email already exists'});
+      return;
+    }
+
+    // Other internal error
+    console.log(err);
+    res.status(500).json({error: err});
+    return;
+  }
+
+  next();
+};
+
+module.exports = {getVendor, getVendors, createVendor, getVendorById, authenticateVendor, updateVendor};
