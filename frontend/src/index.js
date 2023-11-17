@@ -18,16 +18,6 @@ import config from './config.js';
 
 const isadmin = true;
 
-// if(!session){
-//    path  = '/login'
-//   el = <Login/>
-// }else{
-//   path = '/vendor'
-//   el = <Vendor/>
-// }
-// function loaderfunc(){
-//   axios.get("localhost:3001").then((res) => console.log(res) ).catch(err =>  console.log('there was an error:', err))
-// }
 
 // Setup the mock vendor service
 if (config.environment === 'dev') {
@@ -72,7 +62,7 @@ const router = createBrowserRouter([
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-export default Root = root.render(
+export default root.render(
     <React.StrictMode>
       <RouterProvider router={router} />
     </React.StrictMode>,
