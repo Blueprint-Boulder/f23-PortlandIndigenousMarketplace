@@ -41,13 +41,13 @@ export default class MockVendorService {
     }
 
     //Fetches the vendor with the given id from the backend
-    static getVendorbyId(id){
+    static getVendorById(id){
         const v = this.mockvendors.filter(vendor => vendor.id === id);
         return v.length > 0 ? v[0] : null;
     }
 
     //Fetches the vendor with the given email from the backend
-    static getVendorbyEmail(email){
+    static getVendorByEmail(email){
         const v = this.mockvendors.filter(vendor => vendor.email === email);
         return v.length > 0 ? v[0] : null;
     }

@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import ServiceExample from './routes/serviceexample';
 import "./App.css";
-import {createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 // import axios from 'axios';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
@@ -17,19 +17,12 @@ import MockLoginService from './services/MockServices/MockLoginService';
 
 
 import config from './config.js';
+import { MessageProvider } from './alert.jsx';
 
 let isadmin = true
+let session = false
 
-// if(!session){
-//    path  = '/login'
-//   el = <Login/>
-// }else{
-//   path = '/vendor'
-//   el = <Vendor/>
-// }
-// function loaderfunc(){
-//   axios.get("localhost:3001").then((res) => console.log(res) ).catch(err =>  console.log('there was an error:', err))
-// }
+
 
 // Setup the mock vendor service
 if(config.environment === "dev")
@@ -43,15 +36,15 @@ const router = createBrowserRouter([
     children:[ 
     {
       path: "/vendor",
-      element: <Vendor />
+      element: session? <Vendor /> : <Navigate to="/login" />
     },
     {
       path: '/login',
-      element: <Login loginService = {MockLoginService}/> 
+      element: <Login loginService = {MockLoginService.login}/> 
     },
     {
       path: '/register',
-      element: <Register registerService = {MockLoginService}/>
+      element: <Register registerService = {MockLoginService.register}/>
     },
     {
       path: '/reset_password',
@@ -59,23 +52,25 @@ const router = createBrowserRouter([
     },
     {
       path: '/profile',
-      element: <Profile/>
+      element: session ? <Profile/> : <Navigate to="/login" />
     },
     {
       path: '/events',
-      element: <Events/>
+      element: session ? <Events/> : <Navigate to="/login" />
     },
     config.environment === "dev" && {
       path: '/service-example',
-      element: <ServiceExample VendorService={MockVendorService}/>
+      element: session? <ServiceExample VendorService={MockVendorService}/>: <Navigate to="/login" />
     }]
   },
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-export default Root = root.render(
+export default root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <MessageProvider>
+      <RouterProvider router={router} />
+    </MessageProvider>
   </React.StrictMode>
 );
 

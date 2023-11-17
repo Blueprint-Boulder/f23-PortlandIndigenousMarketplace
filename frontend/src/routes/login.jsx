@@ -2,32 +2,35 @@
 import { useState } from "react"
 // import { redirect} from "react-router"
 import logo from "./../assets/PIM_logo_black.png"
-import { Link } from "react-router-dom"
-import Alert from '../components/alert'
+import { Link, useNavigate } from "react-router-dom"
+import { useContext } from 'react';
+import { MessageContext } from '../alert';
 
 
 
-export default function Login({loginService}){
+export default function Login({loginService, admin}){
     const [user, setUser] = useState('')
     const [pass, setPass] = useState('')
-    const [message, setMessage] = useState('')
-    const [err, setErr] = useState(false)
+    const navigate = useNavigate()
+    const {setMessage, setBad} = useContext(MessageContext)
+
     
-    function handleLogin(){
+    async function handleLogin(){
         const data = {username: user, password: pass}
+        if (loginService(data)) {
+
+            setMessage('Logged in succesfully')
+            admin ? navigate('/events') : navigate('/vendor')
+            console.log('Logged in!')
+        } else {
+            setMessage("Failed to login")
+            setBad(true)
+        }
         // axios.post("/login", data).then(() => redirect('/events')).catch(err => setMessage('There was an error: ' + err), setErr(true))
     }
 
     return(
         <div className="content-center">
-            {
-            message
-            ? 
-            <Alert content = {message} error = {err}/>
-            :
-            <></>
-            }
-            
             
             <div className="flex flex-col m-auto w-max p-4 text-center ">
 
