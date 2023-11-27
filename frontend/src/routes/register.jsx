@@ -31,10 +31,10 @@ export default function Register({registerService}) {
   }
 
   return (
-    <div className="content-center">
+    <div className="content-center h-[80vh] overflow-scroll">
 
 
-      <div className="flex flex-col m-auto w-max p-4 text-center ">
+      <div className="flex flex-col m-auto w-max px-4 text-center justify-start">
 
         <img className="max-w-xs" src={logo} alt="Pim logo white" />
 
