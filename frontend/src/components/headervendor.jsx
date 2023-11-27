@@ -10,7 +10,7 @@ export default function Header({admin}) {
   };
 
   return (
-    <div className="flex justify-end ">
+    <div className="flex justify-end bg-blue ">
       <div className="max-w-screen-xlflex flex-wrap p-4 ml-auto">
         <div className="flex md:order-2">
           <button
@@ -50,7 +50,7 @@ export default function Header({admin}) {
             <li>
               <Link to='/login' className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Login</Link>
             </li>
-            {admin ? <li><Link to='/service-example' className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Admin</Link></li> : null}
+            {admin ? <li><Link to='/vendors' className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Vendors</Link></li> : null}
           </ul>
         </div>
       </div>

@@ -88,8 +88,8 @@ export default class MockVendorService {
   }
 
   // Fetches the vendor with the given email from the backend
-  static getVendorByEmail(email) {
-    const v = this.mockvendors.filter((vendor) => vendor.email === email);
+  static getVendorByName(name) {
+    const v = this.mockvendors.filter((vendor) => vendor.name === name);
     return v.length > 0 ? v[0] : null;
   }
 
