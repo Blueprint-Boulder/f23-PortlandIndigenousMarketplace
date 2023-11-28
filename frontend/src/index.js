@@ -20,7 +20,7 @@ import config from './config.js';
 import {MessageProvider} from './alert.jsx';
 
 const isadmin = true;
-const session = false;
+const session = true;
 
 
 // Setup the mock vendor service
