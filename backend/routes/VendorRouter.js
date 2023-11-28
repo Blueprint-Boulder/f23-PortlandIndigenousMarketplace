@@ -9,11 +9,16 @@ const {
   createEventRequest,
   getEventRequest,
   updateVendor,
+  updateAuthenticatedVendor,
 } = require('../controllers/VendorController');
 const sendSuccessResponse = require('../middleware/successResponse');
+const {
+  verifyToken,
+  signToken,
+} = require('../controllers/AuthController');
 
 // Logs in vendor
-router.post('/login', getVendor, authenticateVendor, sendSuccessResponse);
+router.post('/login', getVendor, authenticateVendor, signToken, sendSuccessResponse);
 
 // Fetches all vendors
 router.get('/', getVendors, sendSuccessResponse);
@@ -33,6 +38,10 @@ router.post('/events/request', createEventRequest, sendSuccessResponse);
 router.get('/events/request', getEventRequest, sendSuccessResponse);
 
 // Edit vendor by id
-router.put('/:vendorId', updateVendor, sendSuccessResponse);
+// This probably should be an admin-protected route. How does that work?
+router.put('/:vendorId', verifyToken, updateVendor, sendSuccessResponse);
+
+// Route for vendor to update themself. ID is retrieved from the token.
+router.put('/', verifyToken, updateAuthenticatedVendor, sendSuccessResponse);
 
 module.exports = router;
