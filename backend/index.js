@@ -18,8 +18,10 @@ app.use(express.json());
 
 // Import router objects and direct the app to use them
 const VendorRouter = require('./routes/VendorRouter');
+const AdminRouter = require('./routes/AdminRouter');
 
 app.use('/vendors', VendorRouter);
+app.use('/admins', AdminRouter);
 
 app.get('/', (req, res) => {
   res.status(202).send('Hello World!');
