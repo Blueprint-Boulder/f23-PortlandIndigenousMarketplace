@@ -1,4 +1,5 @@
 const express = require('express');
+const pgp = require('pg-promise')();
 const db = require('../database');
 
 const {hash, genSalt} = require('bcryptjs');
@@ -32,6 +33,11 @@ const authenticateVendor = async (req, res, next) => {
     if (match) {
       res.locals.vendor = vendor;
       delete res.locals.vendor['password'];
+
+      res.locals.data = {
+        'message': 'Login successful',
+        'status': 'success',
+      };
 
       next();
     } else {
@@ -191,6 +197,34 @@ const getEventRequest = async (req, res, next) => {
   }
 };
 
+const updateAuthenticatedVendor = async (req, res, next) => {
+  const vendor = res.locals.vendor;
+
+  // Values that are actually being updated
+  const keys = [];
+  const values = {};
+  for (const key in req.body) {
+    if (req.body[key]) {
+      keys.push(key);
+      values[key] = req.body[key];
+    }
+  }
+
+  // Use a helper to generate set of columns for the query
+  const cs = new pgp.helpers.ColumnSet(keys, {table: 'vendors'});
+  // Generate the query
+  const query = pgp.helpers.update(values, cs) + ' WHERE vendor_id = $1';
+
+  // Update the vendor in the database
+  try {
+    await db.none(query, [vendor.vendor_id]);
+    next();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({error: 'Internal Server Error'});
+  }
+};
+
 const updateVendor = async (req, res, next) => {
   const {vendorId} = req.params;
   const {
@@ -200,12 +234,6 @@ const updateVendor = async (req, res, next) => {
     password,
     website,
   } = req.body;
-
-  // Checks if the required fields are present
-  if (!password || !email || !name) {
-    console.log(req.body);
-    return res.status(400).json({error: 'Missing required fields'});
-  }
 
   // Hashes the password using bcrypt
   let passwordHash;
@@ -254,4 +282,5 @@ module.exports = {
   createEventRequest,
   getEventRequest,
   updateVendor,
+  updateAuthenticatedVendor,
 };
