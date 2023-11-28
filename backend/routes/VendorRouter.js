@@ -6,6 +6,8 @@ const {
   createVendor,
   getVendorById,
   authenticateVendor,
+  createEventRequest,
+  getEventRequest,
   updateVendor,
 } = require('../controllers/VendorController');
 const sendSuccessResponse = require('../middleware/successResponse');
@@ -24,6 +26,13 @@ router.post('/', createVendor, (req, res) => {
   res.status(200).json({status: 'success'});
 });
 
+// Create Vendor event request
+router.post('/events/request', createEventRequest, sendSuccessResponse);
+
+// Get Vendor event request
+router.get('/events/request', getEventRequest, sendSuccessResponse);
+
+// Edit vendor by id
 router.put('/:vendorId', updateVendor, sendSuccessResponse);
 
 module.exports = router;
