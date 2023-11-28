@@ -22,22 +22,17 @@ const getVendor = async (req, res, next) => {
   }
 };
 
-// Middleware to authenticate the vendor
+// Middleware to verify the password of the vendor
 const authenticateVendor = async (req, res, next) => {
   try {
     const vendor = res.locals.data;
     const match = await bcrypt.compare(req.body.password, vendor.password);
+
+    // If passwords match, pass vendor object without password
     if (match) {
-      // If the password matches, store a success message and relevant vendor data
-      res.locals.data = {
-        status: 'success',
-        message: 'Successful login.',
-        vendorDetails: {
-          id: vendor.id,
-          email: vendor.email,
-          // TODO: Include any other vendor details we need
-        },
-      };
+      res.locals.vendor = vendor;
+      delete res.locals.vendor['password'];
+
       next();
     } else {
       res.status(401).json({message: 'Incorrect email or password.'});
@@ -174,8 +169,7 @@ const getEventRequest = async (req, res, next) => {
       console.error(err);
       res.status(500).json({error: 'Internal Server Error'});
     }
-  }
-  else if (vendorId && eventId) {
+  } else if (vendorId && eventId) {
     try {
       const eventRequest = db.oneOrNone(
           'SELECT * FROM Event_Requests WHERE vendor_id = $1 AND event_id = $2',
@@ -192,8 +186,7 @@ const getEventRequest = async (req, res, next) => {
       console.error(err);
       res.status(500).json({error: 'Internal Server Error'});
     }
-  }
-  else {
+  } else {
     res.status(400).json({error: 'Missing required fields'});
   }
 };

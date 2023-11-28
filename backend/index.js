@@ -5,16 +5,24 @@ if (require('dotenv').config().parsed === undefined) {
 
 // Import the database object from the database.js file
 const db = require('./database');
-const cors = require('cors');
+
 // Import Express and initialize our app
 const express = require('express');
 const app = express();
 
-const errorHandler = require('errorhandler');
-app.use(errorHandler({dumbExceptions: true, showStack: true}), cors());
-
 // Parse Json requests
 app.use(express.json());
+
+const errorHandler = require('errorhandler');
+app.use(errorHandler({dumbExceptions: true, showStack: true}));
+
+// Allows cross origin requests
+const cors = require('cors');
+app.use(cors());
+
+// Parses cookies attached to the client request object
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 // Import router objects and direct the app to use them
 const VendorRouter = require('./routes/VendorRouter');

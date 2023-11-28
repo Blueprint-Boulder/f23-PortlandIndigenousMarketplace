@@ -11,9 +11,13 @@ const {
   updateVendor,
 } = require('../controllers/VendorController');
 const sendSuccessResponse = require('../middleware/successResponse');
+const {
+  verifyToken,
+  signToken,
+} = require('../controllers/AuthController');
 
 // Logs in vendor
-router.post('/login', getVendor, authenticateVendor, sendSuccessResponse);
+router.post('/login', getVendor, authenticateVendor, signToken, sendSuccessResponse);
 
 // Fetches all vendors
 router.get('/', getVendors, sendSuccessResponse);
@@ -33,6 +37,6 @@ router.post('/events/request', createEventRequest, sendSuccessResponse);
 router.get('/events/request', getEventRequest, sendSuccessResponse);
 
 // Edit vendor by id
-router.put('/:vendorId', updateVendor, sendSuccessResponse);
+router.put('/:vendorId', verifyToken, updateVendor, sendSuccessResponse);
 
 module.exports = router;
