@@ -5,13 +5,13 @@ if (require('dotenv').config().parsed === undefined) {
 
 // Import the database object from the database.js file
 const db = require('./database');
-
+const cors = require('cors');
 // Import Express and initialize our app
 const express = require('express');
 const app = express();
 
 const errorHandler = require('errorhandler');
-app.use(errorHandler({dumbExceptions: true, showStack: true}));
+app.use(errorHandler({dumbExceptions: true, showStack: true}), cors());
 
 // Parse Json requests
 app.use(express.json());

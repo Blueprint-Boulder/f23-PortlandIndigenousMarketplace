@@ -1,73 +1,80 @@
-// import axios from "axios"
-import { useState } from "react"
-// import { redirect} from "react-router"
-import logo from "./../assets/PIM_logo_black.png"
-import { Link } from "react-router-dom"
+
+import React, {useState} from 'react';
+import logo from './../assets/PIM_logo_black.png';
+import {Link, useNavigate} from 'react-router-dom';
+import {useContext} from 'react';
+import {MessageContext} from '../alert';
+import PropTypes from 'prop-types';
 
 
-function Banner({content, error}){
-    return(
-        <>
-        {error ? 
-        <div className="bg-red-600">{content}</div>
-        :
-        <div className="bg-slate-600">{content}</div>
-        }
-        </>
-        
-    )
-}
+export default function Login({loginService, admin}) {
+  const [user, setUser] = useState('');
+  const [pass, setPass] = useState('');
+  const navigate = useNavigate();
+  const {setMessage, setBad} = useContext(MessageContext);
 
-export default function Login(){
-    const [user, setUser] = useState('')
-    const [pass, setPass] = useState('')
-    const [message, setMessage] = useState('')
-    const [err, setErr] = useState(false)
-    
-    function handleLogin(){
-        const data = {username: user, password: pass}
-        // axios.post("/login", data).then(() => redirect('/events')).catch(err => setMessage('There was an error: ' + err), setErr(true))
+
+  async function handleLogin() {
+    const data = {username: user, password: pass};
+    if (loginService(data)) {
+      setMessage('Logged in succesfully');
+            admin ? navigate('/events') : navigate('/vendor');
+            console.log('Logged in!');
+    } else {
+      setMessage('Failed to login');
+      setBad(true);
     }
+    // axios.post("/login", data).then(() => redirect('/events')).catch(err => setMessage('There was an error: ' + err), setErr(true))
+  }
 
-    return(
-        <div className="content-center">
-            {
-            message
-            ? 
-            <Banner content = {message} bad = {err}/>
-            :
-            <></>
-            }
-            
-            
-            <div className="flex flex-col m-auto w-max p-4 text-center ">
+  return (
+    <div className="content-centerh-[80vh] overflow-scroll">
 
-                <img className="max-w-xs  " src={logo} alt="Pim logo white" />
+      <div className="flex flex-col m-auto w-max px-4 text-center justify-start ">
 
-                <div className="m-2">
+        <img className="max-w-xs" src={logo} alt="Pim logo white" />
+
+        <div className="m-2">
                     Login
-                </div>
-
-                <div className="m-2">
-                    <input className="rounded-lg w-3/4" placeholder="Username" onChange={(e) => setUser(e.target.value)}></input>
-                </div>
-                <div className="m-2">
-                    <input className="rounded-lg w-3/4" placeholder="Password" type="password" onChange={(e) => setPass(e.target.value)}></input>
-                </div>
-
-                <div className="m-2 ">
-                    <button className="bg-blue-300 w-3/4 rounded click:bg-blue-600" onClick={() => handleLogin()}>Submit</button>
-                </div>
-
-                <div className="m-2 text-blue-400 underline">
-                    <Link to='/reset_password'>Forgot Password?</Link>
-                </div>
-
-                <div className="m-2 text-blue-400 underline">
-                    <Link to='/register'>Don't have an account? Register</Link>
-                </div>
-            </div>
-            
         </div>
-    )
+
+        <div className="m-2">
+          <input
+            className="rounded-lg w-3/4"
+            placeholder="Username"
+            onChange={(e) => setUser(e.target.value)}>
+          </input>
+        </div>
+        <div className="m-2">
+          <input
+            className="rounded-lg w-3/4"
+            placeholder="Password" type="password"
+            onChange={(e) => setPass(e.target.value)}>
+          </input>
+        </div>
+
+        <div className="m-2 ">
+          <button
+            className="bg-blue-300 w-3/4 rounded click:bg-blue-600"
+            onClick={() => handleLogin()}>
+                Submit
+          </button>
+        </div>
+
+        <div className="m-2 text-blue-400 underline">
+          <Link to='/reset_password'>Forgot Password?</Link>
+        </div>
+
+        <div className="m-2 text-blue-400 underline">
+          <Link to='/register'>Don&apos;t have an account? Register</Link>
+        </div>
+      </div>
+
+    </div>
+  );
 }
+
+Login.propTypes = {
+  loginService: PropTypes.func.isRequired,
+  admin: PropTypes.bool.isRequired,
+};

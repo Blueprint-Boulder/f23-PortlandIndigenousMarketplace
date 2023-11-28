@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, {useState} from 'react';
+import {Link} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-export default function Header({ admin }) {
+export default function Header({admin}) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -9,7 +10,7 @@ export default function Header({ admin }) {
   };
 
   return (
-    <div className="flex justify-end ">
+    <div className="flex justify-end bg-blue ">
       <div className="max-w-screen-xlflex flex-wrap p-4 ml-auto">
         <div className="flex md:order-2">
           <button
@@ -23,13 +24,13 @@ export default function Header({ admin }) {
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              viewBox="0 0 17 14" 
+              viewBox="0 0 17 14"
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M1 1h15M1 7h15M1 13h15"
               />
             </svg>
@@ -49,10 +50,14 @@ export default function Header({ admin }) {
             <li>
               <Link to='/login' className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Login</Link>
             </li>
-            {admin ? <li><Link to='/vendor' className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Admin</Link></li> : null}
+            {admin ? <li><Link to='/vendors' className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Vendors</Link></li> : null}
           </ul>
         </div>
       </div>
     </div>
   );
 }
+
+Header.propTypes = {
+  admin: PropTypes.bool.isRequired,
+};
