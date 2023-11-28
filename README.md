@@ -2,9 +2,9 @@
 Open source mobile web application to help Portland Indigenous Marketplace manage vendors and events.
 
 ## Startup
-Copy the `.env.EXAMPLE` file to `.env`. This file contains passwords and other information that doesn't need to be pushed to the github. For now, no changes are needed to this file.
+The `.env` files contains the environment variables that docker / the backend rely on to run. You should not need to change this.
 
-Before launching, run `npm install` in both the backend and the frontend directory. Then, from the root directory, run `docker-compose up` to launch all three containers in attached view, or with the flag `-d` to run the containers in the background.
+From the root directory, run `docker-compose up` to launch all three containers in attached view, or with the flag `-d` to run the containers in the background.
 
 ## Contribution Guide
 Every feature you work on should have a corresponding issue on the github project. If you're about to start a feature and this isn't true, go make an issue and assign it to yourself! Every issue should have its own associated branch. Make sure that branch names briefly describes what changes are being implemented.

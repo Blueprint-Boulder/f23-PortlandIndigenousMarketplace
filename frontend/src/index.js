@@ -1,39 +1,79 @@
 import React from 'react';
 import Login from './routes/login';
 import Vendor from './routes/vendor';
+import Events from './routes/events';
+import Profile from './routes/profile';
 import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-const session = false
-let path
-let el
-if (!session) {
-  path = '/login'
-  el = <Login />
-} else {
-  path = '/vendor'
-  el = <Vendor />
+import Vendors from './routes/vendors.jsx';
+import './App.css';
+import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
+// import axios from 'axios';
+import Register from './routes/register';
+import ResetPassword from './routes/reset_password';
+import MockVendorService from './services/MockServices/MockVendorService.js';
+import MockLoginService from './services/MockServices/MockLoginService';
+
+
+import config from './config.js';
+import {MessageProvider} from './alert.jsx';
+
+const isadmin = true;
+const session = true;
+
+// Setup the mock vendor service
+if (config.environment === 'dev') {
+  MockVendorService.init();
 }
+
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Root path={path} />,
+    path: '/',
+    // loader: loaderfunc(),
+    element: <Root admin = {isadmin}/>,
     children: [
       {
-        path: path,
-        element: el
-      }]
-  }
-])
+        path: '/vendors/:vendorId',
+        element: session? <Vendor /> : <Navigate to="/login" />,
+      },
+      {
+        path: '/login',
+        element: <Login loginService = {MockLoginService.login} admin={isadmin}/>,
+      },
+      {
+        path: '/register',
+        element: <Register registerService = {MockLoginService.register}/>,
+      },
+      {
+        path: '/reset_password',
+        element: <ResetPassword/>,
+      },
+      {
+        path: '/profile',
+        element: session ? <Profile/> : <Navigate to="/login" />,
+      },
+      {
+        path: '/events',
+        element: session ? <Events/> : <Navigate to="/login" />,
+      },
+      {
+        path: '/vendors',
+        element: session && isadmin? <Vendors VendorService={MockVendorService}/>: <Navigate to="/login" />,
+      }],
+  },
+]);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+export default root.render(
+    <React.StrictMode>
+      <MessageProvider>
+        <RouterProvider router={router} />
+      </MessageProvider>
+    </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals(console.log);
