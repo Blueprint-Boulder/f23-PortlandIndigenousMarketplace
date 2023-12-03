@@ -1,42 +1,37 @@
 import React from 'react';
-import { useState } from 'react';
-
+import {useState} from 'react';
+import logo from '../assets/PIM_logo_white.png';
 
 export default function oneEvent() {
-  const [eventNum, setEventNum] = useState();
-  const [registered, setRegistered] = useState();
+  // const [eventNum, setEventNum] = useState();
+  // const [registered, setRegistered] = useState();
 
-  function setRegistered(registered) {
+  // function setRegistered(registered) {
+  //   return 1;
+  // }
+  const [about, setAbout] = useState(false);
 
-  }
+  // const handleAbout = (aboutInfo) => {
+  //   setAbout(aboutInfo);
+  // };
 
   return (
-    <div id="Event container">
-      <div id="Event-content flex flex-col">
-        <div id="Event-title text-2xl font-bold tracking-wide">
-        </div>
-        <img id="Event-img break-before"></img>
-        <div className='Event-info flex flex-col'>
-          <div id='About flex flex-row'>
-            <p></p>
-            <button></button>
-          </div>
-
-          <button 
-            className="text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-            onClick={(setRegistered(registered))}
+    <div className="content-center w-auto h-auto">
+      <div className="flex flex-col m-1 my-2">
+        <img src={logo} alt='Event-logo' className='w-40 h-40 self-start border border-black rounded-xl'/>
+        <div className="text-2xl font-bold tracking-wide">Event Title</div>
+        <div className='flex flex-col'>
+          <label>About
+            <select className="self-start bg-opacity-100" onChange={(e) => setAbout(e.target.value)}>{about}</select>
+          </label>
+          <div>Location</div>
+          <div>Date+Time</div>
+          <button
+            className="text-gray-800 font-semibold py-2 px-1 border border-gray-400 rounded shadow"
+            // onClick={(setRegistered(registered))}
           >Register</button>
         </div>
       </div>
-
     </div>
   );
-  /* Format
-          Event Title
-        I  M   A   G   E
-        About v (dropdown) // maybe make a button w no outline, clicking anywhere in area creates the dropdown effect
-          - add a hover to change text color maybe
-      Location | Date+time
-         Register button
-  */
 }

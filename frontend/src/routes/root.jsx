@@ -8,7 +8,6 @@ import {Alert, MessageContext} from '../alert.jsx';
 import {useContext} from 'react';
 
 
-
 export default function Root({admin}) {
   // const data = useLoaderData()
   const {message, setMessage, bad} = useContext(MessageContext);
