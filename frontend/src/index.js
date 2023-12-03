@@ -1,7 +1,7 @@
 import React from 'react';
 import Login from './routes/login';
 import Vendor from './routes/vendor';
-import Events from './routes/events';
+import oneEvent from './components/oneEvent.jsx';
 import Profile from './routes/profile';
 import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
@@ -56,7 +56,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/events',
-        element: session ? <Events/> : <Navigate to="/login" />,
+        element: session ? <oneEvent/> : <Navigate to="/login" />,
       },
       config.environment === 'dev' && {
         path: '/service-example',

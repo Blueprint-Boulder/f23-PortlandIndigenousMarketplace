@@ -1,7 +1,15 @@
 import React from 'react';
+import { useState } from 'react';
 
 
 export default function oneEvent() {
+  const [eventNum, setEventNum] = useState();
+  const [registered, setRegistered] = useState();
+
+  function setRegistered(registered) {
+
+  }
+
   return (
     <div id="Event container">
       <div id="Event-content flex flex-col">
@@ -14,7 +22,10 @@ export default function oneEvent() {
             <button></button>
           </div>
 
-          <button id="text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Register</button>
+          <button 
+            className="text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+            onClick={(setRegistered(registered))}
+          >Register</button>
         </div>
       </div>
 
