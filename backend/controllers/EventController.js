@@ -1,6 +1,6 @@
 const express = require('express');
 const db = require('../database');
-const { hash, genSalt } = require('bcryptjs');
+const {hash, genSalt} = require('bcryptjs');
 const bcrypt = require('bcryptjs');
 
 const getAllEvents = async (req, res, next) => {
@@ -10,66 +10,72 @@ const getAllEvents = async (req, res, next) => {
       res.locals.data = events;
       next();
     } else {
-      res.status(404).json({ message: 'No events found' });
+      res.status(404).json({message: 'No events found'});
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({error: 'Internal Server Error'});
   }
 };
 
 const getEventById = async (req, res, next) => {
-  const { event_id } = req.params;
+  const {event_id} = req.params;
   try {
     const event = await db.oneOrNone('SELECT * FROM Events WHERE event_id = $1', [event_id]);
     if (event) {
       res.locals.data = event;
       next();
     } else {
-      res.status(404).json({ message: 'Event not found' });
+      res.status(404).json({message: 'Event not found'});
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({error: 'Internal Server Error'});
   }
 };
 
 const createEvent = async (req, res, next) => {
-  const { name, location, datetime, description } = req.body;
+  const {name, location, datetime, description, capacity} = req.body;
   try {
-    const result = await db.query(`
-      INSERT INTO Events (name, location, datetime, description)
-      VALUES ($1, $2, $3, $4)
+    await db.none(`
+      INSERT INTO Events (name, location, datetime, description, vendor_capacity)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
-    `, [name, location, datetime, description]);
+    `, [name, location, datetime, description, capacity]);
 
-    res.status(201).json(result.rows[0]);
+    next();
   } catch (error) {
     console.error('Error creating event:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({error: 'Internal Server Error'});
   }
 };
 
 const updateEvent = async (req, res, next) => {
-  const { event_id } = req.params;
-  const { name, location, datetime, description } = req.body;
+  const {event_id} = req.params;
+  const {name, location, datetime, description, capacity} = req.body;
   try {
-    const result = await db.query(`
+    const result = await db.one(`
       UPDATE Events
-      SET name = $1, location = $2, datetime = $3, description = $4
-      WHERE event_id = $5
+      SET 
+        name = $1, 
+        location = $2, 
+        datetime = $3, 
+        description = $4, 
+        vendor_capacity = $5
+      WHERE event_id = $6
       RETURNING *;
-    `, [name, location, datetime, description, event_id]);
+    `, [name, location, datetime, description, capacity, event_id]);
 
-    if (result.rows.length === 0) {
-      res.status(404).json({ error: 'Event not found' });
+    if (!result) {
+      return res.status(404).json({error: 'Event not found'});
     } else {
-      res.json(result.rows[0]);
+      res.locals.data = result;
+      next();
     }
   } catch (error) {
     console.error('Error editing event:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({error: 'Internal Server Error'});
   }
 };
 
-module.exports = { getAllEvents, getEventById, createEvent, updateEvent };
+module.exports = {getAllEvents, getEventById, createEvent, updateEvent};
