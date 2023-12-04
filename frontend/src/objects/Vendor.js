@@ -9,12 +9,13 @@ class Vendor {
     website: string - (Optional) website of the vendor.
     phone_number: string - (Optional) phone number of the vendor.
     */
-  constructor(id, name, email, website = undefined, phoneNumber = undefined) {
+  constructor(id, name, email, website = undefined, phoneNumber = undefined, image = undefined) {
     this.id = id;
     this.name = name;
     this.email = email;
     this.website = website;
     this.phone_number = phoneNumber;
+    this.image = image;
   }
 
   // Create a vendor object from json representation
