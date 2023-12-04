@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 function VendorButton({content, onClick}) {
   return (
-    <button className='bg-blue text-white m-1 p-2' onClick={ () => onClick}> {content}</button>
+    <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={ () => onClick}> {content}</button>
   );
 }
 
@@ -19,11 +19,9 @@ export default function Vendors({VendorService}) {
   };
 
   const vendorDisplay = (vendor) => (
-    <div className="grid grid-cols-2 p-2 bg-grey-2 my-2 rounded h-max ">
-      <div className='col-span-2 row-span-2 flex justify-between'>
-        <img className='w-1/2' src={vendor.image} alt='vendor image'/>
-        <h2 className='text-black m-2'>{vendor.name}</h2>
-      </div>
+    <div className="grid grid-cols-2 p-2 my-2 rounded h-max grid-rows-4 bg-white drop-shadow-md">
+      <img className='w-14 mx-auto my-auto row-span-2 rounded-full bg-white' src={vendor.image} alt='vendor image'/>
+      <h2 className='text-black mx-auto my-auto row-span-2 text-black font-bold'>{vendor.name}</h2>
       <VendorButton onClick={() => handleInvite()} content='Invite'/>
       <VendorButton onClick={() => handleMessage()} content='Message'/>
       <VendorButton onClick={() => handleFlag()} content='Flag'/>
