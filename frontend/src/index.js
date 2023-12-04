@@ -35,7 +35,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/vendors/:vendorId',
-        element: session? <Vendor /> : <Navigate to="/login" />,
+        element: session? <Vendor vendorService={MockVendorService}/> : <Navigate to="/login" />,
       },
       {
         path: '/login',

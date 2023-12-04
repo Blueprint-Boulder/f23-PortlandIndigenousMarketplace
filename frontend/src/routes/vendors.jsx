@@ -1,9 +1,15 @@
 import React from 'react';
 import {useState} from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
+// import {Link} from 'react-router-dom';
+// import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+// import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
+
+function VendorButton({content, onClick}) {
+  return (
+    <button className='bg-blue text-white m-1 p-2' onClick={ () => onClick}> {content}</button>
+  );
+}
 
 export default function Vendors({VendorService}) {
   const [vendors, setVendors] = useState(VendorService.getVendors());
@@ -13,11 +19,15 @@ export default function Vendors({VendorService}) {
   };
 
   const vendorDisplay = (vendor) => (
-    <div className="flex flex-col p-2 bg-grey-2 my-2 rounded h-max ">
-      <div className='flex justify-between'>
-        <h2 className='text-black'>{vendor.name}</h2>
-        <Link className='text-salmon' to={`/vendors/:${vendor.id}`}><FontAwesomeIcon icon={faArrowRight} /></Link>
+    <div className="grid grid-cols-2 p-2 bg-grey-2 my-2 rounded h-max ">
+      <div className='col-span-2 row-span-2 flex justify-between'>
+        <img className='w-1/2' src={vendor.image} alt='vendor image'/>
+        <h2 className='text-black m-2'>{vendor.name}</h2>
       </div>
+      <VendorButton onClick={() => handleInvite()} content='Invite'/>
+      <VendorButton onClick={() => handleMessage()} content='Message'/>
+      <VendorButton onClick={() => handleFlag()} content='Flag'/>
+      <VendorButton onClick={() => handlePromote()} content='Promote'/>
     </div>
   );
 
@@ -39,4 +49,9 @@ export default function Vendors({VendorService}) {
 
 Vendors.propTypes = {
   VendorService: PropTypes.func.isRequired,
+};
+
+VendorButton.propTypes = {
+  content: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
