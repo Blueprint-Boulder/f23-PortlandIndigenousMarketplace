@@ -15,13 +15,15 @@ export default function Root({admin}) {
   setTimeout(() => setMessage(''), 5000);
   const location = useLocation();
   console.log(location.pathname);
+
   useEffect(() => {
     const server = axios.create({
-      baseURL: 'http://localhost:3000',
+      baseURL: 'http://localhost:3001',
       withCredentials: false,
     });
     server.get('/').then((res) => console.log('response from backend', res.data)).catch((err) => console.log(err));
   }, []);
+
   return (
     <div className="bg-grey-1 w-screen flex h-screen flex-col justify-between">
       {message && <Alert content = {message} bad ={bad}/>}

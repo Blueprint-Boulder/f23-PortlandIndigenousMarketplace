@@ -24,7 +24,8 @@ CREATE TABLE Events (
     name VARCHAR(100) NOT NULL,
     location VARCHAR(255),
     datetime TIMESTAMP NOT NULL,
-    description TEXT
+    description TEXT,
+    vendor_capacity INT NOT NULL
 );
 
 -- Violations table
@@ -43,11 +44,11 @@ CREATE TABLE VendorViolations (
 );
 
 -- Event_Requests table
-CREATE TABLE Event_Requests (
+CREATE TABLE EventRequests (
     request_id SERIAL PRIMARY KEY,
     vendor_id INT REFERENCES Vendors(vendor_id),
     event_id INT REFERENCES Events(event_id),
-    approved BOOLEAN DEFAULT FALSE,
+    approved BOOLEAN DEFAULT NULL,
     requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     approved_at TIMESTAMP
 );

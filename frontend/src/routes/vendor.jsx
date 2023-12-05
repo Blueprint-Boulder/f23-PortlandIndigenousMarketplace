@@ -5,5 +5,6 @@ export default function Vendor() {
   const [vendorId] = useState(useParams().vendorId);
   return (
     <div className="color-red-300">  You are on the vendor {vendorId} route</div>
+
   );
 }
