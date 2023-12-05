@@ -16,7 +16,7 @@ export default function Profile({VendorService}) {
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
       </div>
       <hr className='bg-grey-1 w-9/12 drop-shadow-lg'/>
-      <div className='grid grid-cols-2 gap-4 '>
+      <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4'>
           <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.email}</li>
           <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.phone_number}</li>
           <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.website}</li>
