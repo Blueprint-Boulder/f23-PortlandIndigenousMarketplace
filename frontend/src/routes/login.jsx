@@ -28,11 +28,11 @@ export default function Login({loginService, admin}) {
   }
 
   return (
-    <div className="content-center">
+    <div className="content-centerh-[80vh] overflow-scroll">
 
-      <div className="flex flex-col m-auto w-max p-4 text-center ">
+      <div className="flex flex-col m-auto w-max px-4 text-center justify-start ">
 
-        <img className="max-w-xs  " src={logo} alt="Pim logo white" />
+        <img className="max-w-xs" src={logo} alt="Pim logo white" />
 
         <div className="m-2">
                     Login

@@ -93,6 +93,12 @@ export default class MockVendorService {
     return v.length > 0 ? v[0] : null;
   }
 
+  // Fetches the vendor with the given name from the backend
+  static getVendorByName(name) {
+    const v = this.mockvendors.filter((vendor) => vendor.name === name);
+    return v.length > 0 ? v[0] : null;
+  }
+
   static getLastVendorId() {
     return this.mockvendors.length;
   }

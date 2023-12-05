@@ -6,7 +6,7 @@ import Profile from './routes/profile';
 import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
-import ServiceExample from './routes/serviceexample';
+import Vendors from './routes/vendors.jsx';
 import './App.css';
 import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
 // import axios from 'axios';
@@ -35,7 +35,7 @@ const router = createBrowserRouter([
     element: <Root admin = {isadmin}/>,
     children: [
       {
-        path: '/vendor',
+        path: '/vendors/:vendorId',
         element: session? <Vendor /> : <Navigate to="/login" />,
       },
       {
@@ -58,9 +58,9 @@ const router = createBrowserRouter([
         path: '/events',
         element: session ? <Events/> : <Navigate to="/login" />,
       },
-      config.environment === 'dev' && {
-        path: '/service-example',
-        element: session? <ServiceExample VendorService={MockVendorService}/>: <Navigate to="/login" />,
+      {
+        path: '/vendors',
+        element: session && isadmin? <Vendors VendorService={MockVendorService}/>: <Navigate to="/login" />,
       }],
   },
 ]);

@@ -7,7 +7,7 @@ import {faSquareInstagram} from '@fortawesome/free-brands-svg-icons';
 
 export default function Footer() {
   return (
-    <div id="Footer">
+    <div className='bg-teal' id="Footer">
       <div id="Footer-content">
         <a
           className="social-links"
@@ -20,7 +20,6 @@ export default function Footer() {
           id="social-links"
           href="https://www.facebook.com/indigenousmrktplc"><FontAwesomeIcon icon={faSquareFacebook} /></a>
       </div>
-
     </div>
   );
 }

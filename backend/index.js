@@ -10,11 +10,19 @@ const db = require('./database');
 const express = require('express');
 const app = express();
 
+// Parse Json requests
+app.use(express.json());
+
 const errorHandler = require('errorhandler');
 app.use(errorHandler({dumbExceptions: true, showStack: true}));
 
-// Parse Json requests
-app.use(express.json());
+// Allows cross origin requests
+const cors = require('cors');
+app.use(cors());
+
+// Parses cookies attached to the client request object
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 // Import router objects and direct the app to use them
 const VendorRouter = require('./routes/VendorRouter');
