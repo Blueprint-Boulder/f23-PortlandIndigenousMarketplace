@@ -3,6 +3,7 @@ import logo from '../assets/PIM_logo_white.png';
 import {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
 export default function Event({registerEvent}) {
   const [about, setAbout] = useState(false);
   // const [register, setRegistered] = useState(false);
