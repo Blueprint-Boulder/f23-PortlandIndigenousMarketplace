@@ -14,7 +14,7 @@ export default function Events() {
         <div>Location</div>
         <div>Date+Time</div>
         <button
-          className="text-gray-800 font-semibold py-2 px-1 border border-gray-600 rounded w-24 hover:bg-gray-800 hover:text-gray-200 hover:border-gray-200"
+          className="mt-2 text-gray-800 font-semibold py-2 px-1 border border-gray-600 rounded w-24 hover:bg-gray-800 hover:text-gray-200 hover:border-gray-200"
           // onClick={(setRegistered(registered))}
         >Register</button>
         <hr className=" border-gray-500 m-8 w-92"/>
