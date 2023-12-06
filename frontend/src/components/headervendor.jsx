@@ -11,7 +11,7 @@ export default function Header({admin}) {
 
   return (
     <div className="flex bg-blue ">
-      <div className="w-min bg-white flex-wrap p-4 ml-auto">
+      <div className="flex-wrap p-4 ml-auto">
         <div className="flex md:order-2">
           <button
             type="button"

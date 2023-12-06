@@ -18,8 +18,8 @@ export const Alert = ({content, bad}) => {
   return (
     <>
       { bad ?
-        <div className="bg-red-500 text-white text-center">{content}</div>:
-        <div className="bg-green-500 text-white text-center">{content}</div>
+        <div className="bg-red text-white text-center">{content}</div>:
+        <div className="bg-green text-white text-center">{content}</div>
       }
     </>
 

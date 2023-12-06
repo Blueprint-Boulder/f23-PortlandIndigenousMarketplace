@@ -16,13 +16,15 @@ export default function Login({loginService, admin}) {
 
   async function handleLogin() {
     const data = {username: user, password: pass};
-    if (loginService(data)) {
+    if (await loginService(data)) {
+      setBad(false);
       setMessage('Logged in succesfully');
             admin ? navigate('/events') : navigate('/vendor');
             console.log('Logged in!');
     } else {
-      setMessage('Failed to login');
       setBad(true);
+
+      setMessage('Failed to login');
     }
     // axios.post("/login", data).then(() => redirect('/events')).catch(err => setMessage('There was an error: ' + err), setErr(true))
   }

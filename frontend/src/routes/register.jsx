@@ -19,14 +19,15 @@ export default function Register({registerService}) {
   const {setMessage, setBad} = useContext(MessageContext);
   const navigate = useNavigate();
   async function handleRegister() {
-    const data = {name: name, email: email, password: pass, website, phone_number: phone};
+    const data = {name: name, email: email, password: pass, website, phoneNumber: phone};
     if (registerService(data)) {
+      setBad(false);
       setMessage('Registered succesfully');
       console.log('Registered!');
       navigate('/login');
     } else {
-      setMessage('Failed to register');
       setBad(true);
+      setMessage('Failed to register');
     }
   }
 

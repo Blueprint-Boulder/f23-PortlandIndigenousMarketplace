@@ -28,11 +28,10 @@ export default function Vendors({VendorService}) {
       <VendorButton onClick={() => handlePromote()} content='Promote'/>
     </div>
   );
-
   return (
-    <div className='h-[80vh] w-screen p-2 flex flex-col items-left justify-between gap-2'>
+    <div className='h-[80vh] w-screen pl-2 pr-2 flex flex-col items-left justify-between gap-2'>
       <h1 className='color-white text-xl'>Vendors</h1>
-      <input type='text' placeholder='Search for a vendor' className='w-11/12 rounded p-2' onChange={ (e) => handleSearch(e.target.value)}></input>
+      <input type='text' placeholder='Search for a vendor' className='w-11/12 rounded p-2' onChange={(e) => handleSearch(e.target.value)}></input>
       <div className='grid grid-cols-2 gap-x-2 overflow-scroll h-full'>
         {
           vendors && (Array.isArray(vendors) ? vendors.map((vendor, i) => (
