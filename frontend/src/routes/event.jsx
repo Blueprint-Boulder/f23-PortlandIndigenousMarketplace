@@ -1,11 +1,14 @@
 import React from 'react';
+import {useNavigate} from 'react-router-dom';
 import logo from '../assets/PIM_logo_white.png';
 import {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
+import {faAnglesLeft} from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 export default function Event({EventService}) {
   const [about, setAbout] = useState(false);
+  const navigate = useNavigate();
   // const [register, setRegistered] = useState(false);
 
   // wondering if I could use object destructuring here
@@ -26,25 +29,25 @@ export default function Event({EventService}) {
   }
   return (
     <div className="overflow-scroll content-center w-auto h-auto">
+      <button alt='back-arrow' className='mx-2 object-left-top fixed' onClick={() => navigate(-1)}><FontAwesomeIcon icon={faAnglesLeft}/></button>
       <div alt="Event-content" className="flex flex-col items-center">
-        <img src={logo} alt='Event-logo' className='w-45 h-45'/>
-        <div alt="Event-title" className="text-2xl font-bold tracking-wide">{title}</div>
-        <div alt='Event-about' className='flex flex-row'>
+        <img src={logo} alt='Event-logo' className='w-2/3 h-1/2 bg-black py-0 bg-clip-padding rounded-xl'/>
+        <div alt="Event-title" className="text-2xl mt-4 font-bold tracking-wide">{title}</div>
+        <div alt='Event-about' className='flex flex-row mt-4'>
           <div className="mr-2">About</div>
           <button onClick={() => setAbout(!about)}><FontAwesomeIcon icon={faCaretDown}/></button>
         </div>
         <div className={custom}>
           {info}
         </div>
-        <div>{location}</div>
-        <div>{date} at {time}</div>
+        <div className='mt-2'>{location}</div>
+        <div className='mt-3'>{date} at {time}</div>
         <button
-          className="mt-2 text-gray-800 font-semibold py-2 px-1 border border-gray-600 rounded w-24 hover:bg-gray-800 hover:text-gray-200 hover:border-gray-200"
+          className="mt-4 text-gray-800 font-semibold py-2 px-1 border border-gray-600 rounded w-24 click:text-white"
           onClick={() => handleRegister()}
         >Register</button>
-        <hr className=" border-gray-500 mt-8 mb-4 mx-8 w-92"/>
-        <div alt='Attending Vendors'>
-        </div>
+        <hr className='mt-3 mb-1 border-t-2 border-gray-600 w-3/4'/>
+        <div alt='Attending Vendors'>Attending Vendors</div>
       </div>
     </div>
   );
