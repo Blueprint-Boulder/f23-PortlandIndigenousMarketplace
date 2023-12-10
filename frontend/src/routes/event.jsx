@@ -4,9 +4,16 @@ import {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-export default function Event({registerEvent}) {
+export default function Event({EventService}) {
   const [about, setAbout] = useState(false);
   // const [register, setRegistered] = useState(false);
+
+  // wondering if I could use object destructuring here
+  // e.g const [location, setLocation] = useState({getEvent})
+  // b/c getEvent realistically has a prop location
+  const {title, location, date, time, info} = EventService;
+
+  // console.log(getEvent);
   // function to return style
   let custom = 'hidden';
   if (about) {
@@ -21,16 +28,16 @@ export default function Event({registerEvent}) {
     <div className="overflow-scroll content-center w-auto h-auto">
       <div alt="Event-content" className="flex flex-col items-center">
         <img src={logo} alt='Event-logo' className='w-45 h-45'/>
-        <div alt="Event-title" className="text-2xl font-bold tracking-wide">Event Title</div>
+        <div alt="Event-title" className="text-2xl font-bold tracking-wide">{title}</div>
         <div alt='Event-about' className='flex flex-row'>
           <div className="mr-2">About</div>
           <button onClick={() => setAbout(!about)}><FontAwesomeIcon icon={faCaretDown}/></button>
         </div>
         <div className={custom}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          {info}
         </div>
-        <div>Location</div>
-        <div>Date+Time</div>
+        <div>{location}</div>
+        <div>{date} at {time}</div>
         <button
           className="mt-2 text-gray-800 font-semibold py-2 px-1 border border-gray-600 rounded w-24 hover:bg-gray-800 hover:text-gray-200 hover:border-gray-200"
           onClick={() => handleRegister()}
@@ -44,5 +51,5 @@ export default function Event({registerEvent}) {
 }
 
 Event.propTypes = {
-  registerEvent: PropTypes.func.isRequired,
+  EventService: PropTypes.func.isRequired,
 };

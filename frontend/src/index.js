@@ -14,6 +14,7 @@ import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
 import MockLoginService from './services/MockServices/MockLoginService';
+import MockEventService from './services/MockServices/MockEventService.js';
 
 
 import config from './config.js';
@@ -26,6 +27,7 @@ const session = true;
 // Setup the mock vendor service
 if (config.environment === 'dev') {
   MockVendorService.init();
+  MockEventService.init();
 }
 
 const router = createBrowserRouter([
@@ -56,7 +58,8 @@ const router = createBrowserRouter([
       },
       {
         path: '/events',
-        element: session ? <Event getEvent = {() => ({location: 'Boulder,CO', date: '12/4/2023', time: '6:30', about: 'Lorem Ipsum'}) }/> : <Navigate to="/login" />,
+        element: session ? <Event EventService = {MockEventService.getEventById(1)} /> : <Navigate to="/login" />,
+        // () => ({title: 'Boulder Event', location: 'Boulder,CO', date: '12/4/2023', time: '6:30', info: 'Lorem Ipsum'})
       },
       {
         path: '/vendors',
