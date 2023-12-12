@@ -57,8 +57,8 @@ const router = createBrowserRouter([
         element: session ? <Profile/> : <Navigate to="/login" />,
       },
       {
-        path: '/events',
-        element: session ? <Event EventService = {MockEventService.getEventById(1)} /> : <Navigate to="/login" />,
+        path: '/events', // /:event add this and then use params to get the id information
+        element: session ? <Event EventService = {MockEventService} /> : <Navigate to="/login" />,
         // () => ({title: 'Boulder Event', location: 'Boulder,CO', date: '12/4/2023', time: '6:30', info: 'Lorem Ipsum'})
       },
       {
@@ -81,3 +81,4 @@ export default root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals(console.log);
+
