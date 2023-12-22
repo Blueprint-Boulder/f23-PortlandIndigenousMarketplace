@@ -50,9 +50,9 @@ export default function Event({EventService}) {
       <hr className='mt-3 mb-2 border-t-2 border-gray-600 w-3/4'/>
       <div alt='Attending Vendors' className='mt-1 text-xl font-bold tracking-wide'>Attending Vendors</div>
       <button alt="attendance" onClick={toggleVendor} className="mt-4 text-gray-800 font-semibold py-2 px-1 border border-gray-600 rounded w-24">See attending vendors</button>
-      <div alt='vendorImg' className=''>
+      <div alt='vendorImages' className='grid-cols-auto w-2/3 overflow-x-scroll rounded border-2'>
         {vendorImages.map((vendorImg) => (
-          <img key={vendorImg} src={vendorImg} alt={vendorImg}/>
+          <img key={vendorImg} src={vendorImg} alt={vendorImg} className='w-4 h-4'/>
         ))}
       </div>
     </div>
