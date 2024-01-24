@@ -13,8 +13,9 @@ import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
-import MockLoginService from './services/MockServices/MockLoginService';
-import handleRegister from './services/register';
+// import MockLoginService from './services/MockServices/MockLoginService';
+import handleRegister from './services/handleRegister.js';
+import {handleLoginVendor} from './services/handleLogin.js';
 
 
 import config from './config.js';
@@ -36,11 +37,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/vendors/:vendorId',
-        element: session? <Vendor VendorService={MockVendorService}/> : <Navigate to="/login" />,
+        element: session? <Vendor vendorService={MockVendorService}/> : <Navigate to="/login" />,
       },
       {
         path: '/login',
-        element: <Login loginService = {MockLoginService.login} admin={isadmin}/>,
+        element: <Login loginService = {handleLoginVendor} admin={isadmin}/>,
       },
       {
         path: '/register',
@@ -73,7 +74,6 @@ export default root.render(
       </MessageProvider>
     </React.StrictMode>,
 );
-
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

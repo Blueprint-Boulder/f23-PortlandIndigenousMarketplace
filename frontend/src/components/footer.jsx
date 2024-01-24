@@ -7,7 +7,7 @@ import {faSquareInstagram} from '@fortawesome/free-brands-svg-icons';
 
 export default function Footer() {
   return (
-    <div className='bg-teal' id="Footer">
+    <div className='bg-teal fixed bottom-0' id="Footer">
       <div id="Footer-content">
         <a
           className="social-links"
