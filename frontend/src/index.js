@@ -14,6 +14,7 @@ import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
 import MockLoginService from './services/MockServices/MockLoginService';
+import handleRegister from './services/register';
 
 
 import config from './config.js';
@@ -43,7 +44,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/register',
-        element: <Register registerService = {MockLoginService.register}/>,
+        element: <Register registerService = {handleRegister}/>,
       },
       {
         path: '/reset_password',

@@ -11,7 +11,7 @@ export default function Profile({VendorService}) {
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
-          <img className='w-20' src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="" />
+          <img className='w-20' src={vendor.image} alt="" />
         </div>
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
       </div>
@@ -29,7 +29,6 @@ export default function Profile({VendorService}) {
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
           <div className='flex flex-row justify-between'>
             <h1 className='flex-1'>Violations</h1>
-            <p className='font-bold'>X</p>
           </div>
           <div className='flex flex-col items-center drop-shadow-lg'>
             <Link to='/handbook'><img src={handbook} alt="Policy Handbook" /></Link>
