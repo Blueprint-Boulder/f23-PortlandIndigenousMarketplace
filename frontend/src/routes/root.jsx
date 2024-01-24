@@ -11,8 +11,10 @@ import axios from 'axios';
 
 export default function Root({admin}) {
   // const data = useLoaderData()
-  const {message, setMessage, bad} = useContext(MessageContext);
-  setTimeout(() => setMessage(''), 5000);
+  const {message, setMessage, bad, setBad} = useContext(MessageContext);
+  setTimeout(() => {
+    setMessage(''); setBad(false);
+  }, 5000);
   const location = useLocation();
   console.log(location.pathname);
 

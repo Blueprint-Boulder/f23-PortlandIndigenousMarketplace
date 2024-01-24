@@ -10,13 +10,13 @@ export default function Header({admin}) {
   };
 
   return (
-    <div className="flex justify-end bg-blue ">
-      <div className="max-w-screen-xlflex flex-wrap p-4 ml-auto">
+    <div className="flex bg-blue ">
+      <div className="flex-wrap p-4 ml-auto">
         <div className="flex md:order-2">
           <button
             type="button"
             onClick={toggleMenu}
-            className="inline-flex ml-20 p-2 w-10 h-10 text-sm text-gray-500 rounded-lg  bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            className="inline-flex ml-20 p-2 w-10 h-10 text-sm rounded-lg md:hidden lg:hidden"
           >
             <span className="sr-only">Open main menu</span>
             <svg
@@ -40,17 +40,17 @@ export default function Header({admin}) {
           className={`justify-between w-full md:flex md:w-auto md:order-1 ${menuOpen ? '' : 'hidden'}`}
           id="navbar-user"
         >
-          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <ul className="flex flex-col md:flex-row lg:flex-row font-lg p-2  mt-4   rounded-lg ">
             <li>
-              <Link to='/profile' className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Profile</Link>
+              <Link to='/profile' className="block py-2 pl-3 pr-4  rounded hover:bg-gray-100 ">Profile</Link>
             </li>
             <li>
-              <Link to='/events' className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Events</Link>
+              <Link to='/events' className="block py-2 pl-3 pr-4 text-gray-900 rounded">Events</Link>
             </li>
             <li>
-              <Link to='/login' className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Login</Link>
+              <Link to='/login' className="block py-2 pl-3 pr-4 text-gray-900 rounded ">Login</Link>
             </li>
-            {admin ? <li><Link to='/vendors' className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Vendors</Link></li> : null}
+            {admin ? <li><Link to='/vendors' className="block py-2 pl-3 pr-4 text-gray-900 rounded ">Vendors</Link></li> : null}
           </ul>
         </div>
       </div>
