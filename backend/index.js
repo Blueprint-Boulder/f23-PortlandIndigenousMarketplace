@@ -26,8 +26,10 @@ app.use(cookieParser());
 
 // Import router objects and direct the app to use them
 const VendorRouter = require('./routes/VendorRouter');
+const EventRouter = require('./routes/EventRouter');
 
 app.use('/vendors', VendorRouter);
+app.use('/events', EventRouter);
 
 app.get('/', (req, res) => {
   res.status(202).send('Hello World!');
