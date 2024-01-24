@@ -13,7 +13,7 @@ import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
-import MockLoginService from './services/MockServices/MockLoginService';
+// import MockLoginService from './services/MockServices/MockLoginService';
 import handleRegister from './services/handleRegister.js';
 import {handleLoginVendor} from './services/handleLogin.js';
 
@@ -74,7 +74,6 @@ export default root.render(
       </MessageProvider>
     </React.StrictMode>,
 );
-
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
