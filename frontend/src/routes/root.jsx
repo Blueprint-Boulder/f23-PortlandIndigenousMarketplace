@@ -27,7 +27,7 @@ export default function Root({admin}) {
   }, []);
 
   return (
-    <div className="bg-grey-1 w-screen flex h-screen flex-col justify-between">
+    <div className="bg-grey-1 w-screen flex h-screen flex-col">
       {message && <Alert content = {message} bad ={bad}/>}
       <Header admin={admin}/>
       <Outlet/>
