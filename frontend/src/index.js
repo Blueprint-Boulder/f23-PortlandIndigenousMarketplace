@@ -13,7 +13,7 @@ import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
-import MockLoginService from './services/MockServices/MockLoginService';
+// import MockLoginService from './services/MockServices/MockLoginService';
 import MockEventService from './services/MockServices/MockEventService.js';
 import handleRegister from './services/handleRegister.js';
 import {handleLoginVendor} from './services/handleLogin.js';
