@@ -1,7 +1,8 @@
 import React from 'react';
 import Login from './routes/login';
 import Vendor from './routes/vendor';
-import Events from './routes/events';
+import Event from './routes/event.jsx';
+import Events from './routes/events.jsx';
 import Profile from './routes/profile';
 import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
@@ -24,6 +25,7 @@ import {MessageProvider} from './alert.jsx';
 
 const isadmin = true;
 const session = true;
+
 
 // Setup the mock vendor service
 if (config.environment === 'dev') {
@@ -58,6 +60,10 @@ const router = createBrowserRouter([
         element: session ? <Profile/> : <Navigate to="/login" />,
       },
       {
+        path: '/events/:eventId',
+        element: session ? <Event EventService = {MockEventService} /> : <Navigate to="/login" />,
+      },
+      {
         path: '/events',
         element: session ? <Events EventService={MockEventService}/> : <Navigate to="/login" />,
       },
@@ -80,3 +86,4 @@ export default root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals(console.log);
+

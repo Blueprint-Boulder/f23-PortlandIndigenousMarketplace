@@ -25,7 +25,8 @@ export default class MockEventService {
   }
 
   static getEvent(id) {
-    return this.mockEvents.find((event) => event.event_id === id);
+    const e = this.mockEvents.filter((event) => event.eventId === id);
+    return e.length > 0 ? e[0] : null;
   }
 
   static addEvent(event) {

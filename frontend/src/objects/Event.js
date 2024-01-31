@@ -1,3 +1,6 @@
+/*
+Storage mechanism for a vendor object
+*/
 class Event {
   constructor(eventId, name, location, datetime, description, vendorCapacity, durationHours = 2) {
     this.eventId = eventId;

@@ -18,11 +18,8 @@ module.exports = {
       },
       'black': '#382E2D',
       'white': '#F8F6F6',
-      'red': '#E96B67',
-      'green': '#49C9B9',
     },
     extend: {},
   },
   plugins: [],
 };
-
