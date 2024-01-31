@@ -13,6 +13,7 @@ import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
+import MockEventService from './services/MockServices/MockEventService.js';
 // import MockLoginService from './services/MockServices/MockLoginService';
 import MockEventService from './services/MockServices/MockEventService.js';
 import handleRegister from './services/handleRegister.js';
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: '/events/:eventId',
         element: session ? <Event EventService = {MockEventService} /> : <Navigate to="/login" />,
+      },
+      {
+        path: '/events',
+        element: session ? <Events EventService={MockEventService}/> : <Navigate to="/login" />,
       },
       {
         path: '/vendors',
