@@ -1,6 +1,7 @@
 // successResponse.js
 function sendSuccessResponse(req, res) {
   if (res.locals.data) {
+    // console.log('Data in res.locals', res.locals.data);
     res.status(200).json(res.locals.data);
   } else {
     // Fallback if no data is set in res.locals, but middleware is called

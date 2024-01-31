@@ -28,6 +28,7 @@ app.use(cookieParser());
 const VendorRouter = require('./routes/VendorRouter');
 const AdminRouter = require('./routes/AdminRouter');
 const EventRouter = require('./routes/EventRouter');
+const AdminRouter = require('./routes/AdminRouter');
 
 app.use('/vendors', VendorRouter);
 app.use('/events', EventRouter);

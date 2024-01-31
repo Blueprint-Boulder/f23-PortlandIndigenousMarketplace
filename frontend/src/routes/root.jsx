@@ -11,8 +11,10 @@ import axios from 'axios';
 
 export default function Root({admin}) {
   // const data = useLoaderData()
-  const {message, setMessage, bad} = useContext(MessageContext);
-  setTimeout(() => setMessage(''), 5000);
+  const {message, setMessage, bad, setBad} = useContext(MessageContext);
+  setTimeout(() => {
+    setMessage(''); setBad(false);
+  }, 5000);
   const location = useLocation();
   console.log(location.pathname);
 
@@ -25,7 +27,7 @@ export default function Root({admin}) {
   }, []);
 
   return (
-    <div className="bg-grey-1 w-screen flex h-screen flex-col justify-between">
+    <div className="bg-grey-1 w-screen flex min-h-screen flex-col">
       {message && <Alert content = {message} bad ={bad}/>}
       <Header admin={admin}/>
       <Outlet/>

@@ -16,19 +16,20 @@ export default function Login({loginService, admin}) {
 
   async function handleLogin() {
     const data = {username: user, password: pass};
-    if (loginService(data)) {
+    if (await loginService(data)) {
+      setBad(false);
       setMessage('Logged in succesfully');
             admin ? navigate('/events') : navigate('/vendor');
             console.log('Logged in!');
     } else {
-      setMessage('Failed to login');
       setBad(true);
+      setMessage('Failed to login');
     }
     // axios.post("/login", data).then(() => redirect('/events')).catch(err => setMessage('There was an error: ' + err), setErr(true))
   }
 
   return (
-    <div className="content-centerh-[80vh] overflow-scroll">
+    <div className="content-center my-auto overflow-scroll">
 
       <div className="flex flex-col m-auto w-max px-4 text-center justify-start ">
 
@@ -40,14 +41,14 @@ export default function Login({loginService, admin}) {
 
         <div className="m-2">
           <input
-            className="rounded-lg w-3/4"
+            className="p-1 rounded-lg w-3/4 drop-shadow-md"
             placeholder="Username"
             onChange={(e) => setUser(e.target.value)}>
           </input>
         </div>
         <div className="m-2">
           <input
-            className="rounded-lg w-3/4"
+            className="p-1 rounded-lg w-3/4 drop-shadow-md"
             placeholder="Password" type="password"
             onChange={(e) => setPass(e.target.value)}>
           </input>
@@ -55,17 +56,17 @@ export default function Login({loginService, admin}) {
 
         <div className="m-2 ">
           <button
-            className="bg-blue-300 w-3/4 rounded click:bg-blue-600"
+            className="p-1 bg-blue w-3/4 rounded click:bg-black drop-shadow-md"
             onClick={() => handleLogin()}>
                 Submit
           </button>
         </div>
 
-        <div className="m-2 text-blue-400 underline">
+        <div className="m-2 text-blue underline">
           <Link to='/reset_password'>Forgot Password?</Link>
         </div>
 
-        <div className="m-2 text-blue-400 underline">
+        <div className="m-2 text-blue underline">
           <Link to='/register'>Don&apos;t have an account? Register</Link>
         </div>
       </div>

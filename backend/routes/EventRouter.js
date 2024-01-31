@@ -7,6 +7,7 @@ const {
   updateEvent,
 } = require('../controllers/EventController');
 const sendSuccessResponse = require('../middleware/successResponse');
+const {verify} = require('../controllers/AuthController');
 
 // Get all events
 router.get('/', getAllEvents, sendSuccessResponse);
@@ -15,9 +16,9 @@ router.get('/', getAllEvents, sendSuccessResponse);
 router.get('/:event_id', getEventById, sendSuccessResponse);
 
 // Create a new event
-router.post('/', createEvent, sendSuccessResponse);
+router.post('/', verify('admin'), createEvent, sendSuccessResponse);
 
 // Update an existing event
-router.put('/:event_id', updateEvent, sendSuccessResponse);
+router.put('/:event_id', verify('admin'), updateEvent, sendSuccessResponse);
 
 module.exports = router;
