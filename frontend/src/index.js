@@ -14,6 +14,8 @@ import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
+import MockLoginService from './services/MockServices/MockLoginService';
+import handleRegister from './services/register';
 import MockEventService from './services/MockServices/MockEventService.js';
 // import MockLoginService from './services/MockServices/MockLoginService';
 import handleRegister from './services/handleRegister.js';
@@ -41,7 +43,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/vendors/:vendorId',
-        element: session? <Vendor vendorService={MockVendorService}/> : <Navigate to="/login" />,
+        element: session? <Vendor VendorService={MockVendorService}/> : <Navigate to="/login" />,
       },
       {
         path: '/login',
@@ -57,7 +59,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: session ? <Profile/> : <Navigate to="/login" />,
+        element: session ? <Profile VendorService={MockVendorService}/> : <Navigate to="/login" />,
       },
       {
         path: '/events/:eventId',
