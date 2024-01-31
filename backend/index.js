@@ -26,6 +26,7 @@ app.use(cookieParser());
 
 // Import router objects and direct the app to use them
 const VendorRouter = require('./routes/VendorRouter');
+const AdminRouter = require('./routes/AdminRouter');
 const EventRouter = require('./routes/EventRouter');
 const AdminRouter = require('./routes/AdminRouter');
 
