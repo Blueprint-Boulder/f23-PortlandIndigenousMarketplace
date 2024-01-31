@@ -13,6 +13,7 @@ import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
+import MockEventService from './services/MockServices/MockEventService.js';
 // import MockLoginService from './services/MockServices/MockLoginService';
 import handleRegister from './services/handleRegister.js';
 import {handleLoginVendor} from './services/handleLogin.js';
@@ -27,6 +28,7 @@ const session = true;
 // Setup the mock vendor service
 if (config.environment === 'dev') {
   MockVendorService.init();
+  MockEventService.init();
 }
 
 const router = createBrowserRouter([
@@ -57,7 +59,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/events',
-        element: session ? <Events/> : <Navigate to="/login" />,
+        element: session ? <Events EventService={MockEventService}/> : <Navigate to="/login" />,
       },
       {
         path: '/vendors',
