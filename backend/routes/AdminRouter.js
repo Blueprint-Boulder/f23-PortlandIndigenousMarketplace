@@ -23,19 +23,19 @@ const {
 
 const sendSuccessResponse = require('../middleware/successResponse');
 
-router.get('/events/requests/:eventId', getEventRequests, sendSuccessResponse);
+router.get('/events/requests/:eventId', verify('admin'), getEventRequests, sendSuccessResponse);
 
-router.get('/events/requests', getAllEventRequests, sendSuccessResponse);
+router.get('/events/requests', verify('admin'), getAllEventRequests, sendSuccessResponse);
 
-router.get('/violations/:vendorId', getViolations, sendSuccessResponse);
+router.get('/violations/:vendorId', verify('admin'), getViolations, sendSuccessResponse);
 
-router.get('/violations', getAllViolations, sendSuccessResponse);
+router.get('/violations', verify('admin'), getAllViolations, sendSuccessResponse);
 
-router.put('events/requests/:requestId', processEventRequest, sendSuccessResponse);
+router.put('events/requests/:requestId', verify('admin'), processEventRequest, sendSuccessResponse);
 
-router.post('/violations/:vendorId', createVendorViolation, sendSuccessResponse);
+router.post('/violations/:vendorId', verify('admin'), createVendorViolation, sendSuccessResponse);
 
-router.delete('/violations/:violationId', deleteVendorViolation, sendSuccessResponse);
+router.delete('/violations/:violationId', verify('admin'), deleteVendorViolation, sendSuccessResponse);
 
 router.post('/login', getAdminByEmail, signAdminToken, (req, res) => {
   res.status(200).json({status: 'success'});
