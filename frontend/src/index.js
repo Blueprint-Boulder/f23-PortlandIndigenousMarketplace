@@ -18,7 +18,6 @@ import MockLoginService from './services/MockServices/MockLoginService';
 import handleRegister from './services/register';
 import MockEventService from './services/MockServices/MockEventService.js';
 // import MockLoginService from './services/MockServices/MockLoginService';
-import handleRegister from './services/handleRegister.js';
 import {handleLoginVendor} from './services/handleLogin.js';
 
 
