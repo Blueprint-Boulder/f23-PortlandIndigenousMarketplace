@@ -58,7 +58,7 @@ const verifyAdminToken = async (req, res, next) => {
 
 // Returns a middleware to verify the user has the correct permissions.
 // Setting a route that only admins can access.
-// USAGE: router.get('/route', verify('admin'), controller);
+// USAGE: router.get('/route', verify('admin'), controller.method);
 const verify = (privilege) => {
   if (privilege === 'admin') {
     // Check the admin token
