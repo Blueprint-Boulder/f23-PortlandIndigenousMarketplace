@@ -37,11 +37,14 @@ const getEventById = async (req, res, next) => {
 const createEvent = async (req, res, next) => {
   const {name, location, datetime, description, capacity} = req.body;
   try {
-    await db.none(`
+    const event = await db.one(`
       INSERT INTO Events (name, location, datetime, description, vendor_capacity)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `, [name, location, datetime, description, capacity]);
+
+    // Returns the created event
+    res.locals.data = event;
 
     next();
   } catch (error) {

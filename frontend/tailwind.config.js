@@ -12,6 +12,9 @@ module.exports = {
       'grey': {
         1: '#E8E3E2',
         2: '#C6BAB7',
+        3: '#A49A97',
+        4: '#827A78',
+        5: '#625B59',
       },
       'black': '#382E2D',
       'white': '#F8F6F6',
@@ -20,4 +23,3 @@ module.exports = {
   },
   plugins: [],
 };
-

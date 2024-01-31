@@ -92,7 +92,7 @@ const getVendorById = async (req, res, next) => {
 // Registers the vendor in the database
 const createVendor = async (req, res, next) => {
   // Get the values from the request body
-  const {name, email, phone_number, password, website} = req.body;
+  const {name, email, phoneNumber, password, website} = req.body;
 
   // Checks if the required fields are present
   if (!password || !email || !name) {
@@ -107,7 +107,7 @@ const createVendor = async (req, res, next) => {
     passwordHash = await hash(password, salt);
   } catch (err) {
     console.log(err);
-    res.status(500).json({error: err});
+    res.status(495).json({error: err});
     return;
   }
 
@@ -121,7 +121,7 @@ const createVendor = async (req, res, next) => {
                 password, \
                 website\
             ) VALUES ($1, $2, $3, $4, $5)',
-        [name, email, phone_number, passwordHash, website],
+        [name, email, phoneNumber, passwordHash, website],
     );
   } catch (err) {
     // Duplicate emails are not allowed
