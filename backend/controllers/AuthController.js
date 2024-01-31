@@ -1,11 +1,17 @@
 const jwt = require('jsonwebtoken');
 
+const db = require('../database');
+
 // TODO: Set cookies to secure when https is ready?
 
 // This middleware will be used to sign the token after a vendor logs in
 const signToken = async (req, res, next) => {
+  if (res.locals.vendor === undefined) {
+    return res.status(401).json({message: 'Unauthorized'});
+  }
+
   // Sign the token with JWT_SECRET
-  const token = jwt.sign(res.locals.vendor, process.env.JWT_SECRET);
+  const token = await jwt.sign(res.locals.vendor, process.env.JWT_SECRET);
   // Return the token in a cookie
   res.cookie('auth', token, {httpOnly: true, secure: false});
 
@@ -22,17 +28,33 @@ const verifyToken = async (req, res, next) => {
     if (err) {
       res.status(401).json({message: 'Unauthorized'});
     } else {
-      // Add the decoded object to res.locals
-      res.locals.vendor = decoded;
-      next();
+      // Update cookie data from database
+      db.oneOrNone('SELECT * FROM vendors WHERE vendor_id = $1', [decoded.vendor_id], (result, err) => {
+        if (err) {
+          res.status(500).json({message: 'Internal Server Error'});
+        } else if (result === null) {
+          res.status(401).json({message: 'Unauthorized'});
+        }
+
+        res.locals.vendor = result;
+        // Remove the password - isn't needed for any other processes.
+        delete res.locals.vendor['password'];
+
+        // Sign new token and continue
+        signToken(req, res, next);
+      });
     }
   });
 };
 
 // This middleware will be used to sign the token after an admin logs in
 const signAdminToken = async (req, res, next) => {
+  if (res.locals.admin === undefined) {
+    return res.status(401).json({message: 'Unauthorized'});
+  }
+
   // Sign the token with JWT_SECRET
-  const token = jwt.sign(res.locals.admin, process.env.JWT_SECRET);
+  const token = await jwt.sign(res.locals.admin, process.env.JWT_SECRET);
 
   // Return the token in a cookie
   res.cookie('auth_pim', token, {httpOnly: true, secure: false});
@@ -49,9 +71,23 @@ const verifyAdminToken = async (req, res, next) => {
     if (err) {
       return res.status(401).json({message: 'Unauthorized'});
     } else {
-      // Add the decoded object to res.locals
-      res.locals.admin = decoded;
-      next();
+      // Keep the cookie up to date with the database
+      db.oneOrNone('SELECT * FROM admins WHERE admin_id = $1', [decoded.admin_id], (result, err) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({message: 'Internal Server Error'});
+        } else if (result === undefined) {
+          return res.status(401).json({message: 'Unauthorized'});
+        }
+
+        console.log(result);
+
+        res.locals.admin = result;
+        delete res.locals.admin['password'];
+
+        // Sign new token and continue
+        signAdminToken(req, res, next);
+      });
     }
   });
 };
