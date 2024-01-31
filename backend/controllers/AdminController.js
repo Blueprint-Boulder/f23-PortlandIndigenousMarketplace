@@ -1,9 +1,8 @@
 const express = require('express');
-// const pgp = require('pg-promise')();
 const db = require('../database');
 
-// const {hash, genSalt} = require('bcryptjs');
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
+const {hash, genSalt} = require('bcryptjs');
 
 // Middleware given an email in the body, retireves the given admin
 // account or returns an error
@@ -27,16 +26,38 @@ const getAdminByEmail = async (req, res, next) => {
 };
 
 // Middleware to create a new admin account.
-// If used, should be an admin route. i.e. allow Lluvia 
+// If used, should be an admin route. i.e. allow Lluvia
 // to create a new admin account if wanted.
-const createAdmin = (name, email, password) => {
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt);
+const createAdmin = async (name, email, password) => {
+  const salt = await genSalt(10);
+  const hashed = await hash(password, salt);
 
-  return db.one(
+  return await db.one(
       'INSERT INTO Admins (name, email, password) VALUES ($1, $2, $3) RETURNING *',
-      [name, email, hash],
+      [name, email, hashed],
   );
 };
 
-module.exports = {getAdminByEmail, createAdmin};
+const createAdminMiddleware = async (req, res, next) => {
+  try {
+    const {name, email, password} = req.body;
+
+    if (name === undefined || email === undefined || password === undefined) {
+      console.log(req.body);
+      res.status(400).json({error: 'Missing required fields'});
+      return;
+    }
+
+    const data = await createAdmin(name, email, password);
+
+    res.locals.data = data;
+
+    next();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({error: 'Internal Server Error'});
+    return;
+  }
+};
+
+module.exports = {getAdminByEmail, createAdminMiddleware};

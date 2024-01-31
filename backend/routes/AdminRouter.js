@@ -3,7 +3,7 @@ const {
   signAdminToken,
   verify,
 } = require('../controllers/AuthController');
-const {getAdminByEmail} = require('../controllers/AdminController');
+const {getAdminByEmail, createAdminMiddleware} = require('../controllers/AdminController');
 
 // Import express
 const express = require('express');
@@ -16,8 +16,8 @@ router.post('/login', getAdminByEmail, signAdminToken, (req, res) => {
 });
 
 // UNFINISHED: Create an admin account
-// router.post('/', verify('admin'), signAdminToken, (req, res) => {
-//     res.status(200).json({status: 'success'});
+// router.post('/', createAdminMiddleware, (req, res) => {
+//   res.status(200).json({status: 'success', admin: res.locals.data});
 // });
 
 module.exports = router;
