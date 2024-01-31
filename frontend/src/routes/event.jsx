@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
@@ -20,7 +20,14 @@ export default function Event({EventService}) {
   // wondering if I could use object destructuring here
   // e.g const [location, setLocation] = useState({getEvent})
   // b/c getEvent realistically has a prop location
-  const {title, location, date, time, info} = EventService.getEventById(parseInt(eventId));
+  const e = EventService.getEvent(parseInt(eventId));
+  console.log(EventService.getEvent(0));
+  if (e === undefined) {
+    useEffect(()=>{
+      navigate('/events');
+    });
+  }
+  const {name, location, date, startTime, endTime, description, vendorCapacity} = e !== undefined ? e : {name: 'Loading...', location: 'Loading...', date: 'Loading...', startTime: 'Loading...', endTime: 'Loading...', description: 'Loading...', vendorCapacity: 'Loading...'};
   // const vendorList = RegisterEventService[id].getVendors();
   const vendorImages = [logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo];
 
@@ -36,16 +43,16 @@ export default function Event({EventService}) {
     <div id="Event-content" className='overflow-scroll w-full h-full flex flex-col items-center mt-2'>
       <button alt='back-arrow' className='self-start ml-2 fixed ' onClick={() => navigate(-1)}><FontAwesomeIcon icon={faAnglesLeft}/></button>
       <img src={bLogo} className='w-2/3 py-0 bg-clip-padding bg-white drop-shadow-xl rounded-xl'/>
-      <div className="text-2xl mt-2 font-bold tracking-wide">{title}</div>
+      <div className="text-2xl mt-2 font-bold tracking-wide">{name}</div>
       <div className='flex flex-row mt-2'>
         <div className="mr-2">About</div>
         <button onClick={() => setAbout(!about)}><FontAwesomeIcon icon={faCaretDown}/></button>
       </div>
       <div className={`${about ? 'relative text-gray-800 m-1 bg-opacity-100 bg-white drop-shadow-xl rounded-md p-2 w-2/3' : 'hidden'}`}>
-        {info}
+        {description}
       </div>
       <div className='mr-1 mt-2'>{location}</div>
-      <div className='mr-2 mt-2'>{date} | {time}</div>
+      <div className='mr-2 mt-2'>{date} | {startTime}</div>
       <button
         className="mt-3 text-gray-800 font-semibold py-2 px-1 drop-shadow-xl rounded-md bg-white w-24 click:text-white"
         onClick={() => handleRegister()}

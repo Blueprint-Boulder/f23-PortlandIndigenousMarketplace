@@ -2,6 +2,7 @@ import React from 'react';
 import Login from './routes/login';
 import Vendor from './routes/vendor';
 import Event from './routes/event.jsx';
+import Events from './routes/events.jsx';
 import Profile from './routes/profile';
 import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
@@ -15,7 +16,6 @@ import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
 import MockEventService from './services/MockServices/MockEventService.js';
 // import MockLoginService from './services/MockServices/MockLoginService';
-import MockEventService from './services/MockServices/MockEventService.js';
 import handleRegister from './services/handleRegister.js';
 import {handleLoginVendor} from './services/handleLogin.js';
 
