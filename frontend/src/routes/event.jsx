@@ -1,10 +1,10 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
 import {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
+import {faCaretDown, faLeftRight} from '@fortawesome/free-solid-svg-icons';
 import {faAnglesLeft} from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
@@ -14,12 +14,13 @@ export default function Event({EventService}) {
   const [about, setAbout] = useState(false);
   const [vendorOpen, setVendorOpen] = useState(false);
   const navigate = useNavigate();
+  const {eventId} = useParams();
 
   // const [register, setRegistered] = useState(false);
   // wondering if I could use object destructuring here
   // e.g const [location, setLocation] = useState({getEvent})
   // b/c getEvent realistically has a prop location
-  const {title, location, date, time, info} = EventService.getEventById(1);
+  const {title, location, date, time, info} = EventService.getEventById(parseInt(eventId));
   // const vendorList = RegisterEventService[id].getVendors();
   const vendorImages = [logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo];
 

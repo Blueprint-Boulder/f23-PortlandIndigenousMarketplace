@@ -59,9 +59,8 @@ const router = createBrowserRouter([
         element: session ? <Profile/> : <Navigate to="/login" />,
       },
       {
-        path: '/events', // /:event add this and then use params to get the id information
+        path: '/events/:eventId',
         element: session ? <Event EventService = {MockEventService} /> : <Navigate to="/login" />,
-        // () => ({title: 'Boulder Event', location: 'Boulder,CO', date: '12/4/2023', time: '6:30', info: 'Lorem Ipsum'})
       },
       {
         path: '/vendors',
