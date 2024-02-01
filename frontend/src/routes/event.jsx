@@ -4,7 +4,7 @@ import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
 import {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCaretDown, faLeftRight} from '@fortawesome/free-solid-svg-icons';
+import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
 import {faAnglesLeft} from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 

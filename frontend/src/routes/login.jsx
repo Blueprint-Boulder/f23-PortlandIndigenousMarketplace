@@ -15,7 +15,7 @@ export default function Login({loginService, admin}) {
 
 
   async function handleLogin() {
-    const data = {username: user, password: pass};
+    const data = {email: user, password: pass};
     if (await loginService(data)) {
       setBad(false);
       setMessage('Logged in succesfully');

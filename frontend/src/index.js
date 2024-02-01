@@ -8,14 +8,13 @@ import Root from './routes/root';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import Vendors from './routes/vendors.jsx';
+import ErrorPage from './components/error.jsx';
 import './App.css';
 import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
 // import axios from 'axios';
 import Register from './routes/register';
 import ResetPassword from './routes/reset_password';
 import MockVendorService from './services/MockServices/MockVendorService.js';
-import MockLoginService from './services/MockServices/MockLoginService';
-import handleRegister from './services/register';
 import MockEventService from './services/MockServices/MockEventService.js';
 // import MockLoginService from './services/MockServices/MockLoginService';
 import handleRegister from './services/handleRegister.js';
@@ -73,6 +72,7 @@ const router = createBrowserRouter([
         path: '/vendors',
         element: session && isadmin? <Vendors VendorService={MockVendorService}/>: <Navigate to="/login" />,
       }],
+    errorElement: <ErrorPage admin = {isadmin} />,
   },
 ]);
 
