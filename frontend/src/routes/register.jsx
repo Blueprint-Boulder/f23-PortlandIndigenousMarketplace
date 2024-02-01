@@ -4,7 +4,7 @@ import {useState} from 'react';
 // import { redirect} from "react-router"
 import logo from './../assets/PIM_logo_black.png';
 import {Link, useNavigate} from 'react-router-dom';
-import {MessageContext, Alert} from '../alert';
+import {MessageContext, Alert} from '../context';
 import {useContext} from 'react';
 import PropTypes from 'prop-types';
 

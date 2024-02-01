@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import logo from './../assets/PIM_logo_black.png';
 import {Link, useNavigate} from 'react-router-dom';
 import {useContext} from 'react';
-import {MessageContext} from '../alert';
+import {MessageContext} from '../context';
 import PropTypes from 'prop-types';
 
 

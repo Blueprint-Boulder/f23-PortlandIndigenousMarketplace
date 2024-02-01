@@ -22,7 +22,7 @@ import {handleRegister} from './services/handleRegister.js';
 
 
 import config from './config.js';
-import {MessageProvider} from './alert.jsx';
+import {MessageProvider} from './context.jsx';
 
 const isadmin = true;
 const session = true;

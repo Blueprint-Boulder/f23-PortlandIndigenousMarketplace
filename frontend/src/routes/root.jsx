@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'; // Add the missing import
 import {Outlet, useLocation} from 'react-router-dom';
 import Footer from '../components/footer.jsx';
 import Header from '../components/headervendor';
-import {Alert, MessageContext} from '../alert.jsx';
+import {Alert, MessageContext} from '../context.jsx';
 import {useContext} from 'react';
 import axios from 'axios';
 
