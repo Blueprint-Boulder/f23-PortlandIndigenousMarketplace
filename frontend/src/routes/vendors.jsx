@@ -1,6 +1,7 @@
 import React from 'react';
 import {useState} from 'react';
 import PropTypes from 'prop-types';
+import {messageModal} from '../components/messagemodal.jsx';
 // import {Link} from 'react-router-dom';
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 // import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
@@ -16,6 +17,10 @@ export default function Vendors({VendorService}) {
 
   const handleSearch = (vendor) => {
     vendor ? setVendors(VendorService.getVendorByName(vendor)) : setVendors(VendorService.getVendors());
+  };
+
+  const handleMessage = () => {
+    messageModal();
   };
 
   const vendorDisplay = (vendor) => (

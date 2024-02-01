@@ -1,22 +1,30 @@
-import React, {useState} from 'react';
-// import PropTypes from 'prop-types';
+import {React, useState} from 'react';
 
-export default function Message() {
-  const [modal, setModal] = useState(false);
-  const toggleModal = () => {
-    setModal(!modal);
+export default function messageModal() {
+  const [showModal, setShowModal] = useState(false);
+
+  const setShowModalHandler = () => {
+    setShowModal(true);
   };
+
+  const setShowModalHandlerClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <>
-      <button onClick={toggleModal}>Send Message</button>
-      <div className="modal">
-        <div onClick={toggleModal} className="w-screen h-screen fixed inset-0"></div>
-        <div className="modal-content">
-          <h2>Hello Modal</h2>
-          <p>lorem ipsum</p>
-          <button className="close-modal" onClick={toggeModal}>Close</button>
+      showModal && (
+        <div className="bg-white w-50 h-50">
+          <form method="post" action="...">
+            <label for="message">
+              <textarea id="message" name="message" placeholder="Enter Message Here ..."></textarea>
+              Send A Message
+            </label>
+            <button onClick={() => setShowModalHandlerClose()}>Cancel</button>
+            <input type="submit" value="Send"></input>
+          </form>
         </div>
-      </div>
+      )
     </>
   );
 }
