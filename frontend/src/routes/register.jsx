@@ -18,9 +18,11 @@ export default function Register({registerService}) {
   const [website, setWebsite] = useState();
   const {setMessage, setBad} = useContext(MessageContext);
   const navigate = useNavigate();
+
   async function handleRegister() {
-    const data = {name: name, email: email, password: pass, website, phoneNumber: phone};
-    if (registerService(data)) {
+    const data = {name: name, email: email, password: pass, website: website, phoneNumber: phone};
+
+    if (await registerService(data)) {
       setBad(false);
       setMessage('Registered succesfully');
       console.log('Registered!');
@@ -29,7 +31,7 @@ export default function Register({registerService}) {
       setBad(true);
       setMessage('Failed to register');
     }
-  }
+  };
 
   return (
     <div className="content-center my-auto overflow-scroll">
