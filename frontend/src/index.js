@@ -19,6 +19,7 @@ import MockEventService from './services/MockServices/MockEventService.js';
 // import MockLoginService from './services/MockServices/MockLoginService';
 import {handleLoginVendor} from './services/handleLogin.js';
 import {handleRegister} from './services/handleRegister.js';
+import EventsService from './services/Events/EventsService.js';
 
 
 import config from './config.js';
@@ -26,6 +27,12 @@ import {MessageProvider} from './context.jsx';
 
 const isadmin = true;
 const session = true;
+
+// base url for the backend
+const baseUrl = 'http://localhost:3001';
+
+// Initilize Services
+const eventsService = new EventsService(baseUrl);
 
 
 // Setup the mock vendor service
@@ -62,11 +69,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/events/:eventId',
-        element: session ? <Event EventService = {MockEventService} /> : <Navigate to="/login" />,
+        element: session ? <Event eventsService={eventsService} /> : <Navigate to="/login" />,
       },
       {
         path: '/events',
-        element: session ? <Events EventService={MockEventService}/> : <Navigate to="/login" />,
+        element: session ? <Events eventsService={eventsService}/> : <Navigate to="/login" />,
       },
       {
         path: '/vendors',

@@ -1,6 +1,6 @@
 import axios from 'axios';
 // function that returns a boolean, true if the registration was successful, false otherwise.
-export default async function handleRegister(data) {
+export async function handleRegister(data) {
   const server = axios.create({
     baseURL: 'http://localhost:3001',
     withCredentials: false,
