@@ -25,7 +25,6 @@ export default function Login({loginService, admin}) {
       setBad(true);
       setMessage('Failed to login');
     }
-    // axios.post("/login", data).then(() => redirect('/events')).catch(err => setMessage('There was an error: ' + err), setErr(true))
   }
 
   return (

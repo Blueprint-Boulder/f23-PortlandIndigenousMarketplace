@@ -11,16 +11,13 @@ import Vendors from './routes/vendors.jsx';
 import ErrorPage from './components/error.jsx';
 import './App.css';
 import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
-// import axios from 'axios';
 import Register from './routes/register';
-import ResetPassword from './routes/reset_password';
-import MockVendorService from './services/MockServices/MockVendorService.js';
 import MockEventService from './services/MockServices/MockEventService.js';
-// import MockLoginService from './services/MockServices/MockLoginService';
+import MockVendorService from './services/MockServices/MockVendorService.js';
+import ResetPassword from './routes/reset_password';
 import {handleLoginVendor} from './services/handleLogin.js';
 import {handleRegister} from './services/handleRegister.js';
 import EventsService from './services/Events/EventsService.js';
-
 
 import config from './config.js';
 import {MessageProvider} from './context.jsx';
