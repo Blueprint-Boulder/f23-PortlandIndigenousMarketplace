@@ -20,7 +20,7 @@ export default class MockEventService {
     }
   }
 
-  static getEvents() {
+  static getAllEvents() {
     return this.mockEvents;
   }
 
