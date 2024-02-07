@@ -1,13 +1,32 @@
 import React from 'react';
 
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
-export default function Events({EventService}) {
-  const [events] = useState(EventService.getEvents());
+export default function Events({eventsService}) {
+  const [events, setEvents] = useState([]);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const fetchedEvents = await eventsService.getAllEvents();
+        if (fetchedEvents.length === 0) {
+          setError('There are currently no events.');
+        } else {
+          setEvents(fetchedEvents);
+          setError(''); // Reset error state if events are fetched successfully
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        setError('Failed to fetch events.'); // Handle any other errors during fetch
+      }
+    };
+
+    fetchEvents();
+  }, [eventsService]);
 
   const eventDisplay = (event) => (
-    // event name, date, starttime, endtime, description, location in a single row
     <div className="bg-white shadow-lg rounded-lg p-4 max-w-sm mx-auto bm-4">
       <div className="mt-2">
         <div className="text-lg font-semibold text-gray-900">{event.name}</div>
@@ -22,6 +41,14 @@ export default function Events({EventService}) {
       </div>
     </div>
   );
+
+  if (error) {
+    return (
+      <div className='w-full mx-auto flex flex-col justify-center pb-16'>
+        <h1 className='color-white text-2xl text-center my-3 font-semibold'>No Events Found</h1>
+      </div>
+    );
+  }
 
   return (
     // display in a single column
@@ -39,5 +66,7 @@ export default function Events({EventService}) {
 }
 
 Events.propTypes = {
-  EventService: PropTypes.func.isRequired,
+  eventsService: PropTypes.shape({
+    getAllEvents: PropTypes.func.isRequired,
+  }).isRequired,
 };
