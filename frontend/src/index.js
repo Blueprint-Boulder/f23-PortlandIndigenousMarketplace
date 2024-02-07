@@ -25,20 +25,17 @@ import { MessageProvider } from './context.jsx';
 const isadmin = true;
 const session = true;
 
-// Load environment from config
-const environment = config.environment;
-
 let eventService;
 let vendorService;
 
 // Setup the mock vendor service
-if (config.environment === 'dev') {
+if (config.environment == 'dev') {
   MockVendorService.init();
   MockEventService.init();
 
   eventService = MockEventService;
   vendorService = MockVendorService;
-} else if (config.environment === 'prod') {
+} else if (config.environment == 'prod') {
   // Load base url for the backend
   const baseUrl = config.baseUrl;
 
