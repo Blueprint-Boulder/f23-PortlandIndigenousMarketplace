@@ -3,24 +3,24 @@ import React, {useState} from 'react';
 import logo from './../assets/PIM_logo_black.png';
 import {Link, useNavigate} from 'react-router-dom';
 import {useContext} from 'react';
-import {MessageContext} from '../context';
+import {Context} from '../services/context';
 import PropTypes from 'prop-types';
 
 
-export default function Login({loginService, admin}) {
-  const [user, setUser] = useState('');
+export default function Login({loginService}) {
+  const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const navigate = useNavigate();
-  const {setMessage, setBad} = useContext(MessageContext);
-
+  const {setMessage, setBad, setUser} = useContext(Context);
 
   async function handleLogin() {
-    const data = {email: user, password: pass};
+    const data = {email: email, password: pass};
     if (await loginService(data)) {
       setBad(false);
+      setUser();
       setMessage('Logged in succesfully');
-            admin ? navigate('/events') : navigate('/vendor');
-            console.log('Logged in!');
+      navigate('/events');
+      console.log('Logged in!');
     } else {
       setBad(true);
       setMessage('Failed to login');
@@ -42,7 +42,7 @@ export default function Login({loginService, admin}) {
           <input
             className="p-1 rounded-lg w-3/4 drop-shadow-md"
             placeholder="Username"
-            onChange={(e) => setUser(e.target.value)}>
+            onChange={(e) => setEmail(e.target.value)}>
           </input>
         </div>
         <div className="m-2">
@@ -76,5 +76,4 @@ export default function Login({loginService, admin}) {
 
 Login.propTypes = {
   loginService: PropTypes.func.isRequired,
-  admin: PropTypes.bool.isRequired,
 };

@@ -16,6 +16,14 @@ export default function Event({EventService}) {
   const navigate = useNavigate();
   const {eventId} = useParams();
 
+  useEffect(() => {
+    if (!user) {
+      setMessage('Please log in');
+      setBad(true);
+      navigate('/');
+    }
+  }, [navigate, user]);
+
   // const [register, setRegistered] = useState(false);
   // wondering if I could use object destructuring here
   // e.g const [location, setLocation] = useState({getEvent})
@@ -27,7 +35,8 @@ export default function Event({EventService}) {
       navigate('/events');
     });
   }
-  const {name, location, date, startTime, endTime, description, vendorCapacity} = e !== undefined ? e : {name: 'Loading...', location: 'Loading...', date: 'Loading...', startTime: 'Loading...', endTime: 'Loading...', description: 'Loading...', vendorCapacity: 'Loading...'};
+  // removed vendorCapacity from here to fix eslint errorx
+  const {name, location, date, startTime, endTime, description} = e !== undefined ? e : {name: 'Loading...', location: 'Loading...', date: 'Loading...', startTime: 'Loading...', endTime: 'Loading...', description: 'Loading...', vendorCapacity: 'Loading...'};
   // const vendorList = RegisterEventService[id].getVendors();
   const vendorImages = [logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo];
 
@@ -52,7 +61,7 @@ export default function Event({EventService}) {
         {description}
       </div>
       <div className='mr-1 mt-2'>{location}</div>
-      <div className='mr-2 mt-2'>{date} | {startTime}</div>
+      <div className='mr-2 mt-2'>{date} | {startTime} | {endTime}</div> {/* added end time here*/}
       <button
         className="mt-3 text-gray-800 font-semibold py-2 px-1 drop-shadow-xl rounded-md bg-white w-24 click:text-white"
         onClick={() => handleRegister()}
