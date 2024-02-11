@@ -1,7 +1,7 @@
 import React from 'react';
 import {useState} from 'react';
 import PropTypes from 'prop-types';
-import {messageModal} from '../components/messagemodal.jsx';
+import messageModal from '../components/messagemodal.jsx';
 // import {Link} from 'react-router-dom';
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 // import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
@@ -14,13 +14,14 @@ function VendorButton({content, onClick}) {
 
 export default function Vendors({VendorService}) {
   const [vendors, setVendors] = useState(VendorService.getVendors());
+  const [openModal, setOpenModal] = useState(false);
 
   const handleSearch = (vendor) => {
     vendor ? setVendors(VendorService.getVendorByName(vendor)) : setVendors(VendorService.getVendors());
   };
 
   const handleMessage = () => {
-    messageModal();
+    setOpenModal(true);
   };
 
   const vendorDisplay = (vendor) => (
@@ -44,6 +45,7 @@ export default function Vendors({VendorService}) {
           )) : vendorDisplay(vendors))
         }
       </div>
+      {openModal && <messageModal closeModal={setOpenModal}/>}
     </div>
 
   );
