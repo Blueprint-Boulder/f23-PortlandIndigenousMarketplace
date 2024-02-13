@@ -14,13 +14,15 @@ function VendorButton({content, onClick}) {
 
 export default function Vendors({VendorService}) {
   const [vendors, setVendors] = useState(VendorService.getVendors());
+  const [vendor, setVendor] = useState({});
   const [openModal, setOpenModal] = useState(false);
 
   const handleSearch = (vendor) => {
     vendor ? setVendors(VendorService.getVendorByName(vendor)) : setVendors(VendorService.getVendors());
   };
 
-  const handleMessage = () => {
+  const handleMessage = (vendor) => {
+    setVendor(vendor);
     setOpenModal(true);
   };
 
@@ -29,7 +31,7 @@ export default function Vendors({VendorService}) {
       <img className='w-14 mx-auto my-auto row-span-2 rounded-full bg-white' src={vendor.image} alt='vendor image'/>
       <h2 className='text-black mx-auto my-auto row-span-2 text-black font-bold'>{vendor.name}</h2>
       <VendorButton onClick={() => handleInvite()} content='Invite'/>
-      <VendorButton onClick={() => handleMessage()} content='Message'/>
+      <VendorButton onClick={() => handleMessage(vendor)} content='Message'/>
       <VendorButton onClick={() => handleFlag()} content='Flag'/>
       <VendorButton onClick={() => handlePromote()} content='Promote'/>
     </div>
@@ -45,7 +47,7 @@ export default function Vendors({VendorService}) {
           )) : vendorDisplay(vendors))
         }
       </div>
-      {openModal && <MessageModal closeModal={setOpenModal}/>}
+      {openModal && <MessageModal closeModal={setOpenModal} vendor = {vendor}/>}
     </div>
 
   );
