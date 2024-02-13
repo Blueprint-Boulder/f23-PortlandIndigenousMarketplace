@@ -18,7 +18,6 @@ import ResetPassword from './routes/reset_password.jsx';
 import {handleLoginVendor} from './services/handleLogin.js';
 import {handleRegister} from './services/handleRegister.js';
 import config from './config.js';
-import {Provider} from './services/context.jsx';
 import Logout from './routes/logout.jsx';
 
 
@@ -88,9 +87,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 export default root.render(
     <React.StrictMode>
-      <Provider>
-        <RouterProvider router={router} />
-      </Provider>
+      <RouterProvider router={router} />
     </React.StrictMode>,
 );
 // If you want to start measuring performance in your app, pass a function

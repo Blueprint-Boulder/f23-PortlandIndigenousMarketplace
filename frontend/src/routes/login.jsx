@@ -17,7 +17,7 @@ export default function Login({loginService}) {
     const data = {email: email, password: pass};
     if (await loginService(data)) {
       setBad(false);
-      setUser();
+      setUser({email: email, password: pass, id: 2, isadmin: false}); // dummy user object for develepment
       setMessage('Logged in succesfully');
       navigate('/events');
       console.log('Logged in!');

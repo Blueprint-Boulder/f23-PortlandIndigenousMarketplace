@@ -1,11 +1,11 @@
-import React from 'react';
-import useUser from '../services/useUser';
+import React, {useContext} from 'react';
+import {Context} from '../services/context.jsx';
 import {useNavigate} from 'react-router-dom';
 export default function Logout() {
-  const {destroyUser} = useUser();
+  const {setUser} = useContext(Context);
   const navigate = useNavigate();
   const handleLogout = () => {
-    destroyUser();
+    setUser();
     navigate('/');
   };
   return (
