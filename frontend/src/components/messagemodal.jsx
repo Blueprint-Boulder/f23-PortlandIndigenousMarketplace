@@ -1,6 +1,6 @@
 import React from 'react';
 
-function messageModal({closeModal}) {
+function MessageModal({closeModal}) {
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-white w-50 h-50">
       <form method="post" action="...">
@@ -15,4 +15,4 @@ function messageModal({closeModal}) {
   );
 }
 
-export default messageModal;
+export default MessageModal;

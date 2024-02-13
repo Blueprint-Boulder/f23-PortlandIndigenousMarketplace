@@ -1,14 +1,14 @@
 import React from 'react';
 import {useState} from 'react';
 import PropTypes from 'prop-types';
-import messageModal from '../components/messagemodal.jsx';
+import MessageModal from '../components/messagemodal.jsx'; // changed case of MessageModal, this is convention
 // import {Link} from 'react-router-dom';
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 // import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
 
 function VendorButton({content, onClick}) {
   return (
-    <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={ () => onClick}> {content}</button>
+    <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={onClick}> {content}</button> // changed the way this onclick works, wasnt working before
   );
 }
 
@@ -45,7 +45,7 @@ export default function Vendors({VendorService}) {
           )) : vendorDisplay(vendors))
         }
       </div>
-      {openModal && <messageModal closeModal={setOpenModal}/>}
+      {openModal && <MessageModal closeModal={setOpenModal}/>}
     </div>
 
   );
