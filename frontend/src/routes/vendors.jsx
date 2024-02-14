@@ -1,17 +1,19 @@
-import React, {useEffect} from 'react';
-import {useState} from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import { Context } from '../services/context';
 // import {Link} from 'react-router-dom';
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 // import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
 
-function VendorButton({content, onClick}) {
+function VendorButton({ content, onClick }) {
   return (
-    <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={ () => onClick}> {content}</button>
+    <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={onClick}> {content}</button>
   );
 }
 
-export default function Vendors({VendorService}) {
+export default function Vendors({ VendorService }) {
   const [vendors, setVendors] = useState([]);
   const [error, setError] = useState('');
 
@@ -40,12 +42,12 @@ export default function Vendors({VendorService}) {
 
   const vendorDisplay = (vendor) => (
     <div className="grid grid-cols-2 p-2 my-2 rounded h-max grid-rows-4 bg-white drop-shadow-md">
-      <img className='w-14 mx-auto my-auto row-span-2 rounded-full bg-white' src={vendor.image} alt='vendor image'/>
+      <img className='w-14 mx-auto my-auto row-span-2 rounded-full bg-white' src={vendor.image} alt='vendor image' />
       <h2 className='text-black mx-auto my-auto row-span-2 text-black font-bold'>{vendor.name}</h2>
-      <VendorButton onClick={() => handleInvite()} content='Invite'/>
-      <VendorButton onClick={() => handleMessage()} content='Message'/>
-      <VendorButton onClick={() => handleFlag()} content='Flag'/>
-      <VendorButton onClick={() => handlePromote()} content='Promote'/>
+      <VendorButton onClick={() => setMessage('please write my code')} content='Invite' />
+      <VendorButton onClick={() => setMessage('please write my code')} content='Message' />
+      <VendorButton onClick={() => navigate(`/vendors/:${vendor.id}`)} content='View' />
+      <VendorButton onClick={() => setMessage('please write my code')} content='Promote' />
     </div>
   );
 

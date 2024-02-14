@@ -4,7 +4,8 @@ import {useState} from 'react';
 // import { redirect} from "react-router"
 import logo from './../assets/PIM_logo_black.png';
 import {Link, useNavigate} from 'react-router-dom';
-import {MessageContext, Alert} from '../context';
+import {Context} from '../services/context';
+import Alert from '../components/alert.jsx';
 import {useContext} from 'react';
 import PropTypes from 'prop-types';
 
@@ -16,7 +17,7 @@ export default function Register({registerService}) {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState();
   const [website, setWebsite] = useState();
-  const {setMessage, setBad} = useContext(MessageContext);
+  const {setMessage, setBad} = useContext(Context);
   const navigate = useNavigate();
 
   async function handleRegister() {
