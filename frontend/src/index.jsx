@@ -1,34 +1,31 @@
 import React from 'react';
-import Login from './routes/login';
-import Vendor from './routes/vendor';
+import Login from './routes/login.jsx';
+import Vendor from './routes/vendor.jsx';
 import Event from './routes/event.jsx';
 import Events from './routes/events.jsx';
-import Profile from './routes/profile';
-import Root from './routes/root';
+import Profile from './routes/profile.jsx';
+import Root from './routes/root.jsx';
 import ReactDOM from 'react-dom/client';
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from './reportWebVitals.js';
 import Vendors from './routes/vendors.jsx';
 import ErrorPage from './components/error.jsx';
 import './App.css';
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
-import Register from './routes/register';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Register from './routes/register.jsx';
 import MockEventService from './services/MockServices/MockEventService.js';
 import MockVendorService from './services/MockServices/MockVendorService.js';
-import ResetPassword from './routes/reset_password';
+import ResetPassword from './routes/reset_password.jsx';
 import { handleLoginVendor } from './services/handleLogin.js';
 import { handleRegister } from './services/handleRegister.js';
+import config from './config.js';
+import Logout from './routes/logout.jsx';
 import EventsService from './services/Events/EventsService.js';
 
-import config from './config.js';
-import { MessageProvider } from './context.jsx';
-
-const isadmin = true;
-const session = true;
 
 let eventService;
 let vendorService;
 
-// Setup the mock vendor service
+
 if (config.environment == 'dev') {
   MockVendorService.init();
   MockEventService.init();
@@ -49,16 +46,16 @@ if (config.environment == 'dev') {
 const router = createBrowserRouter([
   {
     path: '/',
-    // loader: loaderfunc(),
-    element: <Root admin={isadmin} />,
+    element: <Root />,
     children: [
       {
         path: '/vendors/:vendorId',
-        element: session ? <Vendor VendorService={vendorService} /> : <Navigate to="/login" />,
+        element: <Vendor VendorService={MockVendorService} />,
       },
       {
         path: '/login',
-        element: <Login loginService={handleLoginVendor} admin={isadmin} />,
+        element: <Login loginService={handleLoginVendor} />,
+
       },
       {
         path: '/register',
@@ -70,34 +67,38 @@ const router = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: session ? <Profile VendorService={vendorService} /> : <Navigate to="/login" />,
+        element: <Profile VendorService={MockVendorService} />,
       },
       {
         path: '/events/:eventId',
-        element: session ? <Event eventsService={eventService} /> : <Navigate to="/login" />,
+        element: <Event EventService={eventService} />,
       },
       {
         path: '/events',
-        element: session ? <Events eventsService={eventService} /> : <Navigate to="/login" />,
+        element: <Events EventService={eventService} />,
       },
       {
         path: '/vendors',
-        element: session && isadmin ? <Vendors VendorService={vendorService} /> : <Navigate to="/login" />,
-      }],
-    errorElement: <ErrorPage admin={isadmin} />,
+        element: <Vendors VendorService={vendorService} />,
+      },
+      {
+        path: '/logout',
+        element: <Logout />,
+      },
+    ],
+    errorElement: <ErrorPage />,
   },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 export default root.render(
   <React.StrictMode>
-    <MessageProvider>
-      <RouterProvider router={router} />
-    </MessageProvider>
+    <RouterProvider router={router} />
   </React.StrictMode>,
 );
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals(console.log);
+
 

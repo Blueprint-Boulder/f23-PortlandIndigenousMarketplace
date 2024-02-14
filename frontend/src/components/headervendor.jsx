@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import PropTypes from 'prop-types';
+import {useContext} from 'react';
+import {Context} from '../services/context.jsx';
 
-export default function Header({admin}) {
+export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const {user} = useContext(Context);
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -42,22 +43,20 @@ export default function Header({admin}) {
         >
           <ul className="flex flex-col md:flex-row lg:flex-row font-lg p-2  mt-4   rounded-lg ">
             <li>
-              <Link to='/profile' className="block py-2 pl-3 pr-4  rounded hover:bg-gray-100 ">Profile</Link>
+              {user &&<Link to={`/vendors/:${user.id}`} className="block py-2 pl-3 pr-4  rounded hover:bg-gray-100 ">Profile</Link>}
             </li>
             <li>
               <Link to='/events' className="block py-2 pl-3 pr-4 text-gray-900 rounded">Events</Link>
             </li>
             <li>
-              <Link to='/login' className="block py-2 pl-3 pr-4 text-gray-900 rounded ">Login</Link>
+              {user ?
+              <Link to = '/logout' className="block py-2 pl-3 pr-4 text-gray-900 rounded ">Logout</Link> :
+              <Link to='/login' className="block py-2 pl-3 pr-4 text-gray-900 rounded ">Login</Link>}
             </li>
-            {admin ? <li><Link to='/vendors' className="block py-2 pl-3 pr-4 text-gray-900 rounded ">Vendors</Link></li> : null}
+            {user && user.isadmin && <li><Link to='/vendors' className="block py-2 pl-3 pr-4 text-gray-900 rounded ">Vendors</Link></li> }
           </ul>
         </div>
       </div>
     </div>
   );
 }
-
-Header.propTypes = {
-  admin: PropTypes.bool.isRequired,
-};

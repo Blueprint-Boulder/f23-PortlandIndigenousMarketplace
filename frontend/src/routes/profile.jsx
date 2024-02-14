@@ -1,15 +1,26 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useState} from 'react';
 import handbook from './../assets/Handbook.png';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Modal from '../components/modal';
 
 export default function Profile({VendorService}) {
+  const navigate = useNavigate();
   // const [vendorId] = useState(useParams().vendorId);
   const [vendor] = useState(VendorService.getVendorById(1));
+  useEffect(() => {
+    if (!user) {
+      setMessage('Please log in');
+      setBad(true);
+      navigate('/');
+    }
+  }, [navigate, user]);
   // Can test using specific id number
   return (
+
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
+      <Modal/>
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
           <img className='w-20' src={vendor.image} alt="" />

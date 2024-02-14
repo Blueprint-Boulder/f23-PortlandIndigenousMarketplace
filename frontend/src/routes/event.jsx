@@ -1,18 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCaretDown, faAnglesLeft} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretDown, faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
 import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
 
-export default function Event({eventsService}) {
+export default function Event({ eventsService }) {
   const [event, setEvent] = useState(null);
   const [about, setAbout] = useState(false);
   const navigate = useNavigate();
-  const {eventId} = useParams();
+  const { eventId } = useParams();
+  const { user } = useContext(Context);
 
   useEffect(() => {
+    if (!user) {
+      setMessage('Please log in');
+      setBad(true);
+      navigate('/');
+    }
     const fetchEvent = async () => {
       const eventData = await eventsService.getEventById(parseInt(eventId));
       if (!eventData) {
@@ -23,13 +29,13 @@ export default function Event({eventsService}) {
     };
 
     fetchEvent();
-  }, [eventId, eventsService, navigate]);
+  }, [eventId, eventsService, navigate, user]);
 
   if (!event) {
     return <div>Event Not Found</div>;
   }
 
-  const {name, location, date, startTime, endTime, description} = event;
+  const { name, location, date, startTime, endTime, description } = event;
   const vendorImages = [logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo];
 
   const toggleVendor = () => {
@@ -49,7 +55,7 @@ export default function Event({eventsService}) {
       <div className="text-2xl mt-2 font-bold tracking-wide">{name}</div>
       <div className='flex flex-row mt-2'>
         <div className="mr-2">About</div>
-        <button onClick={() => setAbout(!about)}><FontAwesomeIcon icon={faCaretDown}/></button>
+        <button onClick={() => setAbout(!about)}><FontAwesomeIcon icon={faCaretDown} /></button>
       </div>
       <div className={`${about ? 'relative text-gray-800 m-1 bg-opacity-100 bg-white drop-shadow-xl rounded-md p-2 w-2/3' : 'hidden'}`}>
         {description}
@@ -60,11 +66,11 @@ export default function Event({eventsService}) {
         className="mt-3 text-gray-800 font-semibold py-2 px-1 drop-shadow-xl rounded-md bg-white w-24 click:text-white"
         onClick={() => handleRegister()}
       >Register</button>
-      <hr className='mt-3 mb-2 border-t-2 border-gray-600 w-3/4'/>
+      <hr className='mt-3 mb-2 border-t-2 border-gray-600 w-3/4' />
       <div alt='Attending Vendors' className='mt-1 text-xl font-bold italic tracking-wide'>Attending Vendors</div>
       <div alt='vendorImages' className='grid grid-cols-4 gap-3 w-2/3 mt-2 rounded-md '>
         {vendorImages.map((vendorImg) => (
-          <img key={vendorImg} src={vendorImg} alt={vendorImg} onClick={toggleVendor} className='w-18 h-14 bg-white rounded-md drop-shadow-xl'/>
+          <img key={vendorImg} src={vendorImg} alt={vendorImg} onClick={toggleVendor} className='w-18 h-14 bg-white rounded-md drop-shadow-xl' />
         ))}
       </div>
     </div>
