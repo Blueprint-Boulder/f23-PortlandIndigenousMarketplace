@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Context } from '../services/context';
+import { Link } from 'react-router-dom';
 
 export default function Events({ eventsService }) {
   const [events, setEvents] = useState([]);
@@ -49,7 +50,11 @@ export default function Events({ eventsService }) {
           {event.location}
           {user && user.isadmin && <button onClick={() => handleEditEvent()} className='hover:bg-blue absolute right-0 text-sm text-grey-5 px-1 rounded-md bg-white border-2'>Edit</button>}
         </div>
-
+        <li key={event.id}>
+          <Link to={`/event/:${event.event_id}`} className="mt-2 bg-blue-500 text-black p-2 rounded-md inline-block">
+          View Event Details
+          </Link>
+        </li>
       </div>
     </div>
   );

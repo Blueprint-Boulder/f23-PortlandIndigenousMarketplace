@@ -87,6 +87,10 @@ const router = createBrowserRouter([
         element: <Event EventService={eventService} />,
       },
       {
+        path: '/event/:eventId',
+        element: <Event EventService={eventService} />,
+      },
+      {
         path: '/events',
         element: <Events EventService={eventService} />,
       },
