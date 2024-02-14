@@ -1,32 +1,42 @@
 import React from 'react';
-import Login from './routes/login.jsx';
+import ReactDOM from 'react-dom/client';
+import reportWebVitals from './reportWebVitals.js';
+import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
+
+// Import CSS for this page
+import './App.css';
+
+// Import Pages
 import Vendor from './routes/vendor.jsx';
 import Event from './routes/event.jsx';
 import Events from './routes/events.jsx';
 import Profile from './routes/profile.jsx';
 import Root from './routes/root.jsx';
-import ReactDOM from 'react-dom/client';
-import reportWebVitals from './reportWebVitals.js';
 import Vendors from './routes/vendors.jsx';
-import ErrorPage from './components/error.jsx';
-import './App.css';
-import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
+
+import Login from './routes/login.jsx';
+import Logout from './routes/logout.jsx';
 import Register from './routes/register';
+import ResetPassword from './routes/reset_password';
+
+import ErrorPage from './components/error.jsx';
+
+// Import Mock Services
 import MockEventService from './services/MockServices/MockEventService.js';
 import MockVendorService from './services/MockServices/MockVendorService.js';
-import ResetPassword from './routes/reset_password';
-import {handleLoginVendor} from './services/handleLogin.js';
-import {handleRegister} from './services/handleRegister.js';
+
+// Import Real Services
 import EventsService from './services/Events/EventsService.js';
 import VendorsService from './services/Vendors/VendorsService.js';
 
-import config from './config.js';
-import {MessageProvider} from './context.jsx';
+import {handleLoginVendor} from './services/handleLogin.js';
+import {handleRegister} from './services/handleRegister.js';
 
+// Import configuration variables
+import config from './config.js';
 
 let eventService;
 let vendorService;
-
 
 if (config.environment == 'dev') {
   MockVendorService.init();
@@ -96,9 +106,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 export default root.render(
     <React.StrictMode>
-      <MessageProvider>
         <RouterProvider router={router} />
-      </MessageProvider>
     </React.StrictMode>,
 );
 // If you want to start measuring performance in your app, pass a function
