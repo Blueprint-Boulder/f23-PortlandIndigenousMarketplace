@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 
 const errorHandler = require('errorhandler');
-app.use(errorHandler({dumbExceptions: true, showStack: true}));
+app.use(errorHandler({ dumbExceptions: true, showStack: true }));
 
 // Allows cross origin requests
 const cors = require('cors');
@@ -26,10 +26,13 @@ app.use(cookieParser());
 
 // Import router objects and direct the app to use them
 const VendorRouter = require('./routes/VendorRouter');
+const AdminRouter = require('./routes/AdminRouter');
 const EventRouter = require('./routes/EventRouter');
 
-app.use('/vendors', VendorRouter);
-app.use('/events', EventRouter);
+// Routes overlapped with the frontend
+app.use('/api/vendors', VendorRouter);
+app.use('/api/events', EventRouter);
+app.use('/api/admins', AdminRouter);
 
 app.get('/', (req, res) => {
   res.status(202).send('Hello World!');

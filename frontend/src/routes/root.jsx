@@ -1,41 +1,30 @@
-import React, {useEffect} from 'react';
-import PropTypes from 'prop-types'; // Add the missing import
-
-import {Outlet, useLocation} from 'react-router-dom';
+import React, {useState} from 'react';
+import {Outlet} from 'react-router-dom';
 import Footer from '../components/footer.jsx';
 import Header from '../components/headervendor';
-import {Alert, MessageContext} from '../alert.jsx';
-import {useContext} from 'react';
-import axios from 'axios';
+import Alert from '../components/alert.jsx';
+import {Context} from '../services/context.jsx';
 
 
-export default function Root({admin}) {
-  // const data = useLoaderData()
-  const {message, setMessage, bad, setBad} = useContext(MessageContext);
+export default function Root() {
+  const [message, setMessage] = useState('');
+  const [bad, setBad] = useState(false);
+  const [user, setUser] = useState(false);
   setTimeout(() => {
     setMessage(''); setBad(false);
   }, 5000);
-  const location = useLocation();
-  console.log(location.pathname);
-
-  useEffect(() => {
-    const server = axios.create({
-      baseURL: 'http://localhost:3001',
-      withCredentials: false,
-    });
-    server.get('/').then((res) => console.log('response from backend', res.data)).catch((err) => console.log(err));
-  }, []);
 
   return (
-    <div className="bg-grey-1 w-screen flex h-screen flex-col justify-between">
-      {message && <Alert content = {message} bad ={bad}/>}
-      <Header admin={admin}/>
-      <Outlet/>
-      <Footer/>
-    </div>
+    <Context.Provider value = {{message, setMessage, bad, setBad, user, setUser}}>
+      <div className="bg-grey-1 w-screen flex min-h-screen flex-col">
+        {message && <Alert content = {message} bad ={bad}/>}
+        <Header />
+        <Outlet/>
+        <Footer/>
+      </div>
+    </Context.Provider>
+
   );
 }
 
-Root.propTypes = {
-  admin: PropTypes.bool.isRequired,
-};
+
