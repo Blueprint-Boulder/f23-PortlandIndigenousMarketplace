@@ -1,30 +1,40 @@
-import React, {useContext, useEffect} from 'react';
-import {useState} from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import {useNavigate} from 'react-router-dom';
-import {Context} from '../services/context';
+import { useNavigate } from 'react-router-dom';
+import { Context } from '../services/context';
 // import {Link} from 'react-router-dom';
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 // import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
 
-function VendorButton({content, onClick}) {
+function VendorButton({ content, onClick }) {
   return (
-    <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={ onClick}> {content}</button>
+    <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={onClick}> {content}</button>
   );
 }
 
-export default function Vendors({VendorService}) {
-  const [vendors, setVendors] = useState(VendorService.getVendors());
-  const navigate = useNavigate();
-  const {setMessage, setBad, user} = useContext(Context);
+export default function Vendors({ VendorService }) {
+  const [vendors, setVendors] = useState([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!user) {
-      setMessage('Please log in');
-      setBad(true);
-      navigate('/');
-    }
-  }, [navigate, user]);
+    const fetchVendors = async () => {
+      try {
+        const fetchedVendors = await VendorService.getVendors();
+        if (fetchedVendors.length === 0) {
+          console.error('No vendors found');
+        } else {
+          setVendors(fetchedVendors);
+          setError('');
+        }
+      } catch (error) {
+        console.error('Error fetching vendors:', error);
+        setError('Failed to fetch vendors.');
+      }
+    };
+
+    fetchVendors();
+  }, [VendorService]);
 
   const handleSearch = (vendor) => {
     vendor ? setVendors(VendorService.getVendorByName(vendor)) : setVendors(VendorService.getVendors());
@@ -32,14 +42,23 @@ export default function Vendors({VendorService}) {
 
   const vendorDisplay = (vendor) => (
     <div className="grid grid-cols-2 p-2 my-2 rounded h-max grid-rows-4 bg-white drop-shadow-md">
-      <img className='w-14 mx-auto my-auto row-span-2 rounded-full bg-white' src={vendor.image} alt='vendor image'/>
+      <img className='w-14 mx-auto my-auto row-span-2 rounded-full bg-white' src={vendor.image} alt='vendor image' />
       <h2 className='text-black mx-auto my-auto row-span-2 text-black font-bold'>{vendor.name}</h2>
-      <VendorButton onClick={() => setMessage('please write my code')} content='Invite'/>
-      <VendorButton onClick={() => setMessage('please write my code')} content='Message'/>
-      <VendorButton onClick={() => navigate(`/vendors/:${vendor.id}`)} content='View'/>
-      <VendorButton onClick={() => setMessage('please write my code')} content='Promote'/>
+      <VendorButton onClick={() => setMessage('please write my code')} content='Invite' />
+      <VendorButton onClick={() => setMessage('please write my code')} content='Message' />
+      <VendorButton onClick={() => navigate(`/vendors/:${vendor.id}`)} content='View' />
+      <VendorButton onClick={() => setMessage('please write my code')} content='Promote' />
     </div>
   );
+
+  if (error) {
+    return (
+      <div className='w-full mx-auto flex flex-col justify-center pb-16'>
+        <h1 className='color-white text-2xl text-center my-3 font-semibold'>No Vendors Found</h1>
+      </div>
+    );
+  }
+
   return (
     <div className=' w-screen pl-2 pr-2 flex flex-col items-left justify-between gap-2'>
       <h1 className='color-white text-xl'>Vendors</h1>

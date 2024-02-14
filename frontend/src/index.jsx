@@ -10,16 +10,18 @@ import reportWebVitals from './reportWebVitals.js';
 import Vendors from './routes/vendors.jsx';
 import ErrorPage from './components/error.jsx';
 import './App.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Register from './routes/register.jsx';
+import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
+import Register from './routes/register';
 import MockEventService from './services/MockServices/MockEventService.js';
 import MockVendorService from './services/MockServices/MockVendorService.js';
-import ResetPassword from './routes/reset_password.jsx';
-import { handleLoginVendor } from './services/handleLogin.js';
-import { handleRegister } from './services/handleRegister.js';
-import config from './config.js';
-import Logout from './routes/logout.jsx';
+import ResetPassword from './routes/reset_password';
+import {handleLoginVendor} from './services/handleLogin.js';
+import {handleRegister} from './services/handleRegister.js';
 import EventsService from './services/Events/EventsService.js';
+import VendorsService from './services/Vendors/VendorsService.js';
+
+import config from './config.js';
+import {MessageProvider} from './context.jsx';
 
 
 let eventService;
@@ -38,9 +40,10 @@ if (config.environment == 'dev') {
 
   // Initilize Services
   const eventsService = new EventsService(baseUrl);
+  const vendorsService = new VendorsService(baseUrl);
 
   eventService = eventsService;
-  vendorService = vendorService;
+  vendorService = vendorsService;
 }
 
 const router = createBrowserRouter([
@@ -92,9 +95,11 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 export default root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
+    <React.StrictMode>
+      <MessageProvider>
+        <RouterProvider router={router} />
+      </MessageProvider>
+    </React.StrictMode>,
 );
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -14,7 +14,7 @@ class Vendor {
     this.name = name;
     this.email = email;
     this.website = website;
-    this.phone_number = phoneNumber;
+    this.phoneNumber = phoneNumber;
     this.image = image;
   }
 
