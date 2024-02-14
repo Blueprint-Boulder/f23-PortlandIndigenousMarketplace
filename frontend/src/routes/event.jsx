@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown, faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCaretDown, faAnglesLeft} from '@fortawesome/free-solid-svg-icons';
 import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
 
-export default function Event({ eventsService }) {
+export default function Event({eventsService}) {
   const [event, setEvent] = useState(null);
   const [about, setAbout] = useState(false);
   const navigate = useNavigate();
-  const { eventId } = useParams();
-  const { user } = useContext(Context);
+  const {eventId} = useParams();
+  const {user} = useContext(Context);
 
   useEffect(() => {
     if (!user) {
@@ -35,7 +35,7 @@ export default function Event({ eventsService }) {
     return <div>Event Not Found</div>;
   }
 
-  const { name, location, date, startTime, endTime, description } = event;
+  const {name, location, date, startTime, endTime, description} = event;
   const vendorImages = [logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo];
 
   const toggleVendor = () => {

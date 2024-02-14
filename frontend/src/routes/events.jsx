@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
-import { useState, useEffect } from 'react';
+import React, {useContext} from 'react';
+import {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { Context } from '../services/context';
+import {Context} from '../services/context';
 
-export default function Events({ eventsService }) {
+export default function Events({eventsService}) {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState('');
-  const { user } = useContext(Context);
+  const {user} = useContext(Context);
 
   useEffect(() => {
     const fetchEvents = async () => {

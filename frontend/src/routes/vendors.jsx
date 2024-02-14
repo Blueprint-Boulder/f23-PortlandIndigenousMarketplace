@@ -1,21 +1,23 @@
-import React, { useContext, useEffect } from 'react';
-import { useState } from 'react';
+import React, {useContext, useEffect} from 'react';
+import {useState} from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
-import { Context } from '../services/context';
+import {useNavigate} from 'react-router-dom';
+import {Context} from '../services/context';
 // import {Link} from 'react-router-dom';
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 // import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
 
-function VendorButton({ content, onClick }) {
+function VendorButton({content, onClick}) {
   return (
     <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={onClick}> {content}</button>
   );
 }
 
-export default function Vendors({ VendorService }) {
+export default function Vendors({VendorService}) {
   const [vendors, setVendors] = useState([]);
   const [error, setError] = useState('');
+  const {user, setMessage, setBad} = useContext(Context);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -34,7 +36,12 @@ export default function Vendors({ VendorService }) {
     };
 
     fetchVendors();
-  }, [VendorService]);
+    if (!user) {
+      setMessage('Please log in');
+      setBad(true);
+      navigate('/');
+    }
+  }, [VendorService, user]);
 
   const handleSearch = (vendor) => {
     vendor ? setVendors(VendorService.getVendorByName(vendor)) : setVendors(VendorService.getVendors());
