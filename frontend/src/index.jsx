@@ -10,32 +10,37 @@ import reportWebVitals from './reportWebVitals.js';
 import Vendors from './routes/vendors.jsx';
 import ErrorPage from './components/error.jsx';
 import './App.css';
-import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Register from './routes/register.jsx';
 import MockEventService from './services/MockServices/MockEventService.js';
 import MockVendorService from './services/MockServices/MockVendorService.js';
 import ResetPassword from './routes/reset_password.jsx';
-import {handleLoginVendor} from './services/handleLogin.js';
-import {handleRegister} from './services/handleRegister.js';
+import { handleLoginVendor } from './services/handleLogin.js';
+import { handleRegister } from './services/handleRegister.js';
 import config from './config.js';
 import Logout from './routes/logout.jsx';
+import EventsService from './services/Events/EventsService.js';
 
 
-// let isadmin;
-// let user;
-// try {
-//   user = JSON.parse(localStorage.getItem('user'));
-// } catch (error) {
-//   user = {email: '', pasword: '', isadmin: false, id: 1}; // dummy user object
-// }
-// if (user) {
-//   session = true;
-//   isadmin = user.isadmin;
-// }
-// Setup the mock vendor service
-if (config.environment === 'dev') {
+let eventService;
+let vendorService;
+
+
+if (config.environment == 'dev') {
   MockVendorService.init();
   MockEventService.init();
+
+  eventService = MockEventService;
+  vendorService = MockVendorService;
+} else if (config.environment == 'prod') {
+  // Load base url for the backend
+  const baseUrl = config.baseUrl;
+
+  // Initilize Services
+  const eventsService = new EventsService(baseUrl);
+
+  eventService = eventsService;
+  vendorService = vendorService;
 }
 
 const router = createBrowserRouter([
@@ -45,35 +50,36 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/vendors/:vendorId',
-        element: <Vendor VendorService={MockVendorService}/>,
+        element: <Vendor VendorService={MockVendorService} />,
       },
       {
         path: '/login',
-        element: <Login loginService = {handleLoginVendor} />,
+        element: <Login loginService={handleLoginVendor} />,
+
       },
       {
         path: '/register',
-        element: <Register registerService = {handleRegister}/>,
+        element: <Register registerService={handleRegister} />,
       },
       {
         path: '/reset_password',
-        element: <ResetPassword/>,
+        element: <ResetPassword />,
       },
       {
         path: '/profile',
-        element: <Profile VendorService={MockVendorService}/>,
+        element: <Profile VendorService={MockVendorService} />,
       },
       {
         path: '/events/:eventId',
-        element: <Event EventService = {MockEventService}/>,
+        element: <Event EventService={eventService} />,
       },
       {
         path: '/events',
-        element: <Events EventService={MockEventService}/>,
+        element: <Events EventService={eventService} />,
       },
       {
         path: '/vendors',
-        element: <Vendors VendorService={MockVendorService}/>,
+        element: <Vendors VendorService={vendorService} />,
       },
       {
         path: '/logout',
@@ -86,9 +92,9 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 export default root.render(
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>,
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>,
 );
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -1,23 +1,23 @@
 
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import logo from './../assets/PIM_logo_black.png';
-import {Link, useNavigate} from 'react-router-dom';
-import {useContext} from 'react';
-import {Context} from '../services/context';
+import { Link, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { Context } from '../services/context';
 import PropTypes from 'prop-types';
 
 
-export default function Login({loginService}) {
+export default function Login({ loginService }) {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const navigate = useNavigate();
-  const {setMessage, setBad, setUser} = useContext(Context);
+  const { setMessage, setBad, setUser } = useContext(Context);
 
   async function handleLogin() {
-    const data = {email: email, password: pass};
+    const data = { email: email, password: pass };
     if (await loginService(data)) {
       setBad(false);
-      setUser({email: email, password: pass, id: 2, isadmin: false}); // dummy user object for develepment
+      setUser({ email: email, password: pass, id: 2, isadmin: true }); // dummy user object for develepment
       setMessage('Logged in succesfully');
       navigate('/events');
       console.log('Logged in!');
@@ -35,7 +35,7 @@ export default function Login({loginService}) {
         <img className="max-w-xs" src={logo} alt="Pim logo white" />
 
         <div className="m-2">
-                    Login
+          Login
         </div>
 
         <div className="m-2">
@@ -57,7 +57,7 @@ export default function Login({loginService}) {
           <button
             className="p-1 bg-blue w-3/4 rounded click:bg-black drop-shadow-md"
             onClick={() => handleLogin()}>
-                Submit
+            Submit
           </button>
         </div>
 

@@ -47,4 +47,9 @@ router.post('/login', getAdminByEmail, signAdminToken, (req, res) => {
 //   res.status(200).json({status: 'success', admin: res.locals.data});
 // });
 
+// DELETE ROUTE IN PRODUCTION -- CREATE AN ADMIN ACCOUNT FOR TESTING PURPOSES
+router.post('/', createAdminMiddleware, (req, res) => {
+  res.status(200).json({status: 'success'});
+});
+
 module.exports = router;
