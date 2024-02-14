@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useState} from 'react';
 import PropTypes from 'prop-types';
 // import {Link} from 'react-router-dom';
@@ -12,7 +12,27 @@ function VendorButton({content, onClick}) {
 }
 
 export default function Vendors({VendorService}) {
-  const [vendors, setVendors] = useState(VendorService.getVendors());
+  const [vendors, setVendors] = useState([]);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        const fetchedVendors = await VendorService.getVendors();
+        if (fetchedVendors.length === 0) {
+          console.error('No vendors found');
+        } else {
+          setVendors(fetchedVendors);
+          setError('');
+        }
+      } catch (error) {
+        console.error('Error fetching vendors:', error);
+        setError('Failed to fetch vendors.');
+      }
+    };
+
+    fetchVendors();
+  }, [VendorService]);
 
   const handleSearch = (vendor) => {
     vendor ? setVendors(VendorService.getVendorByName(vendor)) : setVendors(VendorService.getVendors());
@@ -28,6 +48,15 @@ export default function Vendors({VendorService}) {
       <VendorButton onClick={() => handlePromote()} content='Promote'/>
     </div>
   );
+
+  if (error) {
+    return (
+      <div className='w-full mx-auto flex flex-col justify-center pb-16'>
+        <h1 className='color-white text-2xl text-center my-3 font-semibold'>No Vendors Found</h1>
+      </div>
+    );
+  }
+
   return (
     <div className=' w-screen pl-2 pr-2 flex flex-col items-left justify-between gap-2'>
       <h1 className='color-white text-xl'>Vendors</h1>
