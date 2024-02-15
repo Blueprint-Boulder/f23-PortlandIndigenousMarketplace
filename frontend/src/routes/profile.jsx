@@ -3,12 +3,15 @@ import handbook from './../assets/Handbook.png';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
+import Modal from '../components/modal.jsx';
 
 export default function Profile({vendorService}) {
   const navigate = useNavigate();
   const {user, setMessage, setBad} = useContext(Context);
+  const [modal, setModal] = useState(false);
   const {vendorId} = useParams();
-  const [vendor] = useState(vendorService.getVendorById(parseInt(vendorId.slice(1))));
+  const id = parseInt(vendorId.slice(1));
+  const [vendor] = useState(vendorService.getVendorById(id));
 
   useEffect(() => {
     if (!user) {
@@ -17,9 +20,16 @@ export default function Profile({vendorService}) {
       navigate('/');
     }
   }, [navigate, user]);
+  function handleEdit() {
+    setModal(true);
+  }
   return (
 
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
+      {/* Boilerplate code for the edit button and modal*/}
+      {user.id === id && !modal && <button onClick={() => handleEdit()}>Edit</button>}
+      {modal && <Modal setModal = {setModal} message = 'This should be an edit profile modal'/>}
+      {/* End of boilerplate code */}
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
           <img className='w-20' src={vendor.image} alt="" />
