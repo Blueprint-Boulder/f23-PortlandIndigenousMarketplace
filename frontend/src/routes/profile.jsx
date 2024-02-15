@@ -18,6 +18,8 @@ export default function Profile({vendorService}) {
       setMessage('Please log in');
       setBad(true);
       navigate('/');
+    } else if (user.isadmin) {
+      setMessage('What should an admin see?');
     }
   }, [navigate, user]);
   function handleEdit() {
