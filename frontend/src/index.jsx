@@ -7,7 +7,6 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import './App.css';
 
 // Import Pages
-import Vendor from './routes/vendor.jsx';
 import Event from './routes/event.jsx';
 import Events from './routes/events.jsx';
 import Profile from './routes/profile.jsx';
@@ -63,7 +62,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/vendors/:vendorId',
-        element: <Vendor vendorService={vendorService} />,
+        element: <Profile vendorService={vendorService} />,
       },
       {
         path: '/login',
@@ -77,10 +76,6 @@ const router = createBrowserRouter([
       {
         path: '/reset_password',
         element: <ResetPassword />,
-      },
-      {
-        path: '/profile',
-        element: <Profile vendorService={vendorService } />,
       },
       {
         path: '/events/:eventId',
