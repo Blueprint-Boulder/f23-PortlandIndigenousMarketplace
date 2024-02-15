@@ -13,7 +13,7 @@ function VendorButton({content, onClick}) {
   );
 }
 
-export default function Vendors({VendorService}) {
+export default function Vendors({vendorService}) {
   const [vendors, setVendors] = useState([]);
   const [error, setError] = useState('');
   const {user, setMessage, setBad} = useContext(Context);
@@ -22,7 +22,7 @@ export default function Vendors({VendorService}) {
   useEffect(() => {
     const fetchVendors = async () => {
       try {
-        const fetchedVendors = await VendorService.getVendors();
+        const fetchedVendors = await vendorService.getVendors();
         if (fetchedVendors.length === 0) {
           console.error('No vendors found');
         } else {
@@ -41,10 +41,10 @@ export default function Vendors({VendorService}) {
       setBad(true);
       navigate('/');
     }
-  }, [VendorService, user]);
+  }, [vendorService, user]);
 
   const handleSearch = (vendor) => {
-    vendor ? setVendors(VendorService.getVendorByName(vendor)) : setVendors(VendorService.getVendors());
+    vendor ? setVendors(vendorService.getVendorByName(vendor)) : setVendors(vendorService.getVendors());
   };
 
   const vendorDisplay = (vendor) => (
@@ -83,7 +83,10 @@ export default function Vendors({VendorService}) {
 }
 
 Vendors.propTypes = {
-  VendorService: PropTypes.func.isRequired,
+  vendorService: PropTypes.shape({
+    getVendors: PropTypes.func.isRequired,
+    getVendorByName: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 VendorButton.propTypes = {
