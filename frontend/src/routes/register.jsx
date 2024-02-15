@@ -1,7 +1,5 @@
-// import axios from "axios"
 import React from 'react';
 import {useState} from 'react';
-// import { redirect} from "react-router"
 import logo from './../assets/PIM_logo_black.png';
 import {Link, useNavigate} from 'react-router-dom';
 import {Context} from '../services/context';

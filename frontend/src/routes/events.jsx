@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
 
-export default function Events({eventsService}) {
+export default function Events({eventService}) {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState('');
   const {user} = useContext(Context);
@@ -11,7 +11,7 @@ export default function Events({eventsService}) {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const fetchedEvents = await eventsService.getAllEvents();
+        const fetchedEvents = await eventService.getAllEvents();
         if (fetchedEvents.length === 0) {
           setError('There are currently no events.');
         } else {
@@ -25,7 +25,7 @@ export default function Events({eventsService}) {
     };
 
     fetchEvents();
-  }, [eventsService]);
+  }, [eventService]);
 
   const handleAddEvent = () => {
     console.log('add event called, but I am not implemented :(((');
@@ -82,7 +82,7 @@ export default function Events({eventsService}) {
 }
 
 Events.propTypes = {
-  eventsService: PropTypes.shape({
+  eventService: PropTypes.shape({
     getAllEvents: PropTypes.func.isRequired,
     createEvent: PropTypes.func.isRequired,
   }).isRequired,

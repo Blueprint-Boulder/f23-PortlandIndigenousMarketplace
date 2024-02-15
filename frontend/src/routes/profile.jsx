@@ -1,26 +1,37 @@
-import React, {useEffect} from 'react';
-import {useState} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import handbook from './../assets/Handbook.png';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Modal from '../components/modal';
+import {Context} from '../services/context';
+import Modal from '../components/modal.jsx';
 
-export default function Profile({VendorService}) {
+export default function Profile({vendorService}) {
   const navigate = useNavigate();
-  // const [vendorId] = useState(useParams().vendorId);
-  const [vendor] = useState(VendorService.getVendorById(1));
+  const {user, setMessage, setBad} = useContext(Context);
+  const [modal, setModal] = useState(false);
+  const {vendorId} = useParams();
+  const id = parseInt(vendorId.slice(1));
+  const [vendor] = useState(vendorService.getVendorById(id));
+
   useEffect(() => {
     if (!user) {
       setMessage('Please log in');
       setBad(true);
       navigate('/');
+    } else if (user.isadmin) {
+      setMessage('What should an admin see?');
     }
   }, [navigate, user]);
-  // Can test using specific id number
+  function handleEdit() {
+    setModal(true);
+  }
   return (
 
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
-      <Modal/>
+      {/* Boilerplate code for the edit button and modal*/}
+      {user.id === id && !modal && <button onClick={() => handleEdit()}>Edit</button>}
+      {modal && <Modal setModal = {setModal} message = 'This should be an edit profile modal'/>}
+      {/* End of boilerplate code */}
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
           <img className='w-20' src={vendor.image} alt="" />
@@ -54,6 +65,8 @@ export default function Profile({VendorService}) {
 }
 
 Profile.propTypes = {
-  VendorService: PropTypes.func.isRequired,
+  vendorService: PropTypes.shape({
+    getVendorById: PropTypes.func.isRequired,
+  }).isRequired,
 };
 

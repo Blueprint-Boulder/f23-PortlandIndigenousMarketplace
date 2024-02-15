@@ -1,6 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import {useState} from 'react';
 import PropTypes from 'prop-types';
+import MessageModal from '../components/messagemodal.jsx'; // changed case of MessageModal, this is convention
 import {useNavigate} from 'react-router-dom';
 import {Context} from '../services/context';
 // import {Link} from 'react-router-dom';
@@ -9,20 +10,22 @@ import {Context} from '../services/context';
 
 function VendorButton({content, onClick}) {
   return (
-    <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={onClick}> {content}</button>
+    <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={onClick}> {content}</button> // changed the way this onclick works, wasnt working before
   );
 }
 
-export default function Vendors({VendorService}) {
-  const [vendors, setVendors] = useState([]);
-  const [error, setError] = useState('');
-  const {user, setMessage, setBad} = useContext(Context);
+export default function Vendors({vendorService}) {
+  const [vendors, setVendors] = useState(vendorService.getVendors());
+  const [vendor, setVendor] = useState({});
+  const [openModal, setOpenModal] = useState(false);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
+  const {setMessage, setBad, user} = useContext(Context);
 
   useEffect(() => {
     const fetchVendors = async () => {
       try {
-        const fetchedVendors = await VendorService.getVendors();
+        const fetchedVendors = await vendorService.getVendors();
         if (fetchedVendors.length === 0) {
           console.error('No vendors found');
         } else {
@@ -30,6 +33,7 @@ export default function Vendors({VendorService}) {
           setError('');
         }
       } catch (error) {
+        setError(true);
         console.error('Error fetching vendors:', error);
         setError('Failed to fetch vendors.');
       }
@@ -41,10 +45,15 @@ export default function Vendors({VendorService}) {
       setBad(true);
       navigate('/');
     }
-  }, [VendorService, user]);
+  }, [vendorService, user]);
 
   const handleSearch = (vendor) => {
-    vendor ? setVendors(VendorService.getVendorByName(vendor)) : setVendors(VendorService.getVendors());
+    vendor ? setVendors(vendorService.getVendorByName(vendor)) : setVendors(vendorService.getVendors());
+  };
+
+  const handleMessage = (vendor) => {
+    setVendor(vendor);
+    setOpenModal(true);
   };
 
   const vendorDisplay = (vendor) => (
@@ -52,7 +61,7 @@ export default function Vendors({VendorService}) {
       <img className='w-14 mx-auto my-auto row-span-2 rounded-full bg-white' src={vendor.image} alt='vendor image' />
       <h2 className='text-black mx-auto my-auto row-span-2 text-black font-bold'>{vendor.name}</h2>
       <VendorButton onClick={() => setMessage('please write my code')} content='Invite' />
-      <VendorButton onClick={() => setMessage('please write my code')} content='Message' />
+      <VendorButton onClick={() => handleMessage(vendor)} content='Message' />
       <VendorButton onClick={() => navigate(`/vendors/:${vendor.id}`)} content='View' />
       <VendorButton onClick={() => setMessage('please write my code')} content='Promote' />
     </div>
@@ -77,13 +86,17 @@ export default function Vendors({VendorService}) {
           )) : vendorDisplay(vendors))
         }
       </div>
+      {openModal && <MessageModal closeModal={setOpenModal} vendor={vendor} />}
     </div>
 
   );
 }
 
 Vendors.propTypes = {
-  VendorService: PropTypes.func.isRequired,
+  vendorService: PropTypes.shape({
+    getVendors: PropTypes.func.isRequired,
+    getVendorByName: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 VendorButton.propTypes = {
