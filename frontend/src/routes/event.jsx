@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
 import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
+import {Context} from '../services/context.jsx'
 
-export default function Event({ eventsService }) {
+export default function Event({ eventService }) {
   const [event, setEvent] = useState(null);
   const [about, setAbout] = useState(false);
   const navigate = useNavigate();
   const { eventId } = useParams();
-  const { user } = useContext(Context);
+  const { user, setMessage, setBad } = useContext(Context);
 
   useEffect(() => {
     if (!user) {
@@ -20,8 +21,11 @@ export default function Event({ eventsService }) {
       navigate('/');
     }
     const fetchEvent = async () => {
-      const eventData = await eventsService.getEventById(parseInt(eventId));
+      console.log('Event id', eventId)
+      const eventData = await eventService.getEventById(parseInt(eventId.slice(1)));
       if (!eventData) {
+        setMessage("Event not found")
+        setBad(true)
         navigate('/events');
       } else {
         setEvent(eventData);
@@ -29,7 +33,7 @@ export default function Event({ eventsService }) {
     };
 
     fetchEvent();
-  }, [eventId, eventsService, navigate, user]);
+  }, [eventId, eventService, navigate, user]);
 
   if (!event) {
     return <div>Event Not Found</div>;

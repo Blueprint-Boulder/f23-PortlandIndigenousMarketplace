@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Context } from '../services/context';
 import { Link } from 'react-router-dom';
 
-export default function Events({ eventsService }) {
+export default function Events({ eventService }) {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState('');
   const { user } = useContext(Context);
@@ -12,7 +12,7 @@ export default function Events({ eventsService }) {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const fetchedEvents = await eventsService.getAllEvents();
+        const fetchedEvents = await eventService.getAllEvents();
         if (fetchedEvents.length === 0) {
           setError('There are currently no events.');
         } else {
@@ -26,7 +26,7 @@ export default function Events({ eventsService }) {
     };
 
     fetchEvents();
-  }, [eventsService]);
+  }, [eventService]);
 
   const handleAddEvent = () => {
     console.log('add event called, but I am not implemented :(((');
@@ -50,11 +50,9 @@ export default function Events({ eventsService }) {
           {event.location}
           {user && user.isadmin && <button onClick={() => handleEditEvent()} className='hover:bg-blue absolute right-0 text-sm text-grey-5 px-1 rounded-md bg-white border-2'>Edit</button>}
         </div>
-        <li key={event.id}>
-          <Link to={`/event/:${event.event_id}`} className="mt-2 bg-blue-500 text-black p-2 rounded-md inline-block">
+          <Link to={`/events/:${event.eventId}`} className="mt-2 bg-blue-500 text-black p-2 rounded-md inline-block">
           View Event Details
           </Link>
-        </li>
       </div>
     </div>
   );
