@@ -1,5 +1,5 @@
-import EventsRepository from './EventsRepository';
-import Event from '../../objects/Event';
+import EventsRepository from './EventsRepository.js';
+import Event from '../../objects/Event.js';
 
 export default class EventsService {
   constructor(baseUrl) {

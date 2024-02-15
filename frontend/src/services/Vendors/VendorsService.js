@@ -1,5 +1,5 @@
-import VendorsRepository from './VendorsRepository';
-import Vendor from '../../objects/Vendor';
+import VendorsRepository from './VendorsRepository.js';
+import Vendor from '../../objects/Vendor.js';
 
 export default class VendorsService {
   constructor(baseUrl) {
@@ -38,11 +38,11 @@ export default class VendorsService {
     return await this.vendorsRepository.authenticateVendor(vendorData);
   }
 
-  async createVendor(vendor) {
+  async createVendor(vendor, password) {
     const vendorData = {
       name: vendor.name,
       email: vendor.email,
-      password: vendor.password,
+      password: password,
       website: vendor.website,
       phoneNumber: vendor.phoneNumber,
       image: vendor.image,

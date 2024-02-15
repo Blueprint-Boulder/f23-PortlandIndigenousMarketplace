@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 export default class VendorsRepository {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
