@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals.js';
-import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 // Import CSS for this page
 import './App.css';
 
 // Import Pages
-import Vendor from './routes/vendor.jsx';
 import Event from './routes/event.jsx';
 import Events from './routes/events.jsx';
 import Profile from './routes/profile.jsx';
@@ -63,7 +62,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/vendors/:vendorId',
-        element: <Vendor VendorService={MockVendorService} />,
+        element: <Profile vendorService={vendorService} />,
       },
       {
         path: '/login',
@@ -79,20 +78,16 @@ const router = createBrowserRouter([
         element: <ResetPassword />,
       },
       {
-        path: '/profile',
-        element: <Profile VendorService={MockVendorService} />,
-      },
-      {
         path: '/events/:eventId',
-        element: <Event EventService={eventService} />,
+        element: <Event eventService={eventService} />,
       },
       {
         path: '/events',
-        element: <Events EventService={eventService} />,
+        element: <Events eventService={eventService} />,
       },
       {
         path: '/vendors',
-        element: <Vendors VendorService={vendorService} />,
+        element: <Vendors vendorService={vendorService} />,
       },
       {
         path: '/logout',
@@ -106,7 +101,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 export default root.render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </React.StrictMode>,
 );
 // If you want to start measuring performance in your app, pass a function
