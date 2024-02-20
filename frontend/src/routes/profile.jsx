@@ -232,9 +232,9 @@ export default function Profile({VendorService}) {
                 Portland Indigenous Marketplace is committed to providing access, equal
                 opportunity and reasonable accommodation for individuals with
                 disabilities, medical needs and other barriers in its services, programs, and
-                activities. To request reasonable accommodations through contact below.
-                info@indigenousmarketplace.org
-                or 503-901-3881
+                activities. To request reasonable accommodations through contact below. 
+                <a className='font-bold' href="mailto:info@indigenousmarketplace.org">info@indigenousmarketplace.org</a> 
+                or <p className='font-bold'>503-901-3881</p>
                 Thank you for being a part of the Indigenous Marketplace community!
                 </p>
                 </p>
