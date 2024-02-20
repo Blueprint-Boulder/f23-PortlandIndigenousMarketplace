@@ -35,13 +35,16 @@ const getEventById = async (req, res, next) => {
 };
 
 const createEvent = async (req, res, next) => {
-  const {name, location, datetime, description, capacity} = req.body;
+  const {name, location, start_time, end_time, description, capacity} = req.body;
   try {
-    await db.none(`
-      INSERT INTO Events (name, location, datetime, description, vendor_capacity)
-      VALUES ($1, $2, $3, $4, $5)
+    const event = await db.one(`
+      INSERT INTO Events (name, location, start_time, end_time, description, vendor_capacity)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
-    `, [name, location, datetime, description, capacity]);
+    `, [name, location, start_time, end_time, description, capacity]);
+
+    // Returns the created event
+    res.locals.data = event;
 
     next();
   } catch (error) {
@@ -52,19 +55,20 @@ const createEvent = async (req, res, next) => {
 
 const updateEvent = async (req, res, next) => {
   const {event_id} = req.params;
-  const {name, location, datetime, description, capacity} = req.body;
+  const {name, location, start_time, end_time, description, capacity} = req.body;
   try {
     const result = await db.one(`
       UPDATE Events
       SET 
         name = $1, 
         location = $2, 
-        datetime = $3, 
-        description = $4, 
-        vendor_capacity = $5
-      WHERE event_id = $6
+        start_time = $3, 
+        end_time = $4,
+        description = $5, 
+        vendor_capacity = $6
+      WHERE event_id = $7
       RETURNING *;
-    `, [name, location, datetime, description, capacity, event_id]);
+    `, [name, location, start_time, end_time, description, capacity, event_id]);
 
     if (!result) {
       return res.status(404).json({error: 'Event not found'});
@@ -78,4 +82,20 @@ const updateEvent = async (req, res, next) => {
   }
 };
 
-module.exports = {getAllEvents, getEventById, createEvent, updateEvent};
+const deleteEvent = async (req, res, next) => {
+  const {event_id} = req.params;
+  try {
+    const result = await db.oneOrNone('DELETE FROM Events WHERE event_id = $1 RETURNING *;', [event_id]);
+    if (!result) {
+      return res.status(404).json({error: 'Event not found'});
+    } else {
+      res.locals.data = result;
+      next();
+    }
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    return res.status(500).json({error: 'Internal Server Error'});
+  }
+}
+
+module.exports = {getAllEvents, getEventById, createEvent, updateEvent, deleteEvent};

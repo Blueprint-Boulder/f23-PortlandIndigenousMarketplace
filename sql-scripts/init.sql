@@ -23,7 +23,8 @@ CREATE TABLE Events (
     event_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     location VARCHAR(255),
-    datetime TIMESTAMP NOT NULL,
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP NOT NULL,
     description TEXT,
     vendor_capacity INT NOT NULL
 );
