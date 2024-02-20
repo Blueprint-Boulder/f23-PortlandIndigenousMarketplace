@@ -1,31 +1,6 @@
-import React from 'react';
-import { useState } from 'react';
-// import { Document, PDFViewer } from 'react-pdf'; // Changed import
-import handbook from './../assets/Handbook.png';
-import { Link } from 'react-router-dom';
-// import MyDocument from '../components/pdf';
-
-export default function Profile({VendorService}) {
-  // const [vendorId] = useState(useParams().vendorId);
-  const [vendor] = useState(VendorService.getVendorById(2)); 
-  const [showEditModal, setEditModal] = useState(false)
-  const setEditModalHandler = () =>{
-    setEditModal(true);
-  }
-  const setEditModalHandlerClose = () =>{
-    setEditModal(false);
-  }
-  const [showModal, setShowModal] = useState(false)
-  const setShowModalHandler = () => {
-    setShowModal(true);
-  }
-  const setShowModalHandlerClose = () => {
-    setShowModal(false)
-  }
-  // Can test using specific id number
 import React, {useEffect, useContext, useState} from 'react';
 import handbook from './../assets/Handbook.png';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
 import Modal from '../components/modal.jsx';
@@ -50,13 +25,23 @@ export default function Profile({vendorService}) {
   function handleEdit() {
     setModal(true);
   }
+  const [showEditModal, setEditModal] = useState(false)
+  const setEditModalHandler = () =>{
+    setEditModal(true);
+  }
+  const setEditModalHandlerClose = () =>{
+    setEditModal(false);
+  }
+  const [showModal, setShowModal] = useState(false)
+  const setShowModalHandler = () => {
+    setShowModal(true);
+  }
+  const setShowModalHandlerClose = () => {
+    setShowModal(false)
+  }
   return (
 
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
-      {/* Boilerplate code for the edit button and modal*/}
-      {user.id === id && !modal && <button onClick={() => handleEdit()}>Edit</button>}
-      {modal && <Modal setModal = {setModal} message = 'This should be an edit profile modal'/>}
-      {/* End of boilerplate code */}
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
           <img className='w-20' src={vendor.image} alt="" />
@@ -80,7 +65,10 @@ export default function Profile({vendorService}) {
             <h1 className='flex-1'>Violations</h1>
           </div>
           <div className='flex flex-col items-center drop-shadow-lg'>
-            <Link to='/handbook'><img src={handbook} alt="Policy Handbook" /></Link>
+            <button onClick={() => {setShowModalHandler();}}>
+              <img src={handbook} alt="Policy Handbook" />
+            </button>
+  
             <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
           </div>
       </div>
