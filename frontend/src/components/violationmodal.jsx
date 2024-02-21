@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 function ViolationModal({closeModal, vendor}) { // added vendor object so we can send message to vendor
   const [message, setMessage] = useState('');
   const [activeButtons, setButtons] = useState([]);
-  const [buttonClicked, setButtonClicked] = useState(false);
+
   function handleSubmit() {
     console.log(`Posting message(${message}) to ${vendor.name}`);
     console.log('... As long as someone finishes my code');
@@ -12,7 +12,10 @@ function ViolationModal({closeModal, vendor}) { // added vendor object so we can
   }
 
   const handleButtonClick = (content) => {
-    setButtonClicked(!buttonClicked);
+    if (activeButtons.includes(content)) {
+      setButtons(activeButtons.filter((value) => value !== content));
+      return;
+    }
     setButtons([...activeButtons, content]);
   };
   // changed the code a little bit, easier to use react state and functions than form
@@ -24,17 +27,17 @@ function ViolationModal({closeModal, vendor}) { // added vendor object so we can
       <textarea className="ml-1 w-9/12 h-1/3 pl-2 pt-1 mb-1 rounded-lg drop-shadow-xl border border-2 border-blue placeholder:text-blue placeholder:italic shadow-inner" onChange={(e) => setMessage(e.target.value)} placeholder="Enter Message Here ..."></textarea>
       <h2 className="text-center">Select Violated Policies</h2>
       <div className="grid grid-cols-4 gap-3">
-        <PolicyButton onClick={() => handleButtonClick(content)} content={1} buttonclicked={buttonClicked}/>
-        <PolicyButton onClick={() => handleButtonClick(content)} content={2} buttonclicked={buttonClicked}/>
-        <PolicyButton onClick={() => handleButtonClick(content)} content={3} buttonclicked={buttonClicked}/>
-        <PolicyButton onClick={() => handleButtonClick(content)} content={4} buttonclicked={buttonClicked}/>
-        <PolicyButton onClick={() => handleButtonClick(content)} content={5} buttonclicked={buttonClicked}/>
-        <PolicyButton onClick={() => handleButtonClick(content)} content={6} buttonclicked={buttonClicked}/>
-        <PolicyButton onClick={() => handleButtonClick(content)} content={7} buttonclicked={buttonClicked}/>
-        <PolicyButton onClick={() => handleButtonClick(content)} content={8} buttonclicked={buttonClicked}/>
-        <PolicyButton onClick={() => handleButtonClick(content)} content={9} buttonclicked={buttonClicked}/>
-        <PolicyButton onClick={() => handleButtonClick(content)} content={10} buttonclicked={buttonClicked}/>
-        <PolicyButton onClick={() => handleButtonClick(content)} content={11} buttonclicked={buttonClicked}/>
+        <PolicyButton onClick={() => handleButtonClick(1)} content={1} activebuttons={activeButtons}/>
+        <PolicyButton onClick={() => handleButtonClick(2)} content={2} activebuttons={activeButtons}/>
+        <PolicyButton onClick={() => handleButtonClick(3)} content={3} activebuttons={activeButtons}/>
+        <PolicyButton onClick={() => handleButtonClick(4)} content={4} activebuttons={activeButtons}/>
+        <PolicyButton onClick={() => handleButtonClick(5)} content={5} activebuttons={activeButtons}/>
+        <PolicyButton onClick={() => handleButtonClick(6)} content={6} activebuttons={activeButtons}/>
+        <PolicyButton onClick={() => handleButtonClick(7)} content={7} activebuttons={activeButtons}/>
+        <PolicyButton onClick={() => handleButtonClick(8)} content={8} activebuttons={activeButtons}/>
+        <PolicyButton onClick={() => handleButtonClick(9)} content={9} activebuttons={activeButtons}/>
+        <PolicyButton onClick={() => handleButtonClick(10)} content={10} activebuttons={activeButtons}/>
+        <PolicyButton onClick={() => handleButtonClick(11)} content={11} activebuttons={activeButtons}/>
       </div>
       <footer className='flex flex-row justify-center mt-6 ml-5 pb-2'>
         <button className="bg-blue py-1 px-3 mb-2 mr-2 text-white drop-shadow-xl rounded-lg" onClick={() => handleSubmit()}>Submit</button>
@@ -44,9 +47,9 @@ function ViolationModal({closeModal, vendor}) { // added vendor object so we can
   );
 }
 
-function PolicyButton({content, onClick, buttonclicked}) {
+function PolicyButton({activebuttons, content, onClick}) {
   return (
-    <button className={`${buttonclicked ? 'bg-red' : 'bg-blue'} text-white m-1 p-2 rounded-lg drop-shadow_xl`} onClick={onClick}> {content}</button> // used Harley's VendorButtons as inspo
+    <button className={`${activebuttons.includes(content) ? 'bg-red' : 'bg-blue'} text-white m-1 p-2 rounded-lg drop-shadow_xl`} onClick={onClick}> {content}</button> // used Harley's VendorButtons as inspo
   );
 }
 
@@ -57,8 +60,8 @@ ViolationModal.propTypes = {
   vendor: PropTypes.object.isRequired,
 };
 
-PolicyButton.propTypes ={
+PolicyButton.propTypes = {
   content: PropTypes.number.isRequired,
   onClick: PropTypes.func.isRequired,
-  buttonclicked: PropTypes.bool.isRequired,
+  activebuttons: PropTypes.array.isRequired,
 };
