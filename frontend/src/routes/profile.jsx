@@ -4,7 +4,7 @@ import {Link, useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
 import Modal from '../components/modal.jsx';
-import ViolationModal from '..components/violationmodal.jsx';
+import ViolationModal from '../components/violationmodal.jsx';
 
 export default function Profile({vendorService}) {
   const navigate = useNavigate();
@@ -28,9 +28,9 @@ export default function Profile({vendorService}) {
     setModal(true);
   }
 
-  const handleViolation = (vendor) => {
+  const handleViolation = () => {
     setOpenViolation(true);
-  }
+  };
   return (
 
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
@@ -58,7 +58,7 @@ export default function Profile({vendorService}) {
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <div className='flex flex-row justify-between'>
           <h1 className='flex-1'>Violations</h1>
-          <button className="bg-red w-4/12 h-2/12" onClick={() => handleViolation(vendor)}>Add A Violation</button>
+          <button className="bg-red w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
         </div>
         <div className='flex flex-col items-center drop-shadow-lg'>
           <Link to='/handbook'><img src={handbook} alt="Policy Handbook" /></Link>
