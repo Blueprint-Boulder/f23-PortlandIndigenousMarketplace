@@ -26,8 +26,16 @@ const getVendor = async (req, res, next) => {
 // Middleware to verify the password of the vendor
 const authenticateVendor = async (req, res, next) => {
   try {
+
     const vendor = res.locals.data;
-    const match = await bcrypt.compare(req.body.password, vendor.password);
+    const email = req.body.email;
+    const password = req.body.password;
+
+    if (email === undefined || password === undefined) {
+      res.status(401).json({message: 'Missing email or password'});
+      return;
+    }
+    const match = await bcrypt.compare(password, vendor.password);
 
     // If passwords match, pass vendor object without password
     if (match) {
@@ -110,7 +118,7 @@ const createVendor = async (req, res, next) => {
     passwordHash = await hash(password, salt);
   } catch (err) {
     console.log(err);
-    res.status(495).json({error: err});
+    res.status(495).json({error: "Error hashing password"});
     return;
   }
 
@@ -137,7 +145,7 @@ const createVendor = async (req, res, next) => {
 
     // Other internal error
     console.log(err);
-    res.status(500).json({error: err});
+    res.status(500).json({error: "Internal Server Error"});
     return;
   }
 

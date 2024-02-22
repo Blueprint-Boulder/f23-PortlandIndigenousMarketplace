@@ -2,8 +2,8 @@ import EventsRepository from './EventsRepository.js';
 import Event from '../../objects/Event.js';
 
 export default class EventsService {
-  constructor(baseUrl) {
-    this.eventsRepository = new EventsRepository(baseUrl);
+  constructor(httpClient) {
+    this.eventsRepository = new EventsRepository(httpClient);
   }
 
   async getAllEvents() {

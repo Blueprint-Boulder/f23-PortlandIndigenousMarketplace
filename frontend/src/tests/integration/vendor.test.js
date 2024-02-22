@@ -2,10 +2,12 @@ import {expect} from 'chai';
 import VendorsService from '../../services/Vendors/VendorsService.js';
 import Vendor from '../../objects/Vendor.js';
 import axios from 'axios';
+import HttpClient from '../../services/HttpClient.js';
 
 describe('Vendors Service', function() {
   this.timeout(10000); // Set timeout for all tests in this describe block
-  const vendorService = new VendorsService('http://backend-test:4001/api');
+  const httpClient = new HttpClient('http://backend-test:4001/api');
+  const vendorService = new VendorsService(httpClient);
 
   // Use async/await with the before hook
   before(async function() {
@@ -25,6 +27,60 @@ describe('Vendors Service', function() {
         // Handle errors or failed assertions
         console.error('Test failed', error);
         throw error; // Rethrow to make the test fail
+      }
+    });
+  });
+
+  describe('Get Vendors', function() {
+    it('should get all vendors', async function() {
+      try {
+        const vendors = await vendorService.getVendors();
+        expect(vendors.length).to.be.at.least(1);
+      } catch (error) {
+        console.error('Test failed', error);
+        throw error;
+      }
+    });
+  });
+
+  describe('Get Vendor By ID', function() {
+    it('should get a vendor by ID', async function() {
+      const vendorId = 1;
+      try {
+        const vendor = await vendorService.getVendorById(vendorId);
+        expect(vendor.id).to.equal(vendorId);
+      } catch (error) {
+        console.error('Test failed', error);
+        throw error;
+      }
+    });
+  });
+
+  describe('Authenticate Vendor', function() {
+    it('should authenticate a vendor', async function() {
+      const email = 'John.smith@gmail.com';
+      const password = 'password';
+      try {
+        const response = await vendorService.authenticateVendor({email, password});
+        expect(response.status).to.equal(200);
+      } catch (error) {
+        console.error('Test failed', error);
+        throw error;
+      }
+    });
+  });
+
+  describe('Update Vendor', function() {
+    it('should update a vendor', async function() {
+      const vendor = new Vendor(
+          1, 'Jane Doe', 'John.smith@gmail.com',
+          'www.johnsmith.com', '123-456-7890', 'https://www.kasandbox.org/programming-images/avatars/spunky-sam.png');
+      try {
+        const res = await vendorService.updateSelfVendor(vendor);
+        expect(res.status).to.equal('success');
+      } catch (error) {
+        console.error('Test failed', error);
+        throw error;
       }
     });
   });
