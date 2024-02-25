@@ -1,7 +1,7 @@
 // Import the pg-promise library and initialize it
 const pgp = require('pg-promise')();
 
-var db;
+let db;
 
 if (process.env.NODE_ENV === undefined) {
   throw new Error('NODE_ENV environment variable not set');
@@ -13,11 +13,11 @@ if (process.env.DATABASE_URL === undefined || process.env.DATABASE_TEST_URL === 
 // Connect to the database using the environment variable DATABASE_URL
 if (process.env.NODE_ENV === 'test') {
   console.log('Connecting to database using url: ' + process.env.DATABASE_TEST_URL);
-  var db = pgp(process.env.DATABASE_TEST_URL);
+  db = pgp(process.env.DATABASE_TEST_URL);
 }
 else {
   console.log('Connecting to database using url: ' + process.env.DATABASE_URL);
-  var db = pgp(process.env.DATABASE_URL);
+  db = pgp(process.env.DATABASE_URL);
 }
 
 /*
