@@ -6,18 +6,20 @@ import {useContext} from 'react';
 import {Context} from '../services/context';
 import PropTypes from 'prop-types';
 
-
 export default function Login({loginService}) {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const navigate = useNavigate();
-  const {setMessage, setBad, setUser} = useContext(Context);
+  const {setMessage, setBad} = useContext(Context);
 
   async function handleLogin() {
     const data = {email: email, password: pass};
-    if (await loginService(data)) {
+    const user = await loginService(data);
+
+    console.log(user);
+
+    if (user != undefined) {
       setBad(false);
-      setUser({email: email, password: pass, id: 2, isadmin: true}); // dummy user object for develepment
       setMessage('Logged in succesfully');
       navigate('/events');
       console.log('Logged in!');

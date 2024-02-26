@@ -73,8 +73,8 @@ if (process.env.NODE_ENV === 'test') {
   module.exports = app;
   return;
 }
-else if (process.env.NODE_ENV === 'dev') {
-  app.listen(process.env.BACKEND_PORT, () => {
+else if (process.env.NODE_ENV === 'dev') { 
+  app.listen( process.env.BACKEND_PORT, () => {
     console.log(`PIM backend app listening on port ${process.env.BACKEND_PORT}`);
   });
   return;
