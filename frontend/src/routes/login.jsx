@@ -15,16 +15,24 @@ export default function Login({loginService}) {
 
   async function handleLogin() {
     const data = {email: email, password: pass};
-    const user = await loginService(data);
+    const loginResponse = await loginService(data);
 
-    console.log(user);
+    console.log(loginResponse);
 
-    if (user != undefined) {
-      setUser(User.createFromCookie);
-      setBad(false);
-      setMessage('Logged in succesfully');
-      navigate('/events');
-      console.log('Logged in!');
+    if (loginResponse != undefined) {
+      if (loginResponse.status == 200) {
+        setUser(User.createFromCookie());
+        setBad(false);
+        setMessage('Logged in succesfully');
+        navigate('/events');
+        console.log('Logged in!');
+      } else if (loginResponse.status == 401) {
+        setBad(true);
+        setMessage('Bad Request. Check username and password.');
+      } else if (loginResponse.status == 500) {
+        setBad(true);
+        setMessage('Server experienced an error processing this request. Please try again.');
+      }
     } else {
       setBad(true);
       setMessage('Failed to login');
