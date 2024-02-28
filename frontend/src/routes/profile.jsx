@@ -99,7 +99,7 @@ export default function Profile({vendorService}) {
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
           <div className='flex flex-col justify-center h-full'>
             <div className='overflow-auto max-h-full'>
-              <p className='overflow-x-scroll text-center p-5'>
+              <p className='overflow-x-scroll text-left p-5'>
                 <h1 className='font-bold'>Mission Statement:</h1>
                 Portland Indigenous Marketplace supports indigenous artists and
                 entrepreneurs by providing barrier-free, culturally respectful spaces that
@@ -250,7 +250,7 @@ export default function Profile({vendorService}) {
                 opportunity and reasonable accommodation for individuals with
                 disabilities, medical needs and other barriers in its services, programs, and
                 activities. To request reasonable accommodations through contact below. 
-                <a className='font-bold' href="mailto:info@indigenousmarketplace.org">info@indigenousmarketplace.org</a> 
+                <a className='font-bold' href="mailto:info@indigenousmarketplace.org">info@indigenousmarketplace.org</a>  
                 or <p className='font-bold'>503-901-3881</p>
                 Thank you for being a part of the Indigenous Marketplace community!
                 </p>

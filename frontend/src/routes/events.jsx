@@ -75,8 +75,10 @@ export default function Events({ eventService }) {
       <div className='static'>
         {user && user.isadmin && <button className='bg-white hover:bg-blue shadow-sm absolute right-0 text-black w-max m-2 p-2 rounded-lg'
           onClick={() => handleAddEvent()}>Add Event</button>}
+        </div>
         {modal && (
-          <div>
+          <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'> 
+          <div className='flex flex-col justify-center h-full'>
             <form action="" className='flex flex-col'>
               <label htmlFor="eventName" className='py-4'>Event Name:</label>
               <input type="text" id='eventName' name='eventName' />
@@ -93,10 +95,10 @@ export default function Events({ eventService }) {
               <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
             </form>
             <button onClick={() => { closeModal(); }} className='bg-blue text-white p-5'>Close Edit</button>
+            </div>
           </div>
         )}
         <h1 className='color-white text-2xl text-center my-3 font-semibold'>Events</h1>
-      </div>
       <div className='flex flex-col space-y-4'>
         {
           events && (Array.isArray(events) ? events.map((event, i) => (
