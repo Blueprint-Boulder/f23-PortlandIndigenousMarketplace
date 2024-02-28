@@ -1,5 +1,5 @@
 import axios from 'axios';
-import config from '../config';
+import config from '../config.js';
 // function that returns a boolean, true if the registration was successful, false otherwise.
 export async function handleRegister(data) {
   const server = axios.create({

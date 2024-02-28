@@ -1,15 +1,15 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { Context } from '../services/context';
-import Modal from '../components/modal.jsx';
+import {Context} from '../services/context';
+// import Modal from '../components/modal.jsx';
 // import { Datetimepicker, initTE } from "tw-elements";
 // initTE({ Datetimepicker });
 // initTE({ Datetimepicker, Input });
 
-export default function Events({ eventService }) {
+export default function Events({eventService}) {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState('');
-  const { user } = useContext(Context);
+  const {user} = useContext(Context);
   const [modal, setModal] = useState(false);
 
   useEffect(() => {

@@ -31,6 +31,8 @@ import VendorsService from './services/Vendors/VendorsService.js';
 import {handleLoginVendor} from './services/handleLogin.js';
 import {handleRegister} from './services/handleRegister.js';
 
+import HttpClient from './services/HttpClient.js';
+
 // Import configuration variables
 import config from './config.js';
 
@@ -47,9 +49,12 @@ if (config.environment == 'dev') {
   // Load base url for the backend
   const baseUrl = config.baseUrl;
 
+  // Create HttpClient
+  const httpClient = new HttpClient(baseUrl);
+
   // Initilize Services
-  const eventsService = new EventsService(baseUrl);
-  const vendorsService = new VendorsService(baseUrl);
+  const eventsService = new EventsService(httpClient);
+  const vendorsService = new VendorsService(httpClient);
 
   eventService = eventsService;
   vendorService = vendorsService;

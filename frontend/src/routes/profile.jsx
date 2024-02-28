@@ -25,20 +25,20 @@ export default function Profile({vendorService}) {
   function handleEdit() {
     setModal(true);
   }
-  const [showEditModal, setEditModal] = useState(false)
+  const [showEditModal, setEditModal] = useState(false);
   const setEditModalHandler = () =>{
     setEditModal(true);
-  }
+  };
   const setEditModalHandlerClose = () =>{
     setEditModal(false);
-  }
-  const [showModal, setShowModal] = useState(false)
+  };
+  const [showModal, setShowModal] = useState(false);
   const setShowModalHandler = () => {
     setShowModal(true);
-  }
+  };
   const setShowModalHandlerClose = () => {
-    setShowModal(false)
-  }
+    setShowModal(false);
+  };
   return (
 
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
@@ -47,7 +47,9 @@ export default function Profile({vendorService}) {
           <img className='w-20' src={vendor.image} alt="" />
         </div>
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
-        <button className='ml-auto' onClick={() => {setEditModalHandler();}}>Edit</button>
+        <button className='ml-auto' onClick={() => {
+          setEditModalHandler();
+        }}>Edit</button>
       </div>
       <hr className='bg-grey-1 w-9/12 drop-shadow-lg'/>
       <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4'>
@@ -61,39 +63,43 @@ export default function Profile({vendorService}) {
         <p>Insert upcoming events modal/reference here</p>
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
-          <div className='flex flex-row justify-between'>
-            <h1 className='flex-1'>Violations</h1>
-          </div>
-          <div className='flex flex-col items-center drop-shadow-lg'>
-            <button onClick={() => {setShowModalHandler();}}>
-              <img src={handbook} alt="Policy Handbook" />
-            </button>
-  
-            <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
-          </div>
+        <div className='flex flex-row justify-between'>
+          <h1 className='flex-1'>Violations</h1>
+        </div>
+        <div className='flex flex-col items-center drop-shadow-lg'>
+          <button onClick={() => {
+            setShowModalHandler();
+          }}>
+            <img src={handbook} alt="Policy Handbook" />
+          </button>
+
+          <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
+        </div>
       </div>
       {
-          showEditModal && (
-            <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
-              <div className='flex flex-col h-full'>
+        showEditModal && (
+          <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
+            <div className='flex flex-col h-full'>
               <form action="" className='flex flex-col'>
-                    <label htmlFor="legalName" className='py-4'>Name:</label>
-                    <input type="text" id='legalName' name='legalName'/>
-                    <label htmlFor="email" className='py-4'>Email:</label>
-                    <input type="text" id='email' name='email'/>
-                    <label htmlFor="phoneNum" className='py-4'>Phone Number:</label>
-                    <input type="text" id='phoneNum' name='phoneNum'/>
-                    <label htmlFor="website" className='py-4'>Website:</label>
-                    <input type="text" id='website' name='website'/>
-                    <label htmlFor="location" className='py-4'>Location:</label>
-                    <input type="text" id='location' name='location'/>
-                    <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
+                <label htmlFor="legalName" className='py-4'>Name:</label>
+                <input type="text" id='legalName' name='legalName'/>
+                <label htmlFor="email" className='py-4'>Email:</label>
+                <input type="text" id='email' name='email'/>
+                <label htmlFor="phoneNum" className='py-4'>Phone Number:</label>
+                <input type="text" id='phoneNum' name='phoneNum'/>
+                <label htmlFor="website" className='py-4'>Website:</label>
+                <input type="text" id='website' name='website'/>
+                <label htmlFor="location" className='py-4'>Location:</label>
+                <input type="text" id='location' name='location'/>
+                <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
               </form>
-              <button onClick={()=>{setEditModalHandlerClose();}} className='bg-blue text-white p-5'>Close Edit</button>
-              </div>
+              <button onClick={()=>{
+                setEditModalHandlerClose();
+              }} className='bg-blue text-white p-5'>Close Edit</button>
             </div>
-          )
-        }
+          </div>
+        )
+      }
       {
         showModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
@@ -105,14 +111,14 @@ export default function Profile({vendorService}) {
                 entrepreneurs by providing barrier-free, culturally respectful spaces that
                 encourage cultural resilience and economic sustainability by promoting
                 public education through cultural arts
-                <h1 className='font-bold'>Introduction:</h1>
-                 <p>
+                  <h1 className='font-bold'>Introduction:</h1>
+                  <p>
                    The nonprofit Portland Indigenous Marketplace and their
                     Indigenous Marketplace programming together with vendors and event
                                    staff have compiled this Vendor Policy Handbook to better communicate all
                                    rules and expectations from vendors that are part of the Indigenous
                                    Marketplace programming.
-                 </p>
+                  </p>
                 By following the rules and policies outlined in this Vendor Policy Handbook
                 you help keep the Indigenous Marketplace community a supportive, viable
                 and enjoyable environment for the entire community. As an approved
@@ -130,9 +136,9 @@ export default function Profile({vendorService}) {
                 Questions or concerns can be sent to info@indigenousmarketplace.org
                 or 503-901-3881
                 Portland Indigenous Marketplace:Vendor Policy Handbook
-                
-                <h1 className='font-bold'>Indigenous Marketplace Vendor Policies:</h1>
-                <p>
+
+                  <h1 className='font-bold'>Indigenous Marketplace Vendor Policies:</h1>
+                  <p>
                   1. a. Vendors agree to donate one raffle item to the organization per
                   marketplace day that they participate in as a vendor. The item
                   donated should be a true representation of the vendor's talent/booth
@@ -142,8 +148,8 @@ export default function Profile({vendorService}) {
                   donate a Silent Auction item with a value of a minimum of $50.
                   This donation will be needed to participate as an approved
                   Indigenous Marketplace vendor into the following of each year.
-                </p>
-                <p>
+                  </p>
+                  <p>
                   2. Vendors agree that all products are made or designed by the Vendor.
                   Used or flea-market goods, manufactured items, or commercialbrand merchandise are not permitted for sale at the Indigenous
                   Marketplace events. Buying products from another vendor,
@@ -154,7 +160,7 @@ export default function Profile({vendorService}) {
                   Exhibit 3 (upon approval each vendor may have 1 approved item that they did
                   not make or design if the Vendor Policy Committee finds that the item integrates
                   into the vendors booth).
-                </p>
+                  </p>
                 3. Attendance tracking begins with the first scheduled market day.
                 Vendors agree to cancel a market date by notifying staff at least 48
                 hours in advance. Notice must be given by calling the general PIM
@@ -162,8 +168,8 @@ export default function Profile({vendorService}) {
                 member via phone or email. Vendors are allowed 2 excused absences
                 per market year. In addition, 2 emergency cancellations are permitted
                 without proper notice.
-                
-                <p>
+
+                  <p>
                   4. Vendors agree to set up by the start time of the Indigenous
                   marketplace events and stay for the duration of marketplace hours. If
                   vendor is running late or if a need to leave before the marketplace
@@ -172,16 +178,16 @@ export default function Profile({vendorService}) {
                   taken to ensure the safety of our customers and fellow vendors. Staff
                   reserves the right to ask vendor to cover table until the end of planned
                   marketplace hours.
-                </p>
-                <p>
+                  </p>
+                  <p>
                   5. Vendor space at the Indigenous Marketplace events will only be
                   shared with other approved Indigenous Marketplace vendors. Any
                   family or friends with the intent to vend will need to complete a
                   vendor application and be approved before vending. (Family, friends
                   and staff are welcomed in your space if they are there to support not sell their
                   own products)
-                </p>
-                <p>
+                  </p>
+                  <p>
                   6. Vendors agree when using canopies/tents they must have four
                   grounded and weighted corners. A minimum of 20 pounds of weight
                   is required to hold down and to secure EACH canopy leg. Weights will
@@ -190,25 +196,25 @@ export default function Profile({vendorService}) {
                   due to fly-aways of their display, canopy or inventory** PIM staff
                   strongly encourage set ups that can be stabilized when winds pick up.
                   PIM is not responsible for any personal losses or damages.
-                </p>
-                <p>
+                  </p>
+                  <p>
                   7. Vendors agree not to drive any motorized vehicle in the marketplace
                   area during marketplace hours. If late arrivals or early pack ups
                   occur, you will not be able to drive your vehicle into the marketplace
                   area to unload or load but carts and equipment may be available for
                   loading/unloading needs.
-                </p>
-                <p>
+                  </p>
+                  <p>
                   8. Before leaving the market, all vendors must clean their booth spaces
                   and ensure that all litter, broken equipment, produce, and other
                   product debris is removed.
-                </p>
-                
-                <p>
+                  </p>
+
+                  <p>
                   9. While imitation is the sincerest form of flattery, please respect your
                   fellow vendors’ ideas and concepts and refrain from copying them.
-                </p>
-                <p>
+                  </p>
+                  <p>
                   10. Vendors agree to engage in respectful communications with staff, community members, and volunteers.
                   Complaints concerning policies 1-10 must be submitted by completing the
                   Indigenous Marketplace Complaint Form in hardcopy (Exhibit 1) or digital
@@ -218,9 +224,9 @@ export default function Profile({vendorService}) {
                   person of interest, either through vendor name, business name or booth
                   location on the day of the infraction, plus provide the staff with written
                   evidence as to the nature of the alleged violation.
-                </p>
-                <h1 className='font-bold'>What happens when a policy complaint occurs?</h1>
-                <p>When a complaint is brought forward by community, vendors,
+                  </p>
+                  <h1 className='font-bold'>What happens when a policy complaint occurs?</h1>
+                  <p>When a complaint is brought forward by community, vendors,
                 volunteers or staff the Vendor Policy Committee will review complaint. If
                 the complaint is found valid the vendor of interest will receive a notice of
                 the appropriate level of accountability.
@@ -250,13 +256,15 @@ export default function Profile({vendorService}) {
                 opportunity and reasonable accommodation for individuals with
                 disabilities, medical needs and other barriers in its services, programs, and
                 activities. To request reasonable accommodations through contact below. 
-                <a className='font-bold' href="mailto:info@indigenousmarketplace.org">info@indigenousmarketplace.org</a>  
+                <a className='font-bold' href="mailto:info@indigenousmarketplace.org">info@indigenousmarketplace.org</a> 
                 or <p className='font-bold'>503-901-3881</p>
                 Thank you for being a part of the Indigenous Marketplace community!
-                </p>
+                  </p>
                 </p>
               </div>
-              <button onClick={()=>{setShowModalHandlerClose();}} className='bg-blue text-white p-5'>Close Handbook</button>
+              <button onClick={()=>{
+                setShowModalHandlerClose();
+              }} className='bg-blue text-white p-5'>Close Handbook</button>
             </div>
           </div>
         )
