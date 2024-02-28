@@ -79,9 +79,7 @@ export default function Profile({vendorService}) {
           <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
         </div>
       </div>
-<<<<<<< HEAD
       {openViolation && <ViolationModal closeModal={setOpenViolation} vendor={vendor}/>}
-=======
       {
         showEditModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
@@ -275,7 +273,6 @@ export default function Profile({vendorService}) {
           </div>
         )
       }
->>>>>>> main
     </div>
 
   );
