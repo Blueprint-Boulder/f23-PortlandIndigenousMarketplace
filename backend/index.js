@@ -38,6 +38,26 @@ app.get('/', (req, res) => {
   res.status(202).send('Hello World!');
 });
 
+app.get('/api/health', (req, res) => {
+  db.one('SELECT 1 AS value')
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+        message: 'Database connection is healthy',
+      });
+    })
+    .catch(error => {
+      console.error('Database connection error:', error);
+      res.status(503).json({
+        status: 'error',
+        message: 'Database connection is unhealthy',
+        error: error.message,
+      });
+    });
+});
+
+
+
 /*
 The backend should be listening on port 3000 within its container,
 but the container's port 3000 is mapped externally to 3001.
@@ -45,6 +65,17 @@ but the container's port 3000 is mapped externally to 3001.
 TL;DR the backend is running on port 3001 on the host machine.
 */
 
-app.listen(process.env.BACKEND_PORT, () => {
-  console.log(`PIM backend app listening on port ${process.env.BACKEND_PORT}`);
-});
+if (process.env.NODE_ENV === 'test') {
+  app.listen(process.env.BACKEND_TEST_PORT, () => {
+    console.log(`PIM backend app listening on port ${process.env.BACKEND_TEST_PORT}`);
+  });
+  // export app to import into test files
+  module.exports = app;
+  return;
+}
+else if (process.env.NODE_ENV === 'dev') { 
+  app.listen( process.env.BACKEND_PORT, () => {
+    console.log(`PIM backend app listening on port ${process.env.BACKEND_PORT}`);
+  });
+  return;
+}

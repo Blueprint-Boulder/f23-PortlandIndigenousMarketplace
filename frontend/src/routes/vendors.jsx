@@ -8,6 +8,8 @@ import {Context} from '../services/context';
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 // import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
 
+import User from '../objects/User.js';
+
 function VendorButton({content, onClick}) {
   return (
     <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={onClick}> {content}</button> // changed the way this onclick works, wasnt working before
@@ -20,7 +22,8 @@ export default function Vendors({vendorService}) {
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
-  const {setMessage, setBad, user} = useContext(Context);
+  const {setMessage, setBad} = useContext(Context);
+  const [user, setUser] = useState(User.createFromCookie());
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -40,7 +43,8 @@ export default function Vendors({vendorService}) {
     };
 
     fetchVendors();
-    if (!user) {
+    setUser(User.createFromCookie());
+    if (user != undefined) {
       setMessage('Please log in');
       setBad(true);
       navigate('/');
