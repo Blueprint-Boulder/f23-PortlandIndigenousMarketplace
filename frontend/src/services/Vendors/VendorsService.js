@@ -8,6 +8,10 @@ export default class VendorsService {
 
   async getVendors() {
     const vendorsData = await this.vendorsRepository.getAllVendors();
+    if (vendorsData == undefined) {
+      return undefined;
+    }
+
     return vendorsData.map((data) => new Vendor(
         data.vendor_id,
         data.name,
