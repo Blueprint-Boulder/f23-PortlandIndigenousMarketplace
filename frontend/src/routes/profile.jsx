@@ -10,7 +10,7 @@ export default function Profile({vendorService}) {
   const navigate = useNavigate();
   const {user, setMessage, setBad} = useContext(Context);
   const [modal, setModal] = useState(false);
-  const [openViolation, setOpenViolation] = useStae(false);
+  const [openViolation, setOpenViolation] = useState(false);
   const {vendorId} = useParams();
   const id = parseInt(vendorId.slice(1));
   const [vendor] = useState(vendorService.getVendorById(id));
@@ -67,7 +67,9 @@ export default function Profile({vendorService}) {
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <div className='flex flex-row justify-between'>
           <h1 className='flex-1'>Violations</h1>
-          <button className="bg-red w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
+          {user.isadmin && (
+            <button className="bg-red w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
+          )}
         </div>
         <div className='flex flex-col items-center drop-shadow-lg'>
           <button onClick={() => {
@@ -145,7 +147,7 @@ export default function Profile({vendorService}) {
                   <p>
                   1. a. Vendors agree to donate one raffle item to the organization per
                   marketplace day that they participate in as a vendor. The item
-                  donated should be a true representation of the vendor's talent/booth
+                  donated should be a true representation of the vendor&pos;s talent/booth
                   with a value of at least $20. Upon review donation could qualify for a
                   maximum of 2 days raffle donation.
                   b. In Nov/Dec of each year every approved vendor will be asked to

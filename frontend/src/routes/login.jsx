@@ -21,7 +21,8 @@ export default function Login({loginService}) {
 
     if (loginResponse != undefined) {
       if (loginResponse.status == 200) {
-        setUser(User.createFromCookie());
+        // setUser(User.createFromCookie());
+        setUser({name: 'bla', isadmin: true, id: 1});
         setBad(false);
         setMessage('Logged in succesfully');
         navigate('/events');

@@ -1,6 +1,6 @@
 {
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": "explicit"
     },
     "eslint.validate": ["javascript, typescript, vue, html, css, scss, json, markdown"],
     "css.lint.unknownAtRules": "ignore"
