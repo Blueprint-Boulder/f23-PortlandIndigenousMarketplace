@@ -1,15 +1,15 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { Context } from '../services/context';
-import Modal from '../components/modal.jsx';
+import {Context} from '../services/context';
+// import Modal from '../components/modal.jsx';
 // import { Datetimepicker, initTE } from "tw-elements";
 // initTE({ Datetimepicker });
 // initTE({ Datetimepicker, Input });
 
-export default function Events({ eventService }) {
+export default function Events({eventService}) {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState('');
-  const { user } = useContext(Context);
+  const {user} = useContext(Context);
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
@@ -92,7 +92,9 @@ export default function Events({ eventService }) {
               <input type="text" id='location' name='location' />
               <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
             </form>
-            <button onClick={() => { closeModal(); }} className='bg-blue text-white p-5'>Close Edit</button>
+            <button onClick={() => {
+              closeModal();
+            }} className='bg-blue text-white p-5'>Close Edit</button>
           </div>
         )}
         <h1 className='color-white text-2xl text-center my-3 font-semibold'>Events</h1>

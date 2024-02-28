@@ -5,12 +5,13 @@ import {Link, useNavigate} from 'react-router-dom';
 import {useContext} from 'react';
 import {Context} from '../services/context';
 import PropTypes from 'prop-types';
+import User from '../objects/User';
 
 export default function Login({loginService}) {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const navigate = useNavigate();
-  const {setMessage, setBad} = useContext(Context);
+  const {setMessage, setBad, setUser} = useContext(Context);
 
   async function handleLogin() {
     const data = {email: email, password: pass};
@@ -19,6 +20,7 @@ export default function Login({loginService}) {
     console.log(user);
 
     if (user != undefined) {
+      setUser(User.createFromCookie);
       setBad(false);
       setMessage('Logged in succesfully');
       navigate('/events');
