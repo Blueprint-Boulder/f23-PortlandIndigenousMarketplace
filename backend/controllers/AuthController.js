@@ -60,6 +60,9 @@ const signAdminToken = async (req, res, next) => {
     return res.status(401).json({message: 'Unauthorized: Admin'});
   }
 
+  // Remove admin password from cookie
+  delete res.locals.admin['password'];
+
   // Sign the token with JWT_SECRET
   const token = await jwt.sign(res.locals.admin, process.env.JWT_SECRET);
 
