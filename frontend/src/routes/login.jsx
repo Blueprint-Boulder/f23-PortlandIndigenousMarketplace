@@ -6,19 +6,20 @@ import {useContext} from 'react';
 import {Context} from '../services/context';
 import PropTypes from 'prop-types';
 
-export default function Login({loginService}) {
+export default function Login({vendorService}) {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const navigate = useNavigate();
-  const {setMessage, setBad} = useContext(Context);
+  const {setMessage, setBad, setUser} = useContext(Context);
 
   async function handleLogin() {
     const data = {email: email, password: pass};
-    const user = await loginService(data);
+    const user = await vendorService.authenticateVendor(data);
 
     console.log(user);
 
     if (user != undefined) {
+      setUser(vendorService.httpClient.user);
       setBad(false);
       setMessage('Logged in succesfully');
       navigate('/events');
@@ -43,7 +44,7 @@ export default function Login({loginService}) {
         <div className="m-2">
           <input
             className="p-1 rounded-lg w-3/4 drop-shadow-md"
-            placeholder="Username"
+            placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}>
           </input>
         </div>
@@ -77,5 +78,10 @@ export default function Login({loginService}) {
 }
 
 Login.propTypes = {
-  loginService: PropTypes.func.isRequired,
+  vendorService: PropTypes.shape( {
+    authenticateVendor: PropTypes.func.isRequired,
+    httpClient: PropTypes.shape( {
+      user: PropTypes.object,
+    }).isRequired,
+  }).isRequired,
 };

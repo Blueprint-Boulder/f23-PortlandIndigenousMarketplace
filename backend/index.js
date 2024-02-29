@@ -18,7 +18,22 @@ app.use(errorHandler({ dumbExceptions: true, showStack: true }));
 
 // Allows cross origin requests
 const cors = require('cors');
-app.use(cors());
+
+// Allowed origins
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:4000'];
+
+// CORS options to dynamically match the allowed origins and allow credentials
+const corsOptionsDelegate = function (req, callback) {
+  let corsOptions;
+  if (allowedOrigins.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true, credentials: true }; // Reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false }; // Disable CORS for this request
+  }
+  callback(null, corsOptions); // Callback expects two parameters: error and options
+};
+
+app.use(cors(corsOptionsDelegate));
 
 // Parses cookies attached to the client request object
 const cookieParser = require('cookie-parser');
