@@ -14,6 +14,7 @@ export default class User {
 
   static newUserFromCookie(cookie, isadmin) {
     const decode = jwtDecode(cookie);
-    return new User(decode.admin_id, decode.name, decode.email, isadmin, null, null);
+    if (isadmin) return new User(decode.admin_id, decode.name, decode.email, isadmin, null, null);
+    return new User(decode.vendor_id, decode.name, decode.email, isadmin, decode.phone_number, decode.website);
   }
 }
