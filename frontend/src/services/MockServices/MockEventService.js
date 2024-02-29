@@ -25,7 +25,7 @@ export default class MockEventService {
   }
 
   static getEventById(id) {
-    console.log('Get event by id was called with id: ', id)
+    console.log('Get event by id was called with id: ', id);
     const e = this.mockEvents.filter((event) => event.eventId === id);
     return e.length > 0 ? e[0] : null;
   }
