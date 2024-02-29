@@ -8,8 +8,8 @@ export default class VendorsRepository {
       const response = await this.httpClient.axiosInstance.get('/vendors');
       return response.data;
     } catch (error) {
-      console.error('Error fetching vendors:');
-      throw error;
+      console.error('Error fetching vendors');
+      return undefined;
     }
   }
 
@@ -19,6 +19,7 @@ export default class VendorsRepository {
       return response.data;
     } catch (error) {
       console.error(`Error fetching vendor with ID ${vendorId}:`);
+      return undefined;
     }
   }
 
@@ -34,6 +35,7 @@ export default class VendorsRepository {
       return response;
     } catch (error) {
       console.error('Error logging in vendor:');
+      return undefined;
     }
   }
 
@@ -43,7 +45,7 @@ export default class VendorsRepository {
       return response.data;
     } catch (error) {
       console.error('Error creating vendor:');
-      throw error;
+      return undefined;
     }
   }
 
@@ -53,7 +55,7 @@ export default class VendorsRepository {
       return response.data;
     } catch (error) {
       console.error('Error updating vendor:');
-      throw error;
+      return undefined;
     }
   }
 
@@ -63,7 +65,7 @@ export default class VendorsRepository {
       return response.data;
     } catch (error) {
       console.error(`Error updating vendor with ID ${vendorId}:`);
-      throw error;
+      return undefined;
     }
   }
 
@@ -73,7 +75,7 @@ export default class VendorsRepository {
       return response.data;
     } catch (error) {
       console.error(`Error deleting vendor with ID ${vendorId}:`);
-      throw error;
+      return undefined;
     }
   }
 
@@ -83,7 +85,7 @@ export default class VendorsRepository {
       return response.data;
     } catch (error) {
       console.error('Error logging out:');
-      throw error;
+      return undefined;
     }
   }
 }

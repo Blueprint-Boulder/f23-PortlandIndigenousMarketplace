@@ -1,4 +1,3 @@
-
 import React, {useState} from 'react';
 import logo from './../assets/PIM_logo_black.png';
 import {Link, useNavigate} from 'react-router-dom';
@@ -14,16 +13,22 @@ export default function Login({vendorService}) {
 
   async function handleLogin() {
     const data = {email: email, password: pass};
-    const user = await vendorService.authenticateVendor(data);
+    const loginResponse = await vendorService.authenticateVendor(data);
 
-    console.log(user);
-
-    if (user != undefined) {
-      setUser(vendorService.httpClient.user);
-      setBad(false);
-      setMessage('Logged in succesfully');
-      navigate('/events');
-      console.log('Logged in!');
+    if (loginResponse != undefined) {
+      if (loginResponse.status == 200) {
+        setUser(vendorService.httpClient.user);
+        setBad(false);
+        setMessage('Logged in succesfully');
+        navigate('/events');
+        console.log('Logged in!');
+      } else if (loginResponse.status == 401) {
+        setBad(true);
+        setMessage('Bad Request. Check username and password.');
+      } else if (loginResponse.status == 500) {
+        setBad(true);
+        setMessage('Server experienced an error processing this request. Please try again.');
+      }
     } else {
       setBad(true);
       setMessage('Failed to login');

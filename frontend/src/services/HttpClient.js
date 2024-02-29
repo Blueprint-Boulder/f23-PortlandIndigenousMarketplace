@@ -7,7 +7,6 @@ class HttpClient {
   constructor(baseURL) {
     this.axiosInstance = axios.create({
       baseURL: baseURL,
-      withCredentials: true,
     });
     this.user = null;
   }
