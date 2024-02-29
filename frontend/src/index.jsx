@@ -28,11 +28,6 @@ import MockVendorService from './services/MockServices/MockVendorService.js';
 import EventsService from './services/Events/EventsService.js';
 import VendorsService from './services/Vendors/VendorsService.js';
 
-// import {handleLoginVendor} from './services/handleLogin.js';
-// import {handleRegister} from './services/handleRegister.js';
-
-import HttpClient from './services/HttpClient.js';
-
 // Import configuration variables
 import config from './config.js';
 
@@ -52,17 +47,13 @@ if (config.environment == 'dev') {
 } else if (config.environment == 'prod') {
   // Load base url for the backend
   const baseUrl = config.baseUrl;
+
+  // Initialize HttpClient
   httpClient = new HttpClient(baseUrl);
 
-  // Create HttpClient
-  const httpClient = new HttpClient(baseUrl);
-
   // Initilize Services
-  const eventsService = new EventsService(httpClient);
-  const vendorsService = new VendorsService(httpClient);
-
-  eventService = eventsService;
-  vendorService = vendorsService;
+  eventService = new EventsService(httpClient);
+  vendorService = new VendorsService(httpClient);
 }
 
 const router = createBrowserRouter([

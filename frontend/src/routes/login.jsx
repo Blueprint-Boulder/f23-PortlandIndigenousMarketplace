@@ -21,7 +21,7 @@ export default function Login({vendorService}) {
         setBad(false);
         setMessage('Logged in succesfully');
         navigate('/events');
-        console.log('Logged in!');
+        console.log('Logged in as user: ', vendorService.httpClient.user);
       } else if (loginResponse.status == 401) {
         setBad(true);
         setMessage('Bad Request. Check username and password.');

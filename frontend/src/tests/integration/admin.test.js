@@ -21,6 +21,8 @@ describe('Admins Service', function() {
       };
       try {
         const response = await adminService.authenticateAdmin(adminData);
+        const cookie = response.headers['set-cookie'][0];
+        httpClient.manuallySetCookie(cookie, true);
         expect(response.status).to.equal(200);
       } catch (error) {
         // Handle errors or failed assertions

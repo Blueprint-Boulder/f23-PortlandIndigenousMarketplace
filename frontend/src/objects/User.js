@@ -1,5 +1,4 @@
-
-
+import {jwtDecode} from 'jwt-decode';
 /*
 Storage mechanism for the currently logged-in user.
 */
@@ -11,5 +10,10 @@ export default class User {
     this.isadmin = isadmin;
     this.phoneNumber = phoneNumber;
     this.website = website;
+  }
+
+  static newUserFromCookie(cookie, isadmin) {
+    const decode = jwtDecode(cookie);
+    return new User(decode.admin_id, decode.name, decode.email, isadmin, null, null);
   }
 }

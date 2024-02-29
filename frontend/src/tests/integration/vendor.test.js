@@ -62,7 +62,10 @@ describe('Vendors Service', function() {
       const password = 'password';
       try {
         const response = await vendorService.authenticateVendor({email, password});
+        const cookie = response.headers['set-cookie'][0];
+        httpClient.manuallySetCookie(cookie, false);
         expect(response.status).to.equal(200);
+        expect(httpClient.user.email).to.equal(email);
       } catch (error) {
         console.error('Test failed', error);
         throw error;
