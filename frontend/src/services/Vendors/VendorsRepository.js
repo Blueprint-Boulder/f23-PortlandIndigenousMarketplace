@@ -1,67 +1,86 @@
-import axios from 'axios';
-
 export default class VendorsRepository {
-  constructor(baseUrl) {
-    this.baseUrl = baseUrl;
+  constructor(httpClient) {
+    this.httpClient = httpClient;
   }
 
   async getAllVendors() {
     try {
-      const response = await axios.get(`${this.baseUrl}/vendors`);
+      const response = await this.httpClient.axiosInstance.get('/vendors');
       return response.data;
     } catch (error) {
-      console.error('Error fetching vendors:', error);
-      throw error;
+      console.error('Error fetching vendors');
+      return undefined;
     }
   }
 
   async getVendorById(vendorId) {
     try {
-      const response = await axios.get(`${this.baseUrl}/vendors/${vendorId}`);
+      const response = await this.httpClient.axiosInstance.get(`/vendors/${vendorId}`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching vendor with ID ${vendorId}:`, error);
-      throw error;
+      console.error(`Error fetching vendor with ID ${vendorId}:`);
+      return undefined;
     }
   }
 
   async authenticateVendor(vendorData) {
     try {
-      const response = await axios.post(`${this.baseUrl}/vendors/login`, vendorData);
-      return response.data;
+      const response = await this.httpClient.axiosInstance.post('vendors/login', vendorData);
+      this.httpClient.setCookie(response.headers['set-cookie'][0]);
+      return response;
     } catch (error) {
-      console.error('Error logging in vendor:', error);
-      throw error;
+      console.error('Error logging in vendor:');
+      return undefined;
     }
   }
 
   async createVendor(vendorData) {
     try {
-      const response = await axios.post(`${this.baseUrl}/vendors`, vendorData);
+      const response = await this.httpClient.axiosInstance.post('/vendors', vendorData);
       return response.data;
     } catch (error) {
-      console.error('Error creating vendor:', error);
-      throw error;
+      console.error('Error creating vendor:');
+      return undefined;
+    }
+  }
+
+  async updateSelfVendor(vendorData) {
+    try {
+      const response = await this.httpClient.axiosInstance.put('/vendors', vendorData);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating vendor:');
+      return undefined;
     }
   }
 
   async updateVendor(vendorId, vendorData) {
     try {
-      const response = await axios.put(`${this.baseUrl}/vendors/${vendorId}`, vendorData);
+      const response = await this.httpClient.axiosInstance.put(`/vendors/${vendorId}`, vendorData);
       return response.data;
     } catch (error) {
-      console.error(`Error updating vendor with ID ${vendorId}:`, error);
-      throw error;
+      console.error(`Error updating vendor with ID ${vendorId}:`);
+      return undefined;
     }
   }
 
   async deleteVendor(vendorId) {
     try {
-      const response = await axios.delete(`${this.baseUrl}/vendors/${vendorId}`);
+      const response = await this.httpClient.axiosInstance.delete(`/vendors/${vendorId}`);
       return response.data;
     } catch (error) {
-      console.error(`Error deleting vendor with ID ${vendorId}:`, error);
-      throw error;
+      console.error(`Error deleting vendor with ID ${vendorId}:`);
+      return undefined;
+    }
+  }
+
+  async logout() {
+    try {
+      const response = await this.httpClient.axiosInstance.post('/logout');
+      return response.data;
+    } catch (error) {
+      console.error('Error logging out:');
+      return undefined;
     }
   }
 }

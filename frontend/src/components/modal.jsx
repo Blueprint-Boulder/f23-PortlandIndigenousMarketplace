@@ -1,15 +1,21 @@
 import React from 'react';
-
-export default function Modal() {
-  const [show, setShow] = useState(false);
+import PropTypes from 'prop-types';
+export default function Modal({setModal, message}) {
   const toggleModal = () => {
-    setShow(!show);
+    setModal(false);
   };
 
   return (
     <>
-      {show && <h1>Modal</h1>}
-      <button onClick={toggleModal}>Show Modal</button>
+      <h1>Modal</h1>
+      <div >{message}</div>
+      <button onClick={toggleModal}> Close</button>
     </>
+
   );
 }
+
+Modal.propTypes = {
+  message: PropTypes.string,
+  setModal: PropTypes.func,
+};

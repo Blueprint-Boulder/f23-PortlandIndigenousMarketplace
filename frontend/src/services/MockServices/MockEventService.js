@@ -1,4 +1,4 @@
-import Event from '../../objects/Event';
+import Event from '../../objects/Event.js';
 
 export default class MockEventService {
   static mockEvents = [];

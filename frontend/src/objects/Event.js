@@ -1,7 +1,7 @@
 /*
 Storage mechanism for a vendor object
 */
-class Event {
+export default class Event {
   constructor(eventId, name, location, startTime, endTime, description, vendorCapacity) {
     this.eventId = eventId;
     this.name = name;
@@ -17,5 +17,3 @@ class Event {
     return JSON.stringify(this);
   }
 }
-
-module.exports = Event;

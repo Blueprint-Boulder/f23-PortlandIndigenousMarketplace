@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals.js';
-import {createBrowserRouter, Navigate, RouterProvider} from 'react-router-dom';
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 // Import CSS for this page
 import './App.css';
 
 // Import Pages
-import Vendor from './routes/vendor.jsx';
 import Event from './routes/event.jsx';
 import Events from './routes/events.jsx';
 import Profile from './routes/profile.jsx';
@@ -32,6 +31,8 @@ import VendorsService from './services/Vendors/VendorsService.js';
 import {handleLoginVendor} from './services/handleLogin.js';
 import {handleRegister} from './services/handleRegister.js';
 
+import HttpClient from './services/HttpClient.js';
+
 // Import configuration variables
 import config from './config.js';
 
@@ -48,9 +49,12 @@ if (config.environment == 'dev') {
   // Load base url for the backend
   const baseUrl = config.baseUrl;
 
+  // Create HttpClient
+  const httpClient = new HttpClient(baseUrl);
+
   // Initilize Services
-  const eventsService = new EventsService(baseUrl);
-  const vendorsService = new VendorsService(baseUrl);
+  const eventsService = new EventsService(httpClient);
+  const vendorsService = new VendorsService(httpClient);
 
   eventService = eventsService;
   vendorService = vendorsService;
@@ -63,7 +67,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/vendors/:vendorId',
-        element: <Vendor VendorService={MockVendorService} />,
+        element: <Profile vendorService={vendorService} />,
       },
       {
         path: '/login',
@@ -77,10 +81,6 @@ const router = createBrowserRouter([
       {
         path: '/reset_password',
         element: <ResetPassword />,
-      },
-      {
-        path: '/profile',
-        element: <Profile vendorService={MockVendorService} />,
       },
       {
         path: '/events/:eventId',
@@ -106,7 +106,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 export default root.render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </React.StrictMode>,
 );
 // If you want to start measuring performance in your app, pass a function

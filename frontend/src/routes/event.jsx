@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, {useEffect, useState, useContext} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown, faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCaretDown, faAnglesLeft} from '@fortawesome/free-solid-svg-icons';
 import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
-import {Context} from '../services/context.jsx'
+import {Context} from '../services/context.jsx';
 
-export default function Event({ eventService }) {
+export default function Event({eventService}) {
   const [event, setEvent] = useState(null);
   const [about, setAbout] = useState(false);
   const navigate = useNavigate();
-  const { eventId } = useParams();
-  const { user, setMessage, setBad } = useContext(Context);
+  const {eventId} = useParams();
+  const {user, setMessage, setBad} = useContext(Context);
 
   useEffect(() => {
     if (!user) {
@@ -21,11 +21,11 @@ export default function Event({ eventService }) {
       navigate('/');
     }
     const fetchEvent = async () => {
-      console.log('Event id', eventId)
+      console.log('Event id', eventId);
       const eventData = await eventService.getEventById(parseInt(eventId.slice(1)));
       if (!eventData) {
-        setMessage("Event not found")
-        setBad(true)
+        setMessage('Event not found');
+        setBad(true);
         navigate('/events');
       } else {
         setEvent(eventData);
@@ -39,7 +39,7 @@ export default function Event({ eventService }) {
     return <div>Event Not Found</div>;
   }
 
-  const { name, location, date, startTime, endTime, description } = event;
+  const {name, location, date, startTime, endTime, description} = event;
   const vendorImages = [logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo, logo, bLogo];
 
   const toggleVendor = () => {
@@ -83,7 +83,7 @@ export default function Event({ eventService }) {
 }
 
 Event.propTypes = {
-  eventsService: PropTypes.shape({
+  eventService: PropTypes.shape({
     getEventById: PropTypes.func.isRequired,
   }).isRequired,
 };

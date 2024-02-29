@@ -1,26 +1,38 @@
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import logo from './../assets/PIM_logo_black.png';
-import { Link, useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { Context } from '../services/context';
+import {Link, useNavigate} from 'react-router-dom';
+import {useContext} from 'react';
+import {Context} from '../services/context';
 import PropTypes from 'prop-types';
+import User from '../objects/User';
 
-
-export default function Login({ loginService }) {
+export default function Login({loginService}) {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const navigate = useNavigate();
-  const { setMessage, setBad, setUser } = useContext(Context);
+  const {setMessage, setBad, setUser} = useContext(Context);
 
   async function handleLogin() {
-    const data = { email: email, password: pass };
-    if (await loginService(data)) {
-      setBad(false);
-      setUser({ email: email, password: pass, id: 2, isadmin: true }); // dummy user object for develepment
-      setMessage('Logged in succesfully');
-      navigate('/events');
-      console.log('Logged in!');
+    const data = {email: email, password: pass};
+    const loginResponse = await loginService(data);
+
+    console.log(loginResponse);
+
+    if (loginResponse != undefined) {
+      if (loginResponse.status == 200) {
+        setUser(User.createFromCookie());
+        setBad(false);
+        setMessage('Logged in succesfully');
+        navigate('/events');
+        console.log('Logged in!');
+      } else if (loginResponse.status == 401) {
+        setBad(true);
+        setMessage('Bad Request. Check username and password.');
+      } else if (loginResponse.status == 500) {
+        setBad(true);
+        setMessage('Server experienced an error processing this request. Please try again.');
+      }
     } else {
       setBad(true);
       setMessage('Failed to login');
