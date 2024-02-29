@@ -2,6 +2,7 @@ import AdminsRepository from './AdminsRepository.js';
 
 export default class AdminsService {
   constructor(httpClient) {
+    this.httpClient = httpClient;
     this.adminsRepository = new AdminsRepository(httpClient);
   }
 
