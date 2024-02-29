@@ -2,6 +2,7 @@ import React, {useContext, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
 import {Link} from 'react-router-dom';
+import FooterPad from '../components/footerpad';
 
 export default function Events({eventService}) {
   const [events, setEvents] = useState([]);
@@ -106,6 +107,7 @@ export default function Events({eventService}) {
           )) : eventDisplay(events))
         }
       </div>
+      <FooterPad/>
     </div>
   );
 }

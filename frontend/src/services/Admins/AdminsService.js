@@ -8,6 +8,7 @@ export default class AdminsService {
 
   async authenticateAdmin(adminData) {
     const response = await this.adminsRepository.authenticateAdmin(adminData);
+    this.httpClient.processCookie();
     return response;
   }
 

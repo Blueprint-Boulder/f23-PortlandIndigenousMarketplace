@@ -3,6 +3,7 @@ import handbook from './../assets/Handbook.png';
 import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
+import FooterPad from '../components/footerpad';
 
 export default function Profile({vendorService}) {
   const {vendorId} = useParams();
@@ -256,6 +257,7 @@ export default function Profile({vendorService}) {
           </div>
         )
       }
+      <FooterPad/>
     </div>
 
   );

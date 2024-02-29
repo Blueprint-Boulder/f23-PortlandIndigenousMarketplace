@@ -7,9 +7,10 @@ import Alert from '../components/alert.jsx';
 import {useContext} from 'react';
 import PropTypes from 'prop-types';
 import Vendor from '../objects/Vendor.js';
+import FooterPad from '../components/footerpad.jsx';
 
 
-export default function Register({vendorService}) {
+export default function Register({vendorService, adminService}) {
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
   const [pass2, setPass2] = useState('');
@@ -23,6 +24,25 @@ export default function Register({vendorService}) {
     const vendor = new Vendor(name, email, website, phone);
 
     const response = await vendorService.createVendor(vendor, pass);
+    console.log(response);
+    if (response) {
+      setBad(false);
+      setMessage('Registered succesfully');
+      console.log('Registered!');
+      navigate('/login');
+    } else {
+      setBad(true);
+      setMessage('Failed to register');
+    }
+  };
+
+  async function handleRegisterAdmin() {
+    const response = await adminService.createAdmin(
+        {
+          name: name,
+          password: pass,
+          email: email,
+        } );
     console.log(response);
     if (response) {
       setBad(false);
@@ -69,14 +89,15 @@ export default function Register({vendorService}) {
         {pass !== pass2 && <Alert content="Passwords match" bad ={true}/>}
 
         <div className="m-2 ">
-          <button className="bg-blue w-3/4 rounded click:bg-black" onClick={() => handleRegister()}>Submit</button>
+          <button className="bg-blue w-3/4 rounded click:bg-black" onClick={() => handleRegister()}>Register</button>
+          <button className="bg-grey-3 w-3/4 rounded click:bg-black" onClick={() => handleRegisterAdmin()}>Register Admin (is this allowed?)</button>
         </div>
 
         <div className="m-2 text-blue underline">
           <Link to='/login'>Back to login</Link>
         </div>
       </div>
-
+      <FooterPad />
     </div>
   );
 }
@@ -84,5 +105,8 @@ export default function Register({vendorService}) {
 Register.propTypes = {
   vendorService: PropTypes.shape({
     createVendor: PropTypes.func.isRequired,
+  }).isRequired,
+  adminService: PropTypes.shape({
+    createAdmin: PropTypes.func.isRequired,
   }).isRequired,
 };

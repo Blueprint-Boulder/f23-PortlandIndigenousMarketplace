@@ -27,6 +27,7 @@ import MockVendorService from './services/MockServices/MockVendorService.js';
 // Import Real Services
 import EventsService from './services/Events/EventsService.js';
 import VendorsService from './services/Vendors/VendorsService.js';
+import AdminsService from './services/Admins/AdminsService.js';
 
 // Import configuration variables
 import config from './config.js';
@@ -35,6 +36,7 @@ import config from './config.js';
 import HttpClient from './services/HttpClient.js';
 
 let eventService;
+let adminService;
 let vendorService;
 let httpClient;
 
@@ -54,6 +56,7 @@ if (config.environment == 'dev') {
   // Initilize Services
   eventService = new EventsService(httpClient);
   vendorService = new VendorsService(httpClient);
+  adminService = new AdminsService(httpClient);
 }
 
 const router = createBrowserRouter([
@@ -67,12 +70,12 @@ const router = createBrowserRouter([
       },
       {
         path: '/login',
-        element: <Login vendorService={vendorService} />,
+        element: <Login vendorService={vendorService} adminService = {adminService} />,
 
       },
       {
         path: '/register',
-        element: <Register vendorService={vendorService} />,
+        element: <Register vendorService={vendorService} adminService = {adminService}/>,
       },
       {
         path: '/reset_password',
@@ -92,7 +95,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/logout',
-        element: <Logout />,
+        element: <Logout vendorService = {vendorService} adminService = {adminService}/>,
       },
     ],
     errorElement: <ErrorPage />,

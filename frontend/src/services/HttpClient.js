@@ -26,6 +26,12 @@ class HttpClient {
     this.axiosInstance.defaults.headers.common['Cookie'] = cookie;
     this.user = User.newUserFromCookie(cookie, isadmin);
   }
+
+  destroyUser() {
+    Cookies.remove('auth');
+    Cookies.remove('auth_pim');
+    this.user = null;
+  }
 }
 
 export default HttpClient;

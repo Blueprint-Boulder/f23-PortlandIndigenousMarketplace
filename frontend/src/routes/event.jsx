@@ -6,6 +6,7 @@ import {faCaretDown, faAnglesLeft} from '@fortawesome/free-solid-svg-icons';
 import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
 import {Context} from '../services/context.jsx';
+import FooterPad from '../components/footerpad.jsx';
 
 export default function Event({eventService}) {
   const [event, setEvent] = useState(null);
@@ -77,6 +78,7 @@ export default function Event({eventService}) {
           <img key={vendorImg} src={vendorImg} alt={vendorImg} onClick={toggleVendor} className='w-18 h-14 bg-white rounded-md drop-shadow-xl' />
         ))}
       </div>
+      <FooterPad/>
     </div>
 
   );
