@@ -1,13 +1,11 @@
-
 import React, {useState} from 'react';
 import logo from './../assets/PIM_logo_black.png';
 import {Link, useNavigate} from 'react-router-dom';
 import {useContext} from 'react';
 import {Context} from '../services/context';
 import PropTypes from 'prop-types';
-import User from '../objects/User';
 
-export default function Login({loginService}) {
+export default function Login({vendorService}) {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const navigate = useNavigate();
@@ -15,17 +13,15 @@ export default function Login({loginService}) {
 
   async function handleLogin() {
     const data = {email: email, password: pass};
-    const loginResponse = await loginService(data);
-
-    console.log(loginResponse);
+    const loginResponse = await vendorService.authenticateVendor(data);
 
     if (loginResponse != undefined) {
       if (loginResponse.status == 200) {
-        setUser(User.createFromCookie());
+        setUser(vendorService.httpClient.user);
         setBad(false);
         setMessage('Logged in succesfully');
         navigate('/events');
-        console.log('Logged in!');
+        console.log('Logged in as user: ', vendorService.httpClient.user);
       } else if (loginResponse.status == 401) {
         setBad(true);
         setMessage('Bad Request. Check username and password.');
@@ -53,7 +49,7 @@ export default function Login({loginService}) {
         <div className="m-2">
           <input
             className="p-1 rounded-lg w-3/4 drop-shadow-md"
-            placeholder="Username"
+            placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}>
           </input>
         </div>
@@ -87,5 +83,10 @@ export default function Login({loginService}) {
 }
 
 Login.propTypes = {
-  loginService: PropTypes.func.isRequired,
+  vendorService: PropTypes.shape( {
+    authenticateVendor: PropTypes.func.isRequired,
+    httpClient: PropTypes.shape( {
+      user: PropTypes.object,
+    }).isRequired,
+  }).isRequired,
 };

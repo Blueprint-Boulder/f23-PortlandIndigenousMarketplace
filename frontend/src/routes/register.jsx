@@ -6,9 +6,10 @@ import {Context} from '../services/context';
 import Alert from '../components/alert.jsx';
 import {useContext} from 'react';
 import PropTypes from 'prop-types';
+import Vendor from '../objects/Vendor.js';
 
 
-export default function Register({registerService}) {
+export default function Register({vendorService}) {
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
   const [pass2, setPass2] = useState('');
@@ -19,9 +20,11 @@ export default function Register({registerService}) {
   const navigate = useNavigate();
 
   async function handleRegister() {
-    const data = {name: name, email: email, password: pass, website: website, phoneNumber: phone};
+    const vendor = new Vendor(name, email, website, phone);
 
-    if (await registerService(data)) {
+    const response = await vendorService.createVendor(vendor, pass);
+    console.log(response);
+    if (response) {
       setBad(false);
       setMessage('Registered succesfully');
       console.log('Registered!');
@@ -60,7 +63,7 @@ export default function Register({registerService}) {
         </div>
 
         <div className="m-2">
-          <input className="p-1 rounded-lg w-3/4" placeholder="Reenter password" type="password" onChange={(e) => setPass2(e.target.value)}></input>
+          <input className="p-1 rounded-lg w-3/4" placeholder="Re-enter password" type="password" onChange={(e) => setPass2(e.target.value)}></input>
         </div>
 
         {pass !== pass2 && <Alert content="Passwords match" bad ={true}/>}
@@ -79,5 +82,7 @@ export default function Register({registerService}) {
 }
 
 Register.propTypes = {
-  registerService: PropTypes.func.isRequired,
+  vendorService: PropTypes.shape({
+    createVendor: PropTypes.func.isRequired,
+  }).isRequired,
 };

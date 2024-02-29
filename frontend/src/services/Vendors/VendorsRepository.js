@@ -26,7 +26,8 @@ export default class VendorsRepository {
   async authenticateVendor(vendorData) {
     try {
       const response = await this.httpClient.axiosInstance.post('vendors/login', vendorData);
-      this.httpClient.setCookie(response.headers['set-cookie'][0]);
+      console.log(response.headers['set-cookie']);
+      this.httpClient.processCookie();
       return response;
     } catch (error) {
       console.error('Error logging in vendor:');

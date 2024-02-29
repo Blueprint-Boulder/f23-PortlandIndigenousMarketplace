@@ -28,16 +28,15 @@ import MockVendorService from './services/MockServices/MockVendorService.js';
 import EventsService from './services/Events/EventsService.js';
 import VendorsService from './services/Vendors/VendorsService.js';
 
-import {handleLoginVendor} from './services/handleLogin.js';
-import {handleRegister} from './services/handleRegister.js';
-
-import HttpClient from './services/HttpClient.js';
-
 // Import configuration variables
 import config from './config.js';
 
+// Import HttpClient
+import HttpClient from './services/HttpClient.js';
+
 let eventService;
 let vendorService;
+let httpClient;
 
 if (config.environment == 'dev') {
   MockVendorService.init();
@@ -49,15 +48,12 @@ if (config.environment == 'dev') {
   // Load base url for the backend
   const baseUrl = config.baseUrl;
 
-  // Create HttpClient
-  const httpClient = new HttpClient(baseUrl);
+  // Initialize HttpClient
+  httpClient = new HttpClient(baseUrl);
 
   // Initilize Services
-  const eventsService = new EventsService(httpClient);
-  const vendorsService = new VendorsService(httpClient);
-
-  eventService = eventsService;
-  vendorService = vendorsService;
+  eventService = new EventsService(httpClient);
+  vendorService = new VendorsService(httpClient);
 }
 
 const router = createBrowserRouter([
@@ -71,12 +67,12 @@ const router = createBrowserRouter([
       },
       {
         path: '/login',
-        element: <Login loginService={handleLoginVendor} />,
+        element: <Login vendorService={vendorService} />,
 
       },
       {
         path: '/register',
-        element: <Register registerService={handleRegister} />,
+        element: <Register vendorService={vendorService} />,
       },
       {
         path: '/reset_password',

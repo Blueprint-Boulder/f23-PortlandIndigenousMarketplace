@@ -1,5 +1,7 @@
--- Create the tables
+-- Enable pgcrypto extension for password hashing
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+-- Create the tables
 -- Admins table
 CREATE TABLE IF NOT EXISTS Admins (
     admin_id SERIAL PRIMARY KEY,
@@ -57,3 +59,7 @@ CREATE TABLE IF NOT EXISTS EventRequests (
 -- Indexes (as per the diagram)
 CREATE INDEX idx_admin_email ON Admins(email);
 CREATE INDEX idx_vendor_email ON Vendors(email);
+
+-- Insert initial admin user - Uncomment and modify for initial setup
+INSERT INTO Admins (name, email, password)
+VALUES ('Admin', 'admin@pim.com', crypt('pim', gen_salt('bf')));

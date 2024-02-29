@@ -19,6 +19,7 @@ const {
     processEventRequest,
     getAdminByEmail,
     createAdminMiddleware,
+    authenticateAdmin,
 } = require('../controllers/AdminController');
 
 const sendSuccessResponse = require('../middleware/successResponse');
@@ -37,9 +38,7 @@ router.post('/violations/:vendorId', verify('admin'), createVendorViolation, sen
 
 router.delete('/violations/:violationId', verify('admin'), deleteVendorViolation, sendSuccessResponse);
 
-router.post('/login', getAdminByEmail, signAdminToken, (req, res) => {
-  res.status(200).json({status: 'success'});
-});
+router.post('/login', getAdminByEmail, authenticateAdmin, signAdminToken, sendSuccessResponse);
 
 // UNFINISHED: Create an admin account
 // Useful for creating an admin account for testing purposes. Password in database needs to be hashed for login to work properly.

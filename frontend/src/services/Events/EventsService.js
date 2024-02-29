@@ -3,6 +3,7 @@ import Event from '../../objects/Event.js';
 
 export default class EventsService {
   constructor(httpClient) {
+    this.httpClient = httpClient;
     this.eventsRepository = new EventsRepository(httpClient);
   }
 
