@@ -12,9 +12,10 @@ export default class User {
     this.website = website;
   }
 
-  static newUserFromCookie(cookie, isadmin) {
+  static newUserFromCookie(cookie) {
     const decode = jwtDecode(cookie);
-    if (isadmin) return new User(decode.admin_id, decode.name, decode.email, isadmin, null, null);
-    return new User(decode.vendor_id, decode.name, decode.email, isadmin, decode.phone_number, decode.website);
+    console.log(decode.website);
+    if (!decode.website) return new User(decode.admin_id, decode.name, decode.email, true, null, null);
+    return new User(decode.vendor_id, decode.name, decode.email, false, decode.phone_number, decode.website);
   }
 }
