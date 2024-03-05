@@ -5,7 +5,6 @@ export default class AdminsRepository {
   async authenticateAdmin(adminData) {
     try {
       const response = await this.httpClient.axiosInstance.post('admins/login', adminData);
-      // this.httpClient.processCookie(response.headers['set-cookie'][0]);
       return response;
     } catch (error) {
       console.error('Error logging in admin:');

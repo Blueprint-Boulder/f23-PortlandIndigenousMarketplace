@@ -11,30 +11,31 @@ export default function Root() {
   const [message, setMessage] = useState('');
   const [bad, setBad] = useState(false);
   const [user, setUser] = useState(null);
-  const [cookie, setCookie] = useState(Cookies.get('auth') || Cookies.get('auth_pim'));
+  const [cookie, setCookie] = useState(null);
   setTimeout(() => {
     setMessage(''); setBad(false);
   }, 5000);
 
   useEffect(() => {
-    // Update the user state when the cookie changes
-    if (Cookies.get('auth') || Cookies.get('auth_pim')) {
-      setUser(User.newUserFromCookie(cookie));
-    }
+    const checkCookie = () => {
+      const currentCookie = Cookies.get('auth') || Cookies.get('auth_pim');
+      if (currentCookie !== cookie && currentCookie !== undefined) {
+        setCookie(currentCookie);
+        setUser(User.newUserFromCookie(currentCookie));
+        console.log(User.newUserFromCookie(currentCookie));
+      }
+    };
+
+    // Check immediately
+    checkCookie();
+
+    // Then check every second
+    const intervalId = setInterval(checkCookie, 1000);
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
   }, [cookie]);
 
-  useEffect(() => {
-    // Set up a mutation observer to watch for changes in the cookie
-    const observer = new MutationObserver(() => {
-      setCookie(Cookies.get('auth') || Cookies.get('auth_pim'));
-    });
-
-    // Start observing the document with the configured parameters
-    observer.observe(document, {attributes: true, attributeFilter: ['cookie'], subtree: true});
-
-    // Clean up the observer when the component unmounts
-    return () => observer.disconnect();
-  }, []);
   return (
     <Context.Provider value = {{message, setMessage, bad, setBad, user, setUser}}>
       <div className="bg-grey-1 w-screen flex min-h-screen flex-col">
