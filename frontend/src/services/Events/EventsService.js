@@ -13,10 +13,10 @@ export default class EventsService {
         data.eventId,
         data.name,
         data.location,
-        new Date(data.start_time),
-        new Date(data.end_time),
+        new Date(data.starttime),
+        new Date(data.endtime),
         data.description,
-        data.vendor_capacity,
+        data.vendorCapacity,
     ));
   }
 
@@ -26,8 +26,8 @@ export default class EventsService {
         eventData.eventId,
         eventData.name,
         eventData.location,
-        new Date(eventData.start_time),
-        new Date(eventData.end_time),
+        new Date(eventData.starttime),
+        new Date(eventData.endtime),
         eventData.description,
         eventData.vendorCapacity,
     );
@@ -38,8 +38,8 @@ export default class EventsService {
       // Assuming your Event class has properties that directly map to your data structure
       name: event.name,
       location: event.location,
-      start_time: event.start_time.toISOString(), // Convert Date object to string
-      end_time: event.end_time.toISOString(),
+      starttime: event.starttime.toISOString(), // Convert Date object to string
+      endtime: event.endtime.toISOString(),
       description: event.description,
       vendorCapacity: event.vendorCapacity,
       // Include other properties as needed
@@ -51,8 +51,8 @@ export default class EventsService {
     const eventData = {
       name: event.name,
       location: event.location,
-      start_time: event.start_time.toISOString(),
-      end_time: event.end_time.toISOString(),
+      starttime: event.starttime.toISOString(),
+      endtime: event.endtime.toISOString(),
       description: event.description,
       vendorCapacity: event.vendorCapacity,
     };

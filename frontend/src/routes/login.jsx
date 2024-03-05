@@ -18,11 +18,8 @@ export default function Login({vendorService, adminService}) {
 
     if (loginResponse != undefined) {
       if (loginResponse.status == 200) {
-        setUser(vendorService.httpClient.user);
-        setBad(false);
         setMessage('Logged in succesfully');
         navigate('/events');
-        console.log('Logged in as user: ', vendorService.httpClient.user);
       } else if (loginResponse.status == 401) {
         setBad(true);
         setMessage('Bad Request. Check username and password.');

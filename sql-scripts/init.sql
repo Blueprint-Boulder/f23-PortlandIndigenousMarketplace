@@ -25,10 +25,10 @@ CREATE TABLE IF NOT EXISTS Events (
     event_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     location VARCHAR(255),
-    start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP NOT NULL,
+    starttime TIMESTAMP NOT NULL,
+    endtime TIMESTAMP NOT NULL,
     description TEXT,
-    vendor_capacity INT NOT NULL
+    vendorCapacity INT NOT NULL
 );
 
 -- Violations table
