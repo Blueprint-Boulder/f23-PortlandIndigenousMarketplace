@@ -19,6 +19,7 @@
     "jwt-decode": "^4.0.0",
     "mocha": "^9.1.0",
     "react": "^18.2.0",
+    "react-datepicker": "^6.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.17.0",
     "react-router-dom": "^6.17.0",

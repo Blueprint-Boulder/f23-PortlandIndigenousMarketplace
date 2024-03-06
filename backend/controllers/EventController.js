@@ -35,13 +35,13 @@ const getEventById = async (req, res, next) => {
 };
 
 const createEvent = async (req, res, next) => {
-  const {name, location, start_time, end_time, description, capacity} = req.body;
+  const {name, location, starttime, endtime, description, vendorCapacity} = req.body;
   try {
     const event = await db.one(`
-      INSERT INTO Events (name, location, start_time, end_time, description, vendor_capacity)
+      INSERT INTO Events (name, location, starttime, endtime, description, vendorCapacity)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
-    `, [name, location, start_time, end_time, description, capacity]);
+    `, [name, location, starttime, endtime, description, vendorCapacity]);
 
     // Returns the created event
     res.locals.data = event;
@@ -55,20 +55,20 @@ const createEvent = async (req, res, next) => {
 
 const updateEvent = async (req, res, next) => {
   const {event_id} = req.params;
-  const {name, location, start_time, end_time, description, capacity} = req.body;
+  const {name, location, starttime, endtime, description, vendorCapacity} = req.body;
   try {
     const result = await db.one(`
       UPDATE Events
       SET 
         name = $1, 
         location = $2, 
-        start_time = $3, 
-        end_time = $4,
+        starttime = $3, 
+        endtime = $4,
         description = $5, 
         vendor_capacity = $6
       WHERE event_id = $7
       RETURNING *;
-    `, [name, location, start_time, end_time, description, capacity, event_id]);
+    `, [name, location, starttime, endtime, description, vendorCapacity, event_id]);
 
     if (!result) {
       return res.status(404).json({error: 'Event not found'});

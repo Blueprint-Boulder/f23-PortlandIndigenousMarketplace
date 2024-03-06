@@ -171,6 +171,33 @@ const createAdminMiddleware = async (req, res, next) => {
   }
 };
 
+const authenticateAdmin = async (req, res, next) => {
+    try {
+        const {password} = req.body;
+        const {admin} = res.locals;
+        
+        if (admin === undefined) {
+            return res.status(401).json({message: 'Unauthorized: Admin'});
+        }
+        
+        const match = await bcrypt.compare(password, admin.password);
+        
+        if (match) {
+            res.locals.data = {
+                'message': 'Login successful',
+                'status': 'success',
+            };
+            next();
+        } else {
+            res.status(401).json({message: 'Incorrect admin email or password.'});
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({error: 'Internal Server Error'});
+    
+    }
+}
+
 module.exports = {
     getEventRequests,
     getAllEventRequests,
@@ -181,4 +208,5 @@ module.exports = {
     processEventRequest,
     getAdminByEmail,
     createAdminMiddleware,
+    authenticateAdmin,
 };

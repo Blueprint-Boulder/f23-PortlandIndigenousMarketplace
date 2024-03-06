@@ -1,16 +1,62 @@
 import React, {useContext, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
-// import Modal from '../components/modal.jsx';
-// import { Datetimepicker, initTE } from "tw-elements";
-// initTE({ Datetimepicker });
-// initTE({ Datetimepicker, Input });
+import {Link} from 'react-router-dom';
+import FooterPad from '../components/footerpad';
+
+
+import DatePicker from 'react-datepicker';
+
+import 'react-datepicker/dist/react-datepicker.css';
+
+function EventModal({editEvent, handleSubmit}) {
+  const [eventInfo, setEventInfo] = useState({name: '', description: '', location: '', starttime: new Date(), endtime: new Date(), vendorCapacity: 0});
+  return (
+    <div>
+      <form action="" className='flex flex-col' onSubmit = {() => handleSubmit(eventInfo)}>
+        <label htmlFor="eventName" className='py-4'>Event Name:</label>
+        <input type="text" id='eventName' name='eventName' onChange = {(e) => setEventInfo({...eventInfo, name: e.target.value})}/>
+        <label htmlFor="description" className='py-4'>Description:</label>
+        <input type="text" id='description' name='description' onChange = {(e) => setEventInfo({...eventInfo, description: e.target.value})} />
+        <label htmlFor="location" className='py-4' >Location:</label>
+        <input type="text" id='location' name='location' onChange = {(e) => setEventInfo({...eventInfo, location: e.target.value})}/>
+        <label htmlFor="start-time" className='py-4' >Start Time:</label>
+        <DatePicker
+          id='start-time'
+          name='start-time'
+          selected={eventInfo.starttime}
+          onChange={(dateTime) => setEventInfo({...eventInfo, starttime: dateTime})}
+          showTimeSelect
+          timeIntervals={15}
+          timeCaption="Time"
+          dateFormat="MMMM d, yyyy h:mm aa"
+        />
+        <label htmlFor="end-time" className='py-4' >End Time:</label>
+        <DatePicker
+          id='end-time'
+          name='end-time'
+          selected={eventInfo.endtime}
+          onChange={(dateTime) => setEventInfo({...eventInfo, endtime: dateTime})}
+          showTimeSelect
+          timeIntervals={15}
+          timeCaption="Time"
+          dateFormat="MMMM d, yyyy h:mm aa"
+        />
+        <label htmlFor="vendor-capacity" className='py-4' >Vendor Capacity:</label>
+        <input type="text" id='vendor-capacity' name='location' onChange = {(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})}/>
+        <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>{editEvent ? 'Save Changes' : 'Add Event'}</button>
+      </form>
+    </div>
+  );
+}
 
 export default function Events({eventService}) {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState('');
   const {user} = useContext(Context);
   const [modal, setModal] = useState(false);
+  const [editEvent, setEditEvent] = useState(false);
+  const [currId, setCurrId] = useState(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -31,19 +77,33 @@ export default function Events({eventService}) {
     fetchEvents();
   }, [eventService]);
 
-  const closeModal = () => {
-    setModal(false);
+  async function handleSubmit(event) {
+    if (editEvent) {
+      setEditEvent(true);
+      setModal(false);
+      const res = await eventService.updateEvent(currId, event);
+      console.log('Res status', res.status);
+      if (res !== undefined) {
+        console.log('Event updated successfully');
+        const updatedEvents = await eventService.getAllEvents();
+        setEvents(updatedEvents);
+      } else {
+        console.error('Failed to update event');
+      }
+    } else {
+      setEditEvent(false);
+      setModal(false);
+      const res = await eventService.createEvent(event);
+      if (res !== undefined) {
+        console.log('Event added successfully');
+        const updatedEvents = await eventService.getAllEvents();
+        setEvents(updatedEvents);
+      } else {
+        console.error('Failed to add event');
+      }
+    }
   };
 
-  const handleAddEvent = () => {
-    console.log('add event called, but I am not implemented :(((');
-    // eventsService.createEvent(); this needs implementation
-    setModal(true);
-  };
-
-  const handleEditEvent = () => {
-    console.log('edit event called, but I am not implemented :(((');
-  };
 
   const eventDisplay = (event) => (
     <div className="bg-white shadow-lg rounded-lg p-4 max-w-sm mx-auto bm-4">
@@ -56,8 +116,13 @@ export default function Events({eventService}) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8C15 9.65685 13.6569 11 12 11Z" />
           </svg>
           {event.location}
-          {user && user.isadmin && <button onClick={() => handleEditEvent()} className='hover:bg-blue absolute right-0 text-sm text-grey-5 px-1 rounded-md bg-white border-2'>Edit</button>}
+          {user && user.isadmin && <button onClick={() => {
+            setEditEvent(true); setModal(true); setCurrId(event.eventId);
+          }} className='hover:bg-blue absolute right-0 text-sm text-grey-5 px-1 rounded-md bg-white border-2'>Edit</button>}
         </div>
+        <Link to={`/events/:${event.eventId}`} className="mt-2 bg-blue-500 text-black p-2 rounded-md inline-block">
+          View Event Details
+        </Link>
       </div>
     </div>
   );
@@ -66,6 +131,13 @@ export default function Events({eventService}) {
     return (
       <div className='w-full mx-auto flex flex-col justify-center pb-16'>
         <h1 className='color-white text-2xl text-center my-3 font-semibold'>No Events Found</h1>
+        {!modal && user && user.isadmin && <button className='bg-white hover:bg-blue shadow-sm absolute right-0 text-black w-max m-2 p-2 rounded-lg'
+          onClick={() => {
+            setEditEvent(false); setModal(true);
+          }}>Add Event</button>}
+        {modal && (
+          <EventModal editEvent={editEvent} handleSubmit={handleSubmit}/>
+        )}
       </div>
     );
   }
@@ -73,39 +145,22 @@ export default function Events({eventService}) {
   return (
     <div className='w-full mx-auto flex flex-col justify-center pb-16'>
       <div className='static'>
-        {user && user.isadmin && <button className='bg-white hover:bg-blue shadow-sm absolute right-0 text-black w-max m-2 p-2 rounded-lg'
-          onClick={() => handleAddEvent()}>Add Event</button>}
-        </div>
+        {!modal && user && user.isadmin && <button className='bg-white hover:bg-blue shadow-sm absolute right-0 text-black w-max m-2 p-2 rounded-lg'
+          onClick={() => {
+            setEditEvent(false); setModal(true);
+          }}>Add Event</button>}
         {modal && (
-          <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'> 
-          <div className='flex flex-col justify-center h-full'>
-            <form action="" className='flex flex-col'>
-              <label htmlFor="eventName" className='py-4'>Event Name:</label>
-              <input type="text" id='eventName' name='eventName' />
-              <label htmlFor="desc" className='py-4'>Description:</label>
-              <input type="text" id='desc' name='desc' />
-              <label htmlFor="date" className='py-4'>Date:</label>
-              <input type="text" id='date' name='date' />
-              {/* <div className="relative mb-3" data-te-date-timepicker-init data-te-input-wrapper-init>
-                <input type="text" className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0" id="form1" />
-                <label htmlFor="form1" className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">Select a time</label>
-              </div> */}
-              <label htmlFor="location" className='py-4'>Location:</label>
-              <input type="text" id='location' name='location' />
-              <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
-            </form>
-            <button onClick={() => { closeModal(); }} className='bg-blue text-white p-5'>Close Edit</button>
-            </div>
-          </div>
+          <EventModal editEvent={editEvent} handleSubmit={handleSubmit}/>
         )}
         <h1 className='color-white text-2xl text-center my-3 font-semibold'>Events</h1>
       <div className='flex flex-col space-y-4'>
         {
           events && (Array.isArray(events) ? events.map((event, i) => (
-            <li className='list-style:none' key={event.id}>{eventDisplay(event)}</li>
+            <div className='list-style:none' key={event.eventId}>{eventDisplay(event)}</div>
           )) : eventDisplay(events))
         }
       </div>
+      <FooterPad/>
     </div>
   );
 }
@@ -113,5 +168,12 @@ export default function Events({eventService}) {
 Events.propTypes = {
   eventService: PropTypes.shape({
     getAllEvents: PropTypes.func.isRequired,
+    createEvent: PropTypes.func.isRequired,
+    updateEvent: PropTypes.func.isRequired,
   }).isRequired,
+};
+
+EventModal.propTypes = {
+  editEvent: PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
 };

@@ -13,7 +13,9 @@ const signToken = async (req, res, next) => {
   // Sign the token with JWT_SECRET
   const token = await jwt.sign(res.locals.vendor, process.env.JWT_SECRET);
   // Return the token in a cookie
-  res.cookie('auth', token, {httpOnly: true, secure: false});
+  res.cookie('auth', token, {secure: false});
+
+  console.log('Token:', token);
 
   next();
 };
@@ -58,11 +60,14 @@ const signAdminToken = async (req, res, next) => {
     return res.status(401).json({message: 'Unauthorized: Admin'});
   }
 
+  // Remove admin password from cookie
+  delete res.locals.admin['password'];
+
   // Sign the token with JWT_SECRET
   const token = await jwt.sign(res.locals.admin, process.env.JWT_SECRET);
 
   // Return the token in a cookie
-  res.cookie('auth_pim', token, {httpOnly: true, secure: false});
+  res.cookie('auth_pim', token, {secure: false});
 
   next();
 };
