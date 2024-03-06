@@ -15,6 +15,11 @@ export default function Event({eventService}) {
   const {eventId} = useParams();
   const {user, setMessage, setBad} = useContext(Context);
 
+  /*
+    Make location a link that on click redirects to that same
+    location on google maps
+  */
+
   useEffect(() => {
     if (!user) {
       setMessage('Please log in');
