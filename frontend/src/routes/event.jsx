@@ -18,6 +18,10 @@ export default function Event({eventService}) {
   /*
     Make location a link that on click redirects to that same
     location on google maps
+   https://www.google.com/maps/dire/?api=1&destination=1600+Amphitheatre
+   let address = "1600 Amphitheatre Parkway, Mountain View, CA 94043"
+   let encodedAddress = encodeURIComponent(address);
+   let googleMapsDirectionLink = https://www.google.com/maps/dir/?api=1&destination=?{encodedAdress};
   */
 
   useEffect(() => {
@@ -56,6 +60,12 @@ export default function Event({eventService}) {
     // Handle the user registering for the event
   }
 
+  const encodedAddress = encodeURIComponent(location);
+  // one below pulls up directions
+  // const googleMapsDirectionLink =`https://www.google.com/maps/dir/?api=1&destination=?${encodedAddress}`;
+  // just append the encode address to the place route
+  const googleMapDirectionLink = `https://www.google.com/maps/place/${encodedAddress}`;
+
   return (
     <div id="Event-content" className="overflow-scroll w-full h-full flex flex-col items-center mt-2">
       <button className="self-start ml-2 fixed" onClick={() => navigate(-1)}>
@@ -70,7 +80,7 @@ export default function Event({eventService}) {
       <div className={`${about ? 'relative text-gray-800 m-1 bg-opacity-100 bg-white drop-shadow-xl rounded-md p-2 w-2/3' : 'hidden'}`}>
         {description}
       </div>
-      <div className='mr-1 mt-2'>{location}</div>
+      <div className='mr-1 mt-2'><a href={googleMapDirectionLink}>{location}</a></div>
       <div className='mr-2 mt-2'>{date} | {startTime} - {endTime}</div>
       <button
         className="mt-3 text-gray-800 font-semibold py-2 px-1 drop-shadow-xl rounded-md bg-white w-24 click:text-white"
