@@ -21,7 +21,12 @@ export default function Login({loginService}) {
 
     if (loginResponse != undefined) {
       if (loginResponse.status == 200) {
-        setUser(User.createFromCookie());
+        setUser({id : 2,
+          name : "John Balls",
+          email : "jballs@gmail.com",
+          isadmin : true,
+          phone_number : "3034985803",
+          website : "jballs.com"});
         setBad(false);
         setMessage('Logged in succesfully');
         navigate('/events');

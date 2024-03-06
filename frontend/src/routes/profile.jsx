@@ -4,6 +4,11 @@ import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
 import Modal from '../components/modal.jsx';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faSquareFacebook} from '@fortawesome/free-brands-svg-icons';
+import {faSquareInstagram} from '@fortawesome/free-brands-svg-icons';
+import { faSquareXTwitter } from '@fortawesome/free-brands-svg-icons';
+
 
 export default function Profile({vendorService}) {
   const navigate = useNavigate();
@@ -12,7 +17,7 @@ export default function Profile({vendorService}) {
   const {vendorId} = useParams();
   const id = parseInt(vendorId.slice(1));
   const [vendor] = useState(vendorService.getVendorById(id));
-
+  const [socials, setSocials] = useState({insta: vendor.insta, facebook: vendor.facebook, x: vendor.x});
   useEffect(() => {
     if (!user) {
       setMessage('Please log in');
@@ -58,6 +63,11 @@ export default function Profile({vendorService}) {
         <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.website}</li>
         <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li>
       </div>
+      <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
+        {socials.insta && <li className='[list-style:none] p-2 drop-shadow-lg'><FontAwesomeIcon icon={faSquareInstagram} size="2x"/></li>}
+        {socials.x && <li className='[list-style:none] p-2 drop-shadow-lg'><FontAwesomeIcon icon={faSquareXTwitter} size="2x"/></li>}
+        {socials.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><FontAwesomeIcon icon={faSquareFacebook} size="2x"/></li>}
+      </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <h1 className='text-xl'>Upcoming Events</h1>
         <p>Insert upcoming events modal/reference here</p>
@@ -91,6 +101,14 @@ export default function Profile({vendorService}) {
                 <input type="text" id='website' name='website'/>
                 <label htmlFor="location" className='py-4'>Location:</label>
                 <input type="text" id='location' name='location'/>
+                <div className='flex space-x-4 py-4'>
+                  <label htmlFor="insta" className='py-4'>Instagram link:</label>
+                  <input type="text" id='insta' name='insta'/>
+                  <label htmlFor="x" className='py-4'>X:</label>
+                  <input type="text" id='x' name='x'/>
+                  <label htmlFor="facebook" className='py-4'>Facebook:</label>
+                  <input type="text" id='facebook' name='facebook'/>
+                </div>
                 <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
               </form>
               <button onClick={()=>{
@@ -230,20 +248,26 @@ export default function Profile({vendorService}) {
                 volunteers or staff the Vendor Policy Committee will review complaint. If
                 the complaint is found valid the vendor of interest will receive a notice of
                 the appropriate level of accountability.
+                <p>
                 1. First infraction. A warning will be issued (exhibit 3) to vendor
                 in writing/email and recorded in file/history of vendor.
+                </p>
+                <p>
                 2. Second infraction. A face to face or zoom meeting will be
                 needed with staff and Vendor Policy Committee before
                 returning to in person events. This infraction will be recorded in
                 writing/email to the vendor and recorded in file/history of
                 vendor (exhibit 3).
+                </p>
+                <p>
                 3. A plan of separation for the Indigenous Marketplace
                 programming and the Vendor. For severe infractions including
                 but not limited to violence and hate the plan of separation may
                 be permanent. This plan of separation will be shared in
                 writing/email to the vendor and recorded in file/history of
                 vendor (exhibit 2).
-                Portland Indigenous Marketplace:Vendor Policy Handbook
+                </p>
+                <p>
                 4. Extreme Exceptions: Staff and the Vendor Policy Committee
                 hold the right for severe violations that include but not limited
                 to violence and hate to recommend the plan of separation to be
@@ -252,6 +276,7 @@ export default function Profile({vendorService}) {
                 Board of Directors of the Portland Indigenous Marketplace.
                 This Extreme Exception will be shared in writing/email to the
                 vendor and recorded in file/history of vendor (exhibit 2).
+                </p>
                 Portland Indigenous Marketplace is committed to providing access, equal
                 opportunity and reasonable accommodation for individuals with
                 disabilities, medical needs and other barriers in its services, programs, and
