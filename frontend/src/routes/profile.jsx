@@ -17,7 +17,7 @@ export default function Profile({vendorService}) {
   const {vendorId} = useParams();
   const id = parseInt(vendorId.slice(1));
   const [vendor] = useState(vendorService.getVendorById(id));
-  const [socials, setSocials] = useState({insta: vendor.insta, facebook: vendor.facebook, x: vendor.x});
+  const [socials] = useState({insta: vendor.insta, facebook: vendor.facebook, x: vendor.x});
   useEffect(() => {
     if (!user) {
       setMessage('Please log in');
@@ -64,9 +64,9 @@ export default function Profile({vendorService}) {
         <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li>
       </div>
       <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
-        {socials.insta && <li className='[list-style:none] p-2 drop-shadow-lg'><FontAwesomeIcon icon={faSquareInstagram} size="2x"/></li>}
-        {socials.x && <li className='[list-style:none] p-2 drop-shadow-lg'><FontAwesomeIcon icon={faSquareXTwitter} size="2x"/></li>}
-        {socials.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><FontAwesomeIcon icon={faSquareFacebook} size="2x"/></li>}
+        {socials.insta && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.socials.insta}><FontAwesomeIcon icon={faSquareInstagram} size="2x"/></a></li>}
+        {socials.x && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.socials.x}><FontAwesomeIcon icon={faSquareXTwitter} size="2x"/></a></li>}
+        {socials.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.socials.facebook}><FontAwesomeIcon icon={faSquareFacebook} size="2x"/></a></li>}
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <h1 className='text-xl'>Upcoming Events</h1>
