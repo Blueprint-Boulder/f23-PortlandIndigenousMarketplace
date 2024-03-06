@@ -10,6 +10,7 @@ const {
   getEventRequest,
   updateVendor,
   updateAuthenticatedVendor,
+  uploadProfilePic
 } = require('../controllers/VendorController');
 const sendSuccessResponse = require('../middleware/successResponse');
 const {
@@ -41,5 +42,14 @@ router.put('/:vendorId', verify('admin'), updateVendor, sendSuccessResponse);
 
 // Route for vendor to update themself. ID is retrieved from the token.
 router.put('/', verify('vendor'), updateAuthenticatedVendor, sendSuccessResponse);
+
+// Vendor upload photo for self
+router.post('/image', verify('vendor'), uploadProfilePic, sendSuccessResponse);
+
+// Upload Vendor Photo (probably for admin use)
+router.post('/:vendorId/image');
+
+// Get Vendor Photo URL
+router.get('/:vendorId/image');
 
 module.exports = router;

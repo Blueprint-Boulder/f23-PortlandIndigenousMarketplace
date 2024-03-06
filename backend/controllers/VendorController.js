@@ -5,6 +5,32 @@ const db = require('../database');
 const {hash, genSalt} = require('bcryptjs');
 const bcrypt = require('bcryptjs');
 
+// Imports for file uploading
+const {v4} = require('uuid');
+const mime = require('mime-types');
+const multer  = require('multer');
+
+// TODO: add file upload limits
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    console.log("Destination called");
+    cb(null, '/profilepics');
+  },
+  filename: function (req, file, cb) {
+    const uuid = v4();
+    const fileExt = mime.extension(file.mimetype);
+    const fileName = `${uuid}.${fileExt}`;
+
+    console.log("Filename called");
+
+    req.uuid = uuid;
+    req.fileExt = fileExt;
+
+    cb(null, fileName);
+  }
+})
+const upload = multer({ storage: storage }).single('img');
+
 const getVendor = async (req, res, next) => {
   try {
     const data = await db.oneOrNone('SELECT * FROM Vendors WHERE email = $1', [
@@ -284,6 +310,63 @@ const updateVendor = async (req, res, next) => {
   next();
 };
 
+// Upload a profile pic. If one exists for the vendor, remove it.
+const uploadProfilePic = (req, res, next) => {
+  console.log(req.body);
+  
+  // img is the form field for the profile pic
+  upload(req, res, async (err) => {
+    if (err instanceof multer.MulterError){
+      console.log("Multer error occurred handling file upload.");
+      console.log(err);
+      return res.status(500).json({error: err});
+    } else if (err) {
+      // Find out the difference between these two error conditions
+      console.log(err);
+      return res.status(500).json({error: err});
+    }
+
+    // Vendor id for database entry
+    const vendor_id = res.locals.vendor['vendor_id'];
+
+    // Get file name from request
+    const uuid = req.uuid;
+    const fileExt = req.fileExt;
+
+    // Upload metadata to database
+    try {
+      await db.none(
+        `INSERT INTO ProfilePictures (vendor_id, image_key, file_ext) VALUES ($1, $2, $3)`,
+        [vendor_id, uuid, fileExt]);
+    } catch (err) {
+      // Duplicate emails are not allowed
+      if (err.code === '23505') {
+        res.status(400).json({error: 'This vendor already has a profile pic, or the UUID creation failed to be unique.'});
+        return;
+      }
+
+      // TODO: If database entry fails, delete photo from filesystem!
+
+      // Other internal error
+      console.log(err);
+      res.status(500).json({error: err});
+      return;
+    }
+
+    next();
+  });
+};
+
+// Remove the profile pic for a given vendor
+const removeProfilePic = (req, res, next) => {
+
+}
+
+// Retrieve the url of the picture for a given vendor id
+const fetchPicURL = (req,res,next) => {
+
+}
+
 module.exports = {
   getVendor,
   getVendors,
@@ -294,4 +377,5 @@ module.exports = {
   getEventRequest,
   updateVendor,
   updateAuthenticatedVendor,
+  uploadProfilePic
 };
