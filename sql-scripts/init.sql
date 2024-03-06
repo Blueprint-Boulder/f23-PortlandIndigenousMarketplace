@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS ProfilePictures (
     vendor_id INT REFERENCES Vendors(vendor_id) NOT NULL UNIQUE,
     image_key VARCHAR(60) NOT NULL UNIQUE,
     file_ext VARCHAR(10) NOT NULL
-)
+);
 
 -- Events table
 CREATE TABLE IF NOT EXISTS Events (
