@@ -27,9 +27,7 @@ router.get('/', getVendors, sendSuccessResponse);
 router.get('/:vendorId', getVendorById, sendSuccessResponse);
 
 // Creates a new vendor
-router.post('/', createVendor, (req, res) => {
-  res.status(200).json({status: 'success'});
-});
+router.post('/', createVendor, sendSuccessResponse);
 
 // Create Vendor event request
 router.post('/events/request', verify('vendor'), createEventRequest, sendSuccessResponse);

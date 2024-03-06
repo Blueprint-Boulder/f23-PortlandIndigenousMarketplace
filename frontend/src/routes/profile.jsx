@@ -3,17 +3,20 @@ import handbook from './../assets/Handbook.png';
 import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
-import Modal from '../components/modal.jsx';
-import ViolationModal from '../components/violationmodal.jsx';
+import FooterPad from '../components/footerpad';
+import ViolationModal from '../components/violationmodal';
 
 export default function Profile({vendorService}) {
-  const navigate = useNavigate();
-  const {user, setMessage, setBad} = useContext(Context);
-  const [modal, setModal] = useState(false);
-  const [openViolation, setOpenViolation] = useState(false);
   const {vendorId} = useParams();
   const id = parseInt(vendorId.slice(1));
   const [vendor] = useState(vendorService.getVendorById(id));
+  const [openViolation, setOpenViolation] = useState(false);
+  const [numViolations, setNumViolations] = useState(0);
+  const [editModal, setEditModal] = useState(false);
+  const [policyModal, setPolicyModal] = useState(false);
+  const {user, setMessage, setBad} = useContext(Context);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
@@ -24,23 +27,15 @@ export default function Profile({vendorService}) {
       setMessage('What should an admin see?');
     }
   }, [navigate, user]);
-  function handleEdit() {
-    setModal(true);
-  }
-  const [showEditModal, setEditModal] = useState(false);
-  const setEditModalHandler = () =>{
-    setEditModal(true);
+
+  const handleViolation = () => {
+    setOpenViolation(true);
   };
-  const setEditModalHandlerClose = () =>{
-    setEditModal(false);
+
+  const incrementViolations = () => {
+    setNumViolations(numViolations + 1);
   };
-  const [showModal, setShowModal] = useState(false);
-  const setShowModalHandler = () => {
-    setShowModal(true);
-  };
-  const setShowModalHandlerClose = () => {
-    setShowModal(false);
-  };
+
   return (
 
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
@@ -50,7 +45,7 @@ export default function Profile({vendorService}) {
         </div>
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
         <button className='ml-auto' onClick={() => {
-          setEditModalHandler();
+          setEditModal(true);
         }}>Edit</button>
       </div>
       <hr className='bg-grey-1 w-9/12 drop-shadow-lg'/>
@@ -66,14 +61,14 @@ export default function Profile({vendorService}) {
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <div className='flex flex-row justify-between'>
-          <h1 className='flex-1'>Violations</h1>
-          {user.isadmin && (
-            <button className="bg-red w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
+          <h1 className='flex-1'>Violations: {numViolations}</h1>
+          {/* user.isadmin*/(
+            <button className="bg-red drop-shadow-xl border border-0 rounded-md w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
           )}
         </div>
         <div className='flex flex-col items-center drop-shadow-lg'>
           <button onClick={() => {
-            setShowModalHandler();
+            setPolicyModal(true);
           }}>
             <img src={handbook} alt="Policy Handbook" />
           </button>
@@ -81,9 +76,9 @@ export default function Profile({vendorService}) {
           <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
         </div>
       </div>
-      {openViolation && <ViolationModal closeModal={setOpenViolation} vendor={vendor}/>}
+      {openViolation && <ViolationModal closeModal={setOpenViolation} vendor={vendor} setViolations={incrementViolations} />}
       {
-        showEditModal && (
+        editModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
             <div className='flex flex-col h-full'>
               <form action="" className='flex flex-col'>
@@ -100,14 +95,14 @@ export default function Profile({vendorService}) {
                 <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
               </form>
               <button onClick={()=>{
-                setEditModalHandlerClose();
+                setEditModal(false);
               }} className='bg-blue text-white p-5'>Close Edit</button>
             </div>
           </div>
         )
       }
       {
-        showModal && (
+        policyModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
             <div className='flex flex-col justify-center h-full'>
               <div className='overflow-auto max-h-full'>
@@ -147,7 +142,7 @@ export default function Profile({vendorService}) {
                   <p>
                   1. a. Vendors agree to donate one raffle item to the organization per
                   marketplace day that they participate in as a vendor. The item
-                  donated should be a true representation of the vendor&pos;s talent/booth
+                  donated should be a true representation of the vendor&aposs talent/booth
                   with a value of at least $20. Upon review donation could qualify for a
                   maximum of 2 days raffle donation.
                   b. In Nov/Dec of each year every approved vendor will be asked to
@@ -269,12 +264,13 @@ export default function Profile({vendorService}) {
                 </p>
               </div>
               <button onClick={()=>{
-                setShowModalHandlerClose();
+                setPolicyModal(false);
               }} className='bg-blue text-white p-5'>Close Handbook</button>
             </div>
           </div>
         )
       }
+      <FooterPad/>
     </div>
 
   );

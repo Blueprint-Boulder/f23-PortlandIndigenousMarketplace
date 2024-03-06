@@ -3,6 +3,7 @@ import Vendor from '../../objects/Vendor.js';
 
 export default class VendorsService {
   constructor(httpClient) {
+    this.httpClient = httpClient;
     this.vendorsRepository = new VendorsRepository(httpClient);
   }
 

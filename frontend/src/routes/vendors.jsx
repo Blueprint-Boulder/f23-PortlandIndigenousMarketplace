@@ -8,7 +8,7 @@ import {Context} from '../services/context';
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 // import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
 
-import User from '../objects/User.js';
+import FooterPad from '../components/footerpad.jsx';
 
 function VendorButton({content, onClick}) {
   return (
@@ -22,8 +22,7 @@ export default function Vendors({vendorService}) {
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
-  const {setMessage, setBad} = useContext(Context);
-  const [user, setUser] = useState(User.createFromCookie());
+  const {setMessage, setBad, user} = useContext(Context);
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -43,8 +42,7 @@ export default function Vendors({vendorService}) {
     };
 
     fetchVendors();
-    setUser(User.createFromCookie());
-    if (user != undefined) {
+    if (user === undefined) {
       setMessage('Please log in');
       setBad(true);
       navigate('/');
@@ -91,6 +89,7 @@ export default function Vendors({vendorService}) {
         }
       </div>
       {openModal && <MessageModal closeModal={setOpenModal} vendor={vendor} />}
+      <FooterPad />
     </div>
 
   );
