@@ -71,7 +71,9 @@ export default function Login({vendorService, adminService}) {
           <input
             className="p-1 rounded-lg w-3/4 drop-shadow-md"
             placeholder="Email"
+            type="email"
             onChange={(e) => setEmail(e.target.value)}>
+
           </input>
         </div>
         <div className="m-2">
