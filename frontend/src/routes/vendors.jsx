@@ -8,6 +8,8 @@ import {Context} from '../services/context';
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 // import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
 
+import FooterPad from '../components/footerpad.jsx';
+
 function VendorButton({content, onClick}) {
   return (
     <button className='bg-blue text-white m-1 p-2 rounded-lg' onClick={onClick}> {content}</button> // changed the way this onclick works, wasnt working before
@@ -40,7 +42,7 @@ export default function Vendors({vendorService}) {
     };
 
     fetchVendors();
-    if (!user) {
+    if (user === undefined) {
       setMessage('Please log in');
       setBad(true);
       navigate('/');
@@ -87,6 +89,7 @@ export default function Vendors({vendorService}) {
         }
       </div>
       {openModal && <MessageModal closeModal={setOpenModal} vendor={vendor} />}
+      <FooterPad />
     </div>
 
   );

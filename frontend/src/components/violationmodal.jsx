@@ -17,7 +17,7 @@ function ViolationModal({closeModal, vendor}) { // added vendor object so we can
   };
   // changed the code a little bit, easier to use react state and functions than form
   return (
-    <div className="fixed inset-y-96 inset-x-14 rounded-lg drop-shadow-xl bg-white w-9/12 h-4/6">
+    <div className="fixed inset-y-32 inset-x-14 rounded-lg drop-shadow-xl bg-white w-9/12 h-4/6">
       <header className="flex flex-row w-auto bg-blue shadow-xl rounded-md pt-1 h-8 mb-2 pl-1">
         <h2 className="text-white">Add Violations To {vendor.name}</h2>
       </header>

@@ -1,32 +1,33 @@
-import EventsRepository from './EventsRepository';
-import Event from '../../objects/Event';
+import EventsRepository from './EventsRepository.js';
+import Event from '../../objects/Event.js';
 
 export default class EventsService {
-  constructor(baseUrl) {
-    this.eventsRepository = new EventsRepository(baseUrl);
+  constructor(httpClient) {
+    this.httpClient = httpClient;
+    this.eventsRepository = new EventsRepository(httpClient);
   }
 
   async getAllEvents() {
     const eventsData = await this.eventsRepository.getAllEvents();
     return eventsData.map((data) => new Event(
-        data.eventId,
+        data.event_id,
         data.name,
         data.location,
-        new Date(data.start_time),
-        new Date(data.end_time),
+        new Date(data.starttime),
+        new Date(data.endtime),
         data.description,
-        data.vendor_capacity,
+        data.vendorCapacity,
     ));
   }
 
   async getEventById(eventId) {
     const eventData = await this.eventsRepository.getEventById(eventId);
     return new Event(
-        eventData.eventId,
+        eventData.event_id,
         eventData.name,
         eventData.location,
-        new Date(eventData.start_time),
-        new Date(eventData.end_time),
+        new Date(eventData.starttime),
+        new Date(eventData.endtime),
         eventData.description,
         eventData.vendorCapacity,
     );
@@ -37,8 +38,8 @@ export default class EventsService {
       // Assuming your Event class has properties that directly map to your data structure
       name: event.name,
       location: event.location,
-      start_time: event.start_time.toISOString(), // Convert Date object to string
-      end_time: event.end_time.toISOString(),
+      starttime: event.starttime.toISOString(), // Convert Date object to string
+      endtime: event.endtime.toISOString(),
       description: event.description,
       vendorCapacity: event.vendorCapacity,
       // Include other properties as needed
@@ -50,8 +51,8 @@ export default class EventsService {
     const eventData = {
       name: event.name,
       location: event.location,
-      start_time: event.start_time.toISOString(),
-      end_time: event.end_time.toISOString(),
+      starttime: event.starttime.toISOString(),
+      endtime: event.endtime.toISOString(),
       description: event.description,
       vendorCapacity: event.vendorCapacity,
     };

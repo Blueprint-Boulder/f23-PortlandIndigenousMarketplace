@@ -1,13 +1,11 @@
-import axios from 'axios';
-
 export default class EventsRepository {
-  constructor(baseUrl) {
-    this.baseUrl = baseUrl;
+  constructor(httpClient) {
+    this.httpClient = httpClient;
   }
 
   async getAllEvents() {
     try {
-      const response = await axios.get(`${this.baseUrl}/events`);
+      const response = await this.httpClient.axiosInstance.get('/events');
       return response.data;
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -17,7 +15,7 @@ export default class EventsRepository {
 
   async getEventById(eventId) {
     try {
-      const response = await axios.get(`${this.baseUrl}/events/${eventId}`);
+      const response = await this.httpClient.axiosInstance.get(`/events/${eventId}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching event with ID ${eventId}:`, error);
@@ -27,7 +25,7 @@ export default class EventsRepository {
 
   async createEvent(eventData) {
     try {
-      const response = await axios.post(`${this.baseUrl}/events`, eventData);
+      const response = await this.httpClient.axiosInstance.post('/events', eventData);
       return response.data;
     } catch (error) {
       console.error('Error creating event:', error);
@@ -37,7 +35,7 @@ export default class EventsRepository {
 
   async updateEvent(eventId, eventData) {
     try {
-      const response = await axios.put(`${this.baseUrl}/events/${eventId}`, eventData);
+      const response = await this.httpClient.axiosInstance.put(`/events/${eventId}`, eventData);
       return response.data;
     } catch (error) {
       console.error(`Error updating event with ID ${eventId}:`, error);
@@ -47,7 +45,7 @@ export default class EventsRepository {
 
   async deleteEvent(eventId) {
     try {
-      const response = await axios.delete(`${this.baseUrl}/events/${eventId}`);
+      const response = await this.httpClient.axiosInstance.delete(`/events/${eventId}`);
       return response.data;
     } catch (error) {
       console.error(`Error deleting event with ID ${eventId}:`, error);

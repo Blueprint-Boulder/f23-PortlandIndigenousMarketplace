@@ -1,7 +1,7 @@
 /*
 Storage mechanism for a vendor object
 */
-class Vendor {
+export default class Vendor {
   /*
     id: int - database id assigned to this vendor
     name: string - name of the vendor
@@ -32,5 +32,3 @@ class Vendor {
     return JSON.stringify(this);
   }
 }
-
-module.exports = Vendor;

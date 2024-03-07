@@ -7,13 +7,15 @@ const db = require('../database');
 // This middleware will be used to sign the token after a vendor logs in
 const signToken = async (req, res, next) => {
   if (res.locals.vendor === undefined) {
-    return res.status(401).json({message: 'Unauthorized'});
+    return res.status(401).json({message: 'Unauthorized: Vendor'});
   }
 
   // Sign the token with JWT_SECRET
   const token = await jwt.sign(res.locals.vendor, process.env.JWT_SECRET);
   // Return the token in a cookie
-  res.cookie('auth', token, {httpOnly: true, secure: false});
+  res.cookie('auth', token, {secure: false});
+
+  console.log('Token:', token);
 
   next();
 };
@@ -23,17 +25,22 @@ const verifyToken = async (req, res, next) => {
   // Retrieve the token from the cookie
   const token = req.cookies.auth;
 
+  if (!token) {
+    return res.status(403).json({ message: 'No token provided' });
+  }
+
   // Verify the token with JWT_SECRET
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      res.status(401).json({message: 'Unauthorized'});
+      console.log(err);
+      res.status(401).json({message: 'Unauthorized: vendor1'});
     } else {
       // Update cookie data from database
       db.oneOrNone('SELECT * FROM vendors WHERE vendor_id = $1', [decoded.vendor_id], (result, err) => {
         if (err) {
           res.status(500).json({message: 'Internal Server Error'});
         } else if (result === null) {
-          res.status(401).json({message: 'Unauthorized'});
+          res.status(401).json({message: 'Unauthorized: Vendor2'});
         }
 
         res.locals.vendor = result;
@@ -50,14 +57,17 @@ const verifyToken = async (req, res, next) => {
 // This middleware will be used to sign the token after an admin logs in
 const signAdminToken = async (req, res, next) => {
   if (res.locals.admin === undefined) {
-    return res.status(401).json({message: 'Unauthorized'});
+    return res.status(401).json({message: 'Unauthorized: Admin'});
   }
+
+  // Remove admin password from cookie
+  delete res.locals.admin['password'];
 
   // Sign the token with JWT_SECRET
   const token = await jwt.sign(res.locals.admin, process.env.JWT_SECRET);
 
   // Return the token in a cookie
-  res.cookie('auth_pim', token, {httpOnly: true, secure: false});
+  res.cookie('auth_pim', token, {secure: false});
 
   next();
 };
@@ -69,7 +79,7 @@ const verifyAdminToken = async (req, res, next) => {
   // Verify the token with JWT_SECRET
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(401).json({message: 'Unauthorized'});
+      return res.status(401).json({message: 'Unauthorized: Admin'});
     } else {
       // Keep the cookie up to date with the database
       db.oneOrNone('SELECT * FROM admins WHERE admin_id = $1', [decoded.admin_id], (result, err) => {
@@ -77,7 +87,7 @@ const verifyAdminToken = async (req, res, next) => {
           console.log(err);
           return res.status(500).json({message: 'Internal Server Error'});
         } else if (result === undefined) {
-          return res.status(401).json({message: 'Unauthorized'});
+          return res.status(401).json({message: 'Unauthorized: Admin.'});
         }
 
         console.log(result);

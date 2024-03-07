@@ -18,7 +18,22 @@ app.use(errorHandler({ dumbExceptions: true, showStack: true }));
 
 // Allows cross origin requests
 const cors = require('cors');
-app.use(cors());
+
+// Allowed origins
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:4000'];
+
+// CORS options to dynamically match the allowed origins and allow credentials
+const corsOptionsDelegate = function (req, callback) {
+  let corsOptions;
+  if (allowedOrigins.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true, credentials: true }; // Reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false }; // Disable CORS for this request
+  }
+  callback(null, corsOptions); // Callback expects two parameters: error and options
+};
+
+app.use(cors(corsOptionsDelegate));
 
 // Parses cookies attached to the client request object
 const cookieParser = require('cookie-parser');
@@ -38,6 +53,26 @@ app.get('/', (req, res) => {
   res.status(202).send('Hello World!');
 });
 
+app.get('/api/health', (req, res) => {
+  db.one('SELECT 1 AS value')
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+        message: 'Database connection is healthy',
+      });
+    })
+    .catch(error => {
+      console.error('Database connection error:', error);
+      res.status(503).json({
+        status: 'error',
+        message: 'Database connection is unhealthy',
+        error: error.message,
+      });
+    });
+});
+
+
+
 /*
 The backend should be listening on port 3000 within its container,
 but the container's port 3000 is mapped externally to 3001.
@@ -45,6 +80,17 @@ but the container's port 3000 is mapped externally to 3001.
 TL;DR the backend is running on port 3001 on the host machine.
 */
 
-app.listen(process.env.BACKEND_PORT, () => {
-  console.log(`PIM backend app listening on port ${process.env.BACKEND_PORT}`);
-});
+if (process.env.NODE_ENV === 'test') {
+  app.listen(process.env.BACKEND_TEST_PORT, () => {
+    console.log(`PIM backend app listening on port ${process.env.BACKEND_TEST_PORT}`);
+  });
+  // export app to import into test files
+  module.exports = app;
+  return;
+}
+else if (process.env.NODE_ENV === 'dev') { 
+  app.listen( process.env.BACKEND_PORT, () => {
+    console.log(`PIM backend app listening on port ${process.env.BACKEND_PORT}`);
+  });
+  return;
+}

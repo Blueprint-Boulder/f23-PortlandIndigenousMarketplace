@@ -1,5 +1,5 @@
 const config = {
-  environment: 'dev',
+  environment: 'prod',
   baseUrl: 'http://localhost:3001/api',
 };
 
