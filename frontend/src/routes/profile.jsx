@@ -1,17 +1,17 @@
-import React, {useEffect, useContext, useState, useMemo} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import handbook from './../assets/Handbook.png';
 import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
-import ViolationModal from '../components/violationmodal.jsx';
 import FooterPad from '../components/footerpad';
+import ViolationModal from '../components/violationmodal';
 
 export default function Profile({vendorService}) {
   const {vendorId} = useParams();
   const id = parseInt(vendorId.slice(1));
-  const vendor = useMemo(() => vendorService.getVendorById(id));
+  const [vendor] = useState(vendorService.getVendorById(id));
   const [openViolation, setOpenViolation] = useState(false);
-
+  const [numViolations, setNumViolations] = useState(0);
   const [editModal, setEditModal] = useState(false);
   const [policyModal, setPolicyModal] = useState(false);
   const {user, setMessage, setBad} = useContext(Context);
@@ -31,6 +31,11 @@ export default function Profile({vendorService}) {
   const handleViolation = () => {
     setOpenViolation(true);
   };
+
+  const incrementViolations = () => {
+    setNumViolations(numViolations + 1);
+  };
+
   return (
 
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
@@ -56,8 +61,10 @@ export default function Profile({vendorService}) {
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <div className='flex flex-row justify-between'>
-          <h1 className='flex-1'>Violations</h1>
-          <button className="bg-red w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
+          <h1 className='flex-1'>Violations: {numViolations}</h1>
+          {user.isadmin && (
+            <button className="bg-red drop-shadow-xl border border-0 rounded-md w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
+          )}
         </div>
         <div className='flex flex-col items-center drop-shadow-lg'>
           <button onClick={() => {
@@ -69,7 +76,7 @@ export default function Profile({vendorService}) {
           <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
         </div>
       </div>
-      {openViolation && <ViolationModal closeModal={setOpenViolation} vendor={vendor}/>}
+      {openViolation && <ViolationModal closeModal={setOpenViolation} vendor={vendor} setViolations={incrementViolations} />}
       {
         editModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
