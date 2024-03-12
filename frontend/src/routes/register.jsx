@@ -60,12 +60,16 @@ export default function Register({vendorService, adminService}) {
   // };
 
   const handleEmailChange = (e) => {
-    const website = e.target.value;
+    const email = e.target.value;
     const pattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/;
-
-    if (pattern.test(website)) {
-      // The website input matches the pattern
-      setEmail(website);
+    if (email === '') {
+      setValidEmail(true);
+      setBadLocal(false);
+      return;
+    }
+    if (pattern.test(email)) {
+      // The email input matches the pattern
+      setEmail(email);
       setBadLocal(false);
       setValidEmail(true);
     } else {
@@ -78,7 +82,11 @@ export default function Register({vendorService, adminService}) {
   const handleWebsiteChange = (e) => {
     const website = e.target.value;
     const pattern = /[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-
+    if (website === '') {
+      setValidWebsite(true);
+      setBadLocal(false);
+      return;
+    }
     if (pattern.test(website)) {
       // The website input matches the pattern
       setWebsite(website);
@@ -94,6 +102,12 @@ export default function Register({vendorService, adminService}) {
   const handlePhoneChange = (e) => {
     const phone = e.target.value;
     const pattern = /^\d{10}$/;
+
+    if (phone === '') {
+      setValidPhone(true);
+      setBadLocal(false);
+      return;
+    }
     if (pattern.test(phone)) {
       setValidPhone(true);
       setPhone(phone);
@@ -116,6 +130,10 @@ export default function Register({vendorService, adminService}) {
                     Register
         </div>
         <form method= '' onSubmit={(e) => {
+          if (badLocal || pass !== pass2) {
+            e.preventDefault();
+            return;
+          }
           e.preventDefault();
           handleRegister();
         }}>
@@ -129,6 +147,7 @@ export default function Register({vendorService, adminService}) {
           <div className="m-2">
             <input
               className="p-1 rounded-lg w-3/4"
+              required
               placeholder="Email"
               onChange={(e) => handleEmailChange(e)}></input>
           </div>
@@ -137,7 +156,6 @@ export default function Register({vendorService, adminService}) {
             <input
               className="p-1 rounded-lg w-3/4"
               placeholder="Website"
-              required
               onChange={(e) => {
                 handleWebsiteChange(e);
               }}></input>
@@ -152,7 +170,9 @@ export default function Register({vendorService, adminService}) {
           <div className="m-2">
             <input
               className="p-1 rounded-lg w-3/4"
-              placeholder="Password" type="password"
+              placeholder="Password"
+              required
+              type="password"
               onChange={(e) => setPass(e.target.value)}></input>
           </div>
 
@@ -160,17 +180,15 @@ export default function Register({vendorService, adminService}) {
             <input
               className="p-1 rounded-lg w-3/4"
               placeholder="Re-enter password"
+              required
               type="password"
               onChange={(e) => setPass2(e.target.value)}></input>
           </div>
 
           {pass !== pass2 && <Alert content="Passwords match" bad ={true}/>}
-          {
-            !badLocal &&
           <div className="m-2 ">
-            <button className="bg-blue w-3/4 rounded click:bg-black" type='submit'>Register</button>
+            <button className={`${badLocal || pass !== pass2 ? 'bg-grey-2': 'bg-blue'} w-3/4 rounded click:bg-black`} type='submit'>Register</button>
           </div>
-          }
         </form>
 
         <div className="m-2 text-blue underline">

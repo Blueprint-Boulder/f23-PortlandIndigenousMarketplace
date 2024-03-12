@@ -5,16 +5,21 @@ import PropTypes from 'prop-types';
 import {Context} from '../services/context';
 import FooterPad from '../components/footerpad';
 import ViolationModal from '../components/violationmodal';
+import Alert from '../components/alert';
 
 export default function Profile({vendorService}) {
   const {vendorId} = useParams();
   const id = parseInt(vendorId.slice(1));
-  const [vendor] = useState(vendorService.getVendorById(id));
+  const [vendor, setVendor] = useState({});
   const [openViolation, setOpenViolation] = useState(false);
   const [numViolations, setNumViolations] = useState(0);
   const [editModal, setEditModal] = useState(false);
   const [policyModal, setPolicyModal] = useState(false);
   const {user, setMessage, setBad} = useContext(Context);
+  const [vendorData, setVendorData] = useState({name: '', email: '', phoneNumber: '', website: ''});
+  const [badLocal, setBadLocal] = useState(false);
+  const [validEmail, setValidEmail] = useState(true);
+  const [validWebsite, setValidWebsite] = useState(true);
 
   const navigate = useNavigate();
 
@@ -23,10 +28,21 @@ export default function Profile({vendorService}) {
       setMessage('Please log in');
       setBad(true);
       navigate('/');
-    } else if (user.isadmin) {
-      setMessage('What should an admin see?');
     }
-  }, [navigate, user]);
+
+    const fetchVendor = async () => {
+      const vendorData = await vendorService.getVendorById(id);
+      if (!vendorData) {
+        setMessage('Vendor not found');
+        setBad(true);
+        navigate('/vendors');
+      } else {
+        setVendor(vendorData);
+      }
+    };
+
+    fetchVendor();
+  }, [navigate, user, id, vendor]);
 
   const handleViolation = () => {
     setOpenViolation(true);
@@ -36,24 +52,78 @@ export default function Profile({vendorService}) {
     setNumViolations(numViolations + 1);
   };
 
+  const handleEditVendor = async () => {
+    const response = await vendorService.updateSelfVendor(vendorData);
+    if (response) {
+      setMessage('Updated succesfully');
+      const vendorData = await vendorService.getVendorById(id);
+      setVendor(vendorData);
+    } else {
+      setBad(true);
+      setMessage('Failed to update');
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    const pattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/;
+    if (email === '') {
+      setValidEmail(true);
+      setBadLocal(false);
+      return;
+    }
+    if (pattern.test(email)) {
+      setVendorData({...vendorData, email: email});
+      setBadLocal(false);
+      setValidEmail(true);
+    } else {
+      // The website input does not match the pattern
+      setValidEmail(false);
+      setBadLocal(true);
+    }
+  };
+
+  const handleWebsiteChange = (e) => {
+    const website = e.target.value;
+    const pattern = /[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+    if (website === '') {
+      setValidWebsite(true);
+      setBadLocal(false);
+      return;
+    }
+    if (pattern.test(website)) {
+      // The website input matches the pattern
+      setVendorData({...vendorData, website: website});
+      setBadLocal(false);
+      setValidWebsite(true);
+    } else {
+      // The website input does not match the pattern
+      setValidWebsite(false);
+      setBadLocal(true);
+    }
+  };
+
   return (
 
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
-          <img className='w-20' src={vendor.image} alt="" />
+          <img className='w-20' src={'image' in vendor ? vendor.image : {}} alt="vendor profile pic" />
         </div>
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
-        <button className='ml-auto' onClick={() => {
-          setEditModal(true);
-        }}>Edit</button>
+        {
+          !user.isadmin && user.id === id &&
+          <button className='ml-auto' onClick={() => {
+            setEditModal(true);
+          }}>Edit</button>
+        }
       </div>
       <hr className='bg-grey-1 w-9/12 drop-shadow-lg'/>
       <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4'>
         <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.email}</li>
-        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.phone_number}</li>
+        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.phoneNumber}</li>
         <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.website}</li>
-        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li>
+        {/* <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li> dont think this is necessary */}
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <h1 className='text-xl'>Upcoming Events</h1>
@@ -81,22 +151,28 @@ export default function Profile({vendorService}) {
         editModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
             <div className='flex flex-col h-full'>
-              <form action="" className='flex flex-col'>
-                <label htmlFor="legalName" className='py-4'>Name:</label>
-                <input type="text" id='legalName' name='legalName'/>
-                <label htmlFor="email" className='py-4'>Email:</label>
-                <input type="text" id='email' name='email'/>
+              <form action="" onSubmit={(e) => {
+                if (badLocal) {
+                  e.preventDefault();
+                  return;
+                }
+                e.preventDefault(); // Prevents the default form submission behavior
+                handleEditVendor();
+                setEditModal(false);
+              }} className='flex flex-col'>
+                <label htmlFor="legalName" className='py-4' >Name:</label>
+                <input type="text" id='legalName' name='legalName'onChange={(e) => setVendorData({...vendorData, name: e.target.value})}/>
+                {validEmail ? <label htmlFor="email" className='py-4'>Email:</label> : <Alert content="Must be a valid email" bad ={true}/>}
+                <input type="text" id='email' name='email'onChange={(e) => handleEmailChange(e)}/>
                 <label htmlFor="phoneNum" className='py-4'>Phone Number:</label>
-                <input type="text" id='phoneNum' name='phoneNum'/>
-                <label htmlFor="website" className='py-4'>Website:</label>
-                <input type="text" id='website' name='website'/>
-                <label htmlFor="location" className='py-4'>Location:</label>
-                <input type="text" id='location' name='location'/>
-                <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
+                <input type="text" id='phoneNum' name='phoneNum'onChange={(e) => setVendorData({...vendorData, phoneNumber: e.target.value})}/>
+                {validWebsite ? <label htmlFor="website" className='py-4'>Website:</label> : <Alert content="Must be a valid website" bad ={true}/>}
+                <input type="text" id='website' name='website'onChange={(e) => handleWebsiteChange(e)}/>
+                <button type={badLocal ? '': 'submit'} className={`${badLocal ? 'bg-grey-1': 'bg-blue'} text-white p-5 mt-8 mb-4`}>Save Changes</button>
               </form>
               <button onClick={()=>{
                 setEditModal(false);
-              }} className='bg-blue text-white p-5'>Close Edit</button>
+              }} className='bg-blue text-white p-5'>Cancel</button>
             </div>
           </div>
         )
@@ -279,6 +355,7 @@ export default function Profile({vendorService}) {
 Profile.propTypes = {
   vendorService: PropTypes.shape({
     getVendorById: PropTypes.func.isRequired,
+    updateSelfVendor: PropTypes.func.isRequired,
   }).isRequired,
 };
 
