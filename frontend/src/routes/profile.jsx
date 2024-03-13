@@ -42,6 +42,10 @@ export default function Profile({vendorService, violationService}) {
     };
 
     fetchVendor();
+
+    const fetchViolations = async () => {
+      const violationData = await violationService.getViolationsByVendorId(vendorData.vendor_id);
+    };
   }, [navigate, user, id, vendor]);
 
   const handleViolation = () => {
@@ -103,6 +107,33 @@ export default function Profile({vendorService, violationService}) {
     }
   };
 
+  async function handleViolationSubmit(violation) {
+    if (editEvent) {
+      setEditEvent(true);
+      setModal(false);
+      const res = await eventService.updateEvent(currId, event);
+      console.log('Res status', res.status);
+      if (res !== undefined) {
+        console.log('Event updated successfully');
+        const updatedEvents = await eventService.getAllEvents();
+        setEvents(updatedEvents);
+      } else {
+        console.error('Failed to update event');
+      }
+    } else {
+      setEditEvent(false);
+      setModal(false);
+      const res = await eventService.createEvent(event);
+      if (res !== undefined) {
+        console.log('Event added successfully');
+        const updatedEvents = await eventService.getAllEvents();
+        setEvents(updatedEvents);
+      } else {
+        console.error('Failed to add event');
+      }
+    }
+  };
+
   return (
 
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
@@ -146,7 +177,7 @@ export default function Profile({vendorService, violationService}) {
           <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
         </div>
       </div>
-      {openViolation && <ViolationModal closeModal={setOpenViolation} vendor={vendor} setViolations={incrementViolations} />}
+      {openViolation && <ViolationModal closeModal={setOpenViolation} vendor={vendor} setViolations={incrementViolations} handleSubmit={handleViolationSubmit} />}
       {
         editModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>

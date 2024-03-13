@@ -1,22 +1,22 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-function ViolationModal({closeModal, vendor, setViolations}) { // added vendor object so we can send message to vendor
+function ViolationModal({closeModal, vendor, setViolations, handleSubmit}) { // added vendor object so we can send message to vendor
   const [message, setMessage] = useState('');
   const [activeButtons, setButtons] = useState([]);
 
   // ask if theres a way to disable the header button when the modal opens
 
-  const handleSubmit = () => {
-    console.log(`Posting message(${message}) to ${vendor.name}`);
-    console.log('... As long as someone finishes my code');
-    if (activeButtons.length == 0) {
-      alert('Must select a violated policy to submit!');
-      return;
-    }
-    setViolations();
-    closeModal(false);
-  };
+  // const handleSubmit = () => {
+  //   console.log(`Posting message(${message}) to ${vendor.name}`);
+  //   console.log('... As long as someone finishes my code');
+  //   if (activeButtons.length == 0) {
+  //     alert('Must select a violated policy to submit!');
+  //     return;
+  //   }
+  //   setViolations();
+  //   closeModal(false);
+  // };
 
   const handleButtonClick = (content) => {
     // idea:
@@ -51,7 +51,9 @@ function ViolationModal({closeModal, vendor, setViolations}) { // added vendor o
         <PolicyButton onClick={() => handleButtonClick(11)} content={11} activebuttons={activeButtons}/>
       </div>
       <footer className='flex flex-row justify-center mt-6 ml-5 pb-2'>
-        <button className="bg-blue py-2 px-3 mb-1 mr-2 text-white drop-shadow-xl rounded-lg" onClick={() => handleSubmit()}>Submit</button>
+        <button className={`py-2 px-3 mb-1 mr-2 text-white drop-shadow-xl rounded-lg {activeButtons ? bg-blue : bg-grey}`} onClick={() => {
+          activeButtons && handleSubmit();
+        }}>Submit</button>
         <button className="bg-red py-2 px-3 mb-1 text-white drop-shadow-xl rounded-lg" onClick={() => closeModal(false)}>Cancel</button>
       </footer>
     </div>
@@ -70,6 +72,7 @@ ViolationModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   vendor: PropTypes.object.isRequired,
   setViolations: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
 };
 
 PolicyButton.propTypes = {

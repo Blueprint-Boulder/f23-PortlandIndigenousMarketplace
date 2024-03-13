@@ -28,7 +28,7 @@ import MockVendorService from './services/MockServices/MockVendorService.js';
 import EventsService from './services/Events/EventsService.js';
 import VendorsService from './services/Vendors/VendorsService.js';
 import AdminsService from './services/Admins/AdminsService.js';
-import ViolationsService from './services/Violations/ViolationService.js';
+import ViolationsService from './services/Violations/ViolationsService.js';
 
 // Import configuration variables
 import config from './config.js';
