@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-
 function MessageModal({closeModal, vendor}) { // added vendor object so we can send message to vendor
   const [message, setMessage] = useState('');
   function handleSubmit() {

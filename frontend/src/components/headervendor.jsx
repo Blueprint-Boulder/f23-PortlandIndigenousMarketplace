@@ -43,7 +43,7 @@ export default function Header() {
         >
           <ul className="flex flex-col md:flex-row lg:flex-row font-lg p-2  mt-4   rounded-lg ">
             <li>
-              {user &&<Link to={`/vendors/:${user.id}`} className="block py-2 pl-3 pr-4  rounded hover:bg-gray-100 ">Profile</Link>}
+              {user && !user.isadmin &&<Link to={`/vendors/:${user.id}`} className="block py-2 pl-3 pr-4  rounded hover:bg-gray-100 ">Profile</Link>}
             </li>
             <li>
               <Link to='/events' className="block py-2 pl-3 pr-4 text-gray-900 rounded">Events</Link>

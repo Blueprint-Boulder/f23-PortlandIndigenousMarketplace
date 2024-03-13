@@ -284,6 +284,21 @@ const updateVendor = async (req, res, next) => {
   next();
 };
 
+const verifyVendorHasSameVendorId = async (req, res, next) => {
+  const vendor = res.locals.vendor;
+  const vendorId = Number(req.params.vendorId);
+  console.log("Vendor:", vendor);
+  console.log("Vendor ID:", vendorId);
+
+  if (vendor.vendor_id === vendorId) {
+    console.log("Vendor has same vendor ID");
+    next();
+  } else {
+    console.log("TruthValue:", vendor.vendor_id === vendorId)
+    res.status(403).json({error: 'Forbidden'});
+  }
+}
+
 module.exports = {
   getVendor,
   getVendors,
@@ -294,4 +309,5 @@ module.exports = {
   getEventRequest,
   updateVendor,
   updateAuthenticatedVendor,
+  verifyVendorHasSameVendorId
 };
