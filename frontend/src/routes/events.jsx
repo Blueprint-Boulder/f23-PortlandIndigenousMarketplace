@@ -78,10 +78,11 @@ export default function Events({eventService}) {
   }, [eventService]);
 
   async function handleSubmit(event) {
+    // if we are editing an event we need to update the event
     if (editEvent) {
       setEditEvent(true);
       setModal(false);
-      const res = await eventService.updateEvent(currId, event);
+      const res = await eventService.updateEvent(currId, event);// this is wrong
       console.log('Res status', res.status);
       if (res !== undefined) {
         console.log('Event updated successfully');
@@ -90,7 +91,7 @@ export default function Events({eventService}) {
       } else {
         console.error('Failed to update event');
       }
-    } else {
+    } else { // else we are creating a new event
       setEditEvent(false);
       setModal(false);
       const res = await eventService.createEvent(event);
