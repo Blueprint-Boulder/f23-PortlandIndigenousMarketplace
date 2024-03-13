@@ -49,6 +49,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Context } from "../services/context.jsx";
 import "../styles/footer.css";
+import FooterPad from "./footerpad.jsx";
 
 export default function Footer() {
   const { user } = useContext(Context);
