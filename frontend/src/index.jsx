@@ -28,6 +28,7 @@ import MockVendorService from './services/MockServices/MockVendorService.js';
 import EventsService from './services/Events/EventsService.js';
 import VendorsService from './services/Vendors/VendorsService.js';
 import AdminsService from './services/Admins/AdminsService.js';
+import ViolationsService from './services/Violations/ViolationService.js';
 
 // Import configuration variables
 import config from './config.js';
@@ -39,6 +40,7 @@ let eventService;
 let adminService;
 let vendorService;
 let httpClient;
+let violationService;
 
 if (config.environment == 'dev') {
   MockVendorService.init();
@@ -57,6 +59,7 @@ if (config.environment == 'dev') {
   eventService = new EventsService(httpClient);
   vendorService = new VendorsService(httpClient);
   adminService = new AdminsService(httpClient);
+  violationService = new ViolationsService(httpClient);
 }
 
 const router = createBrowserRouter([
@@ -66,7 +69,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/vendors/:vendorId',
-        element: <Profile vendorService={vendorService} />,
+        element: <Profile vendorService={vendorService} violationService ={violationService}/>,
       },
       {
         path: '/login',

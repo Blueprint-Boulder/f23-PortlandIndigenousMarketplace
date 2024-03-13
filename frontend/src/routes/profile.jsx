@@ -7,7 +7,7 @@ import FooterPad from '../components/footerpad';
 import ViolationModal from '../components/violationmodal';
 import Alert from '../components/alert';
 
-export default function Profile({vendorService}) {
+export default function Profile({vendorService, violationService}) {
   const {vendorId} = useParams();
   const id = parseInt(vendorId.slice(1));
   const [vendor, setVendor] = useState({});
@@ -356,6 +356,9 @@ Profile.propTypes = {
   vendorService: PropTypes.shape({
     getVendorById: PropTypes.func.isRequired,
     updateSelfVendor: PropTypes.func.isRequired,
+  }).isRequired,
+  violationService: PropTypes.shape({
+    createViolation: PropTypes.func.isRequired,
   }).isRequired,
 };
 

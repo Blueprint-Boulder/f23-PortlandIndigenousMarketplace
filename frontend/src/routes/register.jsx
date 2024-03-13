@@ -40,25 +40,6 @@ export default function Register({vendorService, adminService}) {
     }
   };
 
-  // async function handleRegisterAdmin() {
-  //   const response = await adminService.createAdmin(
-  //       {
-  //         name: name,
-  //         password: pass,
-  //         email: email,
-  //       } );
-  //   console.log(response);
-  //   if (response) {
-  //     setBad(false);
-  //     setMessage('Registered succesfully');
-  //     console.log('Registered!');
-  //     navigate('/login');
-  //   } else {
-  //     setBad(true);
-  //     setMessage('Failed to register');
-  //   }
-  // };
-
   const handleEmailChange = (e) => {
     const email = e.target.value;
     const pattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/;
