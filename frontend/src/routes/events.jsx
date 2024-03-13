@@ -162,7 +162,9 @@ export default function Events({eventService}) {
       </div>
       <FooterPad/>
     </div>
+    </div>
   );
+
 }
 
 Events.propTypes = {

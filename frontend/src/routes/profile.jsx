@@ -3,18 +3,23 @@ import handbook from './../assets/Handbook.png';
 import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {Context} from '../services/context';
-import Modal from '../components/modal.jsx';
+import FooterPad from '../components/footerpad';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSquareFacebook} from '@fortawesome/free-brands-svg-icons';
 import {faSquareInstagram} from '@fortawesome/free-brands-svg-icons';
 import { faSquareXTwitter } from '@fortawesome/free-brands-svg-icons';
 
-import FooterPad from '../components/footerpad';
-
 export default function Profile({vendorService}) {
   const {vendorId} = useParams();
   const id = parseInt(vendorId.slice(1));
   const [vendor] = useState(vendorService.getVendorById(id));
+
+  const [editModal, setEditModal] = useState(false);
+  const [policyModal, setPolicyModal] = useState(false);
+  const {user, setMessage, setBad} = useContext(Context);
+  const [socials] = useState({insta: "https://www.instagram.com/", facebook: "https://www.facebook.com/", x: "https://twitter.com/?lang=en"});
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
@@ -47,9 +52,9 @@ export default function Profile({vendorService}) {
         <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li>
       </div>
       <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
-        {socials.insta && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.socials.insta}><FontAwesomeIcon icon={faSquareInstagram} size="2x"/></a></li>}
-        {socials.x && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.socials.x}><FontAwesomeIcon icon={faSquareXTwitter} size="2x"/></a></li>}
-        {socials.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.socials.facebook}><FontAwesomeIcon icon={faSquareFacebook} size="2x"/></a></li>}
+        {socials.insta && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.insta} target="_blank"><FontAwesomeIcon icon={faSquareInstagram} size="2x"/></a></li>}
+        {socials.x && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.x} target="_blank"><FontAwesomeIcon icon={faSquareXTwitter} size="2x"/></a></li>}
+        {socials.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.facebook} target="_blank"><FontAwesomeIcon icon={faSquareFacebook} size="2x"/></a></li>}
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <h1 className='text-xl'>Upcoming Events</h1>
@@ -71,7 +76,7 @@ export default function Profile({vendorService}) {
       </div>
       {
         editModal && (
-          <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
+          <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-5/6'>
             <div className='flex flex-col h-full'>
               <form action="" className='flex flex-col'>
                 <label htmlFor="legalName" className='py-4'>Name:</label>
@@ -84,14 +89,20 @@ export default function Profile({vendorService}) {
                 <input type="text" id='website' name='website'/>
                 <label htmlFor="location" className='py-4'>Location:</label>
                 <input type="text" id='location' name='location'/>
-                <div className='flex space-x-4 py-4'>
-                  <label htmlFor="insta" className='py-4'>Instagram link:</label>
-                  <input type="text" id='insta' name='insta'/>
-                  <label htmlFor="x" className='py-4'>X:</label>
-                  <input type="text" id='x' name='x'/>
-                  <label htmlFor="facebook" className='py-4'>Facebook:</label>
-                  <input type="text" id='facebook' name='facebook'/>
-                </div>
+                <div className='py-4 grid grid-cols-1 md:grid-cols-3'>
+                  <div className="py-2">
+                      <label htmlFor="insta">Instagram:</label>
+                      <input type="text" id='insta' name='insta'/>
+                  </div>
+                  <div className="py-2">
+                      <label htmlFor="x">X:</label>
+                      <input type="text" id='x' name='x'/>
+                  </div>
+                  <div className="py-2">
+                      <label htmlFor="facebook">Facebook:</label>
+                      <input type="text" id='facebook' name='facebook'/>
+                  </div>
+              </div>
                 <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
               </form>
               <button onClick={()=>{
@@ -142,7 +153,7 @@ export default function Profile({vendorService}) {
                   <p>
                   1. a. Vendors agree to donate one raffle item to the organization per
                   marketplace day that they participate in as a vendor. The item
-                  donated should be a true representation of the vendor&aposs talent/booth
+                  donated should be a true representation of the vendor's talent/booth
                   with a value of at least $20. Upon review donation could qualify for a
                   maximum of 2 days raffle donation.
                   b. In Nov/Dec of each year every approved vendor will be asked to
@@ -288,4 +299,3 @@ Profile.propTypes = {
     getVendorById: PropTypes.func.isRequired,
   }).isRequired,
 };
-
