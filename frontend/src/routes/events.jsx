@@ -78,28 +78,30 @@ export default function Events({eventService}) {
   }, [eventService]);
 
   async function handleSubmit(event) {
+    // if we are editing an event we need to update the event
     if (editEvent) {
       setEditEvent(true);
       setModal(false);
-      await eventService.updateEvent(currId, event).then((res) => {
-        if (res.status === 200) {
-          console.log('Event updated successfully');
-          setEvents(eventService.getAllEvents());
-        } else {
-          console.error('Failed to update event');
-        }
-      });
-    } else {
+      const res = await eventService.updateEvent(currId, event);// this is wrong
+      console.log('Res status', res.status);
+      if (res !== undefined) {
+        console.log('Event updated successfully');
+        const updatedEvents = await eventService.getAllEvents();
+        setEvents(updatedEvents);
+      } else {
+        console.error('Failed to update event');
+      }
+    } else { // else we are creating a new event
       setEditEvent(false);
       setModal(false);
-      await eventService.createEvent(event).then((res) => {
-        if (res.status === 200) {
-          console.log('Event added successfully');
-          setEvents(eventService.getAllEvents());
-        } else {
-          console.error('Failed to add event');
-        }
-      });
+      const res = await eventService.createEvent(event);
+      if (res !== undefined) {
+        console.log('Event added successfully');
+        const updatedEvents = await eventService.getAllEvents();
+        setEvents(updatedEvents);
+      } else {
+        console.error('Failed to add event');
+      }
     }
   };
 
@@ -156,7 +158,7 @@ export default function Events({eventService}) {
       <div className='flex flex-col space-y-4'>
         {
           events && (Array.isArray(events) ? events.map((event, i) => (
-            <li className='list-style:none' key={event.id}>{eventDisplay(event)}</li>
+            <div className='list-style:none' key={event.eventId}>{eventDisplay(event)}</div>
           )) : eventDisplay(events))
         }
       </div>

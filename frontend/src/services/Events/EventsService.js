@@ -10,7 +10,7 @@ export default class EventsService {
   async getAllEvents() {
     const eventsData = await this.eventsRepository.getAllEvents();
     return eventsData.map((data) => new Event(
-        data.eventId,
+        data.event_id,
         data.name,
         data.location,
         new Date(data.starttime),
@@ -23,7 +23,7 @@ export default class EventsService {
   async getEventById(eventId) {
     const eventData = await this.eventsRepository.getEventById(eventId);
     return new Event(
-        eventData.eventId,
+        eventData.event_id,
         eventData.name,
         eventData.location,
         new Date(eventData.starttime),

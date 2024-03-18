@@ -11,16 +11,6 @@ class HttpClient {
     this.user = null;
   }
 
-  processCookie() {
-    if (Cookies.get('auth_pim') != undefined) {
-      const cookie = Cookies.get('auth_pim');
-      this.user = User.newUserFromCookie(cookie, true);
-    } else if ( Cookies.get('auth') != undefined ) {
-      const cookie = Cookies.get('auth');
-      this.user = User.newUserFromCookie(cookie, false);
-    }
-  }
-
   // for testing only
   manuallySetCookie(cookie, isadmin) {
     this.axiosInstance.defaults.headers.common['Cookie'] = cookie;
