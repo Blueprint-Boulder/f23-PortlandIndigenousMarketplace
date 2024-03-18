@@ -65,7 +65,7 @@ export default function Footer() {
           </Link>
         </div>
 
-        {user ? (
+        {user && !user.isadmin ? (
           <div className="footer-section">
             <Link to={`/vendors/${user.id}`} className="text-blue-500">
               <FontAwesomeIcon icon={faUser} className="fa-icon" />
