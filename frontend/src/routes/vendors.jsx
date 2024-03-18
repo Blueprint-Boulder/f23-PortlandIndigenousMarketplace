@@ -72,7 +72,7 @@ export default function Vendors({vendorService}) {
       console.log(distance);
       return distance;
     };
-    // dont look at this part ;)
+    // dont look at this part ;) (sorting by hamming distance)
     const distances = newvendors.map((v) => hammingDistance(v.name, vendor));
     const zipped = newvendors.map((v, i) => [v, distances[i]]);
     zipped.sort((a, b) => a[1] - b[1]);
