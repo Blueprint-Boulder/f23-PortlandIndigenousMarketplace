@@ -15,11 +15,11 @@ function EventModal({editEvent, handleSubmit}) {
     <div>
       <form action="" className='flex flex-col' onSubmit = {() => handleSubmit(eventInfo)}>
         <label htmlFor="eventName" className='py-4'>Event Name:</label>
-        <input type="text" id='eventName' name='eventName' onChange = {(e) => setEventInfo({...eventInfo, name: e.target.value})}/>
+        <input required type="text" id='eventName' name='eventName' onChange = {(e) => setEventInfo({...eventInfo, name: e.target.value})}/>
         <label htmlFor="description" className='py-4'>Description:</label>
-        <input type="text" id='description' name='description' onChange = {(e) => setEventInfo({...eventInfo, description: e.target.value})} />
+        <input required type="text" id='description' name='description' onChange = {(e) => setEventInfo({...eventInfo, description: e.target.value})} />
         <label htmlFor="location" className='py-4' >Location:</label>
-        <input type="text" id='location' name='location' onChange = {(e) => setEventInfo({...eventInfo, location: e.target.value})}/>
+        <input required type="text" id='location' name='location' onChange = {(e) => setEventInfo({...eventInfo, location: e.target.value})}/>
         <label htmlFor="start-time" className='py-4' >Start Time:</label>
         <DatePicker
           id='start-time'
@@ -28,6 +28,7 @@ function EventModal({editEvent, handleSubmit}) {
           onChange={(dateTime) => setEventInfo({...eventInfo, starttime: dateTime})}
           showTimeSelect
           timeIntervals={15}
+          required
           timeCaption="Time"
           dateFormat="MMMM d, yyyy h:mm aa"
         />
@@ -39,12 +40,14 @@ function EventModal({editEvent, handleSubmit}) {
           onChange={(dateTime) => setEventInfo({...eventInfo, endtime: dateTime})}
           showTimeSelect
           timeIntervals={15}
+          required
           timeCaption="Time"
           dateFormat="MMMM d, yyyy h:mm aa"
         />
         <label htmlFor="vendor-capacity" className='py-4' >Vendor Capacity:</label>
         <input type="text" id='vendor-capacity' name='location' onChange = {(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})}/>
         <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>{editEvent ? 'Save Changes' : 'Add Event'}</button>
+        <button type='button' className='bg-red text-white p-5' onClick={() => setModal(false)}>Cancel</button>
       </form>
     </div>
   );
