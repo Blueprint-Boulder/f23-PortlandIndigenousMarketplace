@@ -55,7 +55,7 @@ export default function Vendors({vendorService}) {
     const newvendors = vendors;
     const hammingDistance = (str1, str2) => {
       if (str1.length === 0 || str2.length === 0) {
-        setVendors(false); // should trigger useEffect
+        setVendors(false); // should trigger useEffect, but doesnt :(
       }
       if (str1.length !== str2.length) {
         (str1.length < str2.length) ?// normalize length
@@ -64,8 +64,12 @@ export default function Vendors({vendorService}) {
       }
       let distance = 0;
       for (let i = 0; i < str1.length; i += 1) { // get hamming distance
-        if (str1[i] !== str2[i]) distance += 1;
+        if (str1[i] !== str2[i]) {
+          if (str1[i] === ' ' || str2[i] === ' ') continue; // ignore spaces
+          distance += 1;
+        }
       }
+      console.log(distance);
       return distance;
     };
     // dont look at this part ;)
