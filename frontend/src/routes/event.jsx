@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCaretDown, faAnglesLeft} from '@fortawesome/free-solid-svg-icons';
+import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
 import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
 import {Context} from '../services/context.jsx';
@@ -68,9 +68,9 @@ export default function Event({eventService}) {
 
   return (
     <div id="Event-content" className="overflow-scroll w-full h-full flex flex-col items-center mt-2">
-      <button className="self-start ml-2 fixed" onClick={() => navigate(-1)}>
+      {/* <button className="self-start ml-2 fixed" onClick={() => navigate(-1)}>
         <FontAwesomeIcon icon={faAnglesLeft} />
-      </button>
+      </button> */}
       <img src={bLogo} alt="Event Logo" className="w-2/3 py-0 bg-clip-padding bg-white drop-shadow-xl rounded-xl" />
       <div className="text-2xl mt-2 font-bold tracking-wide">{name}</div>
       <div className='flex flex-row mt-2'>
