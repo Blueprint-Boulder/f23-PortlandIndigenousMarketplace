@@ -6,6 +6,7 @@ import Alert from '../components/alert.jsx';
 import {Context} from '../services/context.jsx';
 import Cookies from 'js-cookie';
 import User from '../objects/User';
+import BackButton from '../components/backbutton.jsx';
 
 export default function Root() {
   const [message, setMessage] = useState('');
@@ -41,6 +42,7 @@ export default function Root() {
       <div className="bg-grey-1 w-screen flex min-h-screen flex-col">
         {message && <Alert content = {message} bad ={bad}/>}
         {/* <Header /> */}
+        <BackButton/>
         <Outlet/>
         <Footer/>
       </div>

@@ -9,7 +9,7 @@ import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-function EventModal({editEvent, handleSubmit}) {
+function EventModal({editEvent, handleSubmit, closeModal}) {
   const [eventInfo, setEventInfo] = useState({name: '', description: '', location: '', starttime: new Date(), endtime: new Date(), vendorCapacity: 0});
   return (
     <div>
@@ -47,7 +47,7 @@ function EventModal({editEvent, handleSubmit}) {
         <label htmlFor="vendor-capacity" className='py-4' >Vendor Capacity:</label>
         <input type="text" id='vendor-capacity' name='location' onChange = {(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})}/>
         <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>{editEvent ? 'Save Changes' : 'Add Event'}</button>
-        <button type='button' className='bg-red text-white p-5' onClick={() => setModal(false)}>Cancel</button>
+        <button type='button' className='bg-red text-white p-5' onClick={() => closeModal()}>Cancel</button>
       </form>
     </div>
   );
@@ -108,6 +108,9 @@ export default function Events({eventService}) {
     }
   };
 
+  function closeModal() {
+    setModal(false);
+  }
 
   const eventDisplay = (event) => (
     <div className="bg-white shadow-lg rounded-lg p-4 max-w-sm mx-auto bm-4">
@@ -140,7 +143,7 @@ export default function Events({eventService}) {
             setEditEvent(false); setModal(true);
           }}>Add Event</button>}
         {modal && (
-          <EventModal editEvent={editEvent} handleSubmit={handleSubmit}/>
+          <EventModal editEvent={editEvent} handleSubmit={handleSubmit} closeModal={closeModal}/>
         )}
       </div>
     );
@@ -154,7 +157,7 @@ export default function Events({eventService}) {
             setEditEvent(false); setModal(true);
           }}>Add Event</button>}
         {modal && (
-          <EventModal editEvent={editEvent} handleSubmit={handleSubmit}/>
+          <EventModal editEvent={editEvent} handleSubmit={handleSubmit}closeModal={closeModal}/>
         )}
         <h1 className='color-white text-2xl text-center my-3 font-semibold'>Events</h1>
       </div>
@@ -181,4 +184,5 @@ Events.propTypes = {
 EventModal.propTypes = {
   editEvent: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
