@@ -39,23 +39,22 @@
 //     </div>
 //   );
 // }
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, {useContext} from 'react';
+import {Link} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
   faUser,
   faCalendarDays,
   faUserGroup,
-} from "@fortawesome/free-solid-svg-icons";
-import { Context } from "../services/context.jsx";
-import "../styles/footer.css";
-import FooterPad from "./footerpad.jsx";
+} from '@fortawesome/free-solid-svg-icons';
+import {Context} from '../services/context.jsx';
+import '../styles/footer.css';
 
 export default function Footer() {
-  const { user } = useContext(Context);
+  const {user} = useContext(Context);
 
   return (
-    <div className="fixed bottom-0" id="Footer">
+    <div className="fixed bottom-0 " id="Footer">
       <div id="Footer-content" className="flex justify-around items-center p-4">
         <div className="footer-section">
           <Link to="/events" className="text-blue-500">
@@ -79,7 +78,7 @@ export default function Footer() {
 
         {user && user.isadmin ? (
           <div className="footer-section">
-            <Link to="/vendors" className="text-blue-500">
+            <Link to="/vendors" className="text-blue-500 ">
               <FontAwesomeIcon icon={faUserGroup} />
               <div className="icon-text">
                 <span className="section-text">Vendors</span>

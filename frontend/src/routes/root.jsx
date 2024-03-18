@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Outlet} from 'react-router-dom';
 import Footer from '../components/footer.jsx';
-import Header from '../components/headervendor';
+// import Header from '../components/headervendor';
 import Alert from '../components/alert.jsx';
 import {Context} from '../services/context.jsx';
 import Cookies from 'js-cookie';
@@ -40,7 +40,7 @@ export default function Root() {
     <Context.Provider value = {{message, setMessage, bad, setBad, user, setUser}}>
       <div className="bg-grey-1 w-screen flex min-h-screen flex-col">
         {message && <Alert content = {message} bad ={bad}/>}
-        <Header />
+        {/* <Header /> */}
         <Outlet/>
         <Footer/>
       </div>
