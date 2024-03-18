@@ -49,22 +49,23 @@ export default function Vendors({vendorService}) {
       setBad(true);
       navigate('/');
     }
-  }, [vendorService, user]);
+  }, [vendorService, user, vendors]);
 
   const handleSearch = (vendor) => {
     const newvendors = vendors;
     const hammingDistance = (str1, str2) => {
+      if (str1.length === 0 || str2.length === 0) {
+        setVendors(false); // should trigger useEffect
+      }
       if (str1.length !== str2.length) {
         (str1.length < str2.length) ?// normalize length
           str1 += ' '.repeat(str2.length - str1.length) :
           str2 += ' '.repeat(str1.length - str2.length);
-        console.log('str1:', str1, 'str2:', str2);
       }
       let distance = 0;
       for (let i = 0; i < str1.length; i += 1) { // get hamming distance
         if (str1[i] !== str2[i]) distance += 1;
       }
-      console.log('distance:', distance);
       return distance;
     };
     // dont look at this part ;)
@@ -72,7 +73,6 @@ export default function Vendors({vendorService}) {
     const zipped = newvendors.map((v, i) => [v, distances[i]]);
     zipped.sort((a, b) => a[1] - b[1]);
     const unzipped = zipped.map((z) => z[0]);
-    console.log(unzipped);
     setVendors(unzipped);
   };
 
