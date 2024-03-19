@@ -98,4 +98,36 @@ const deleteEvent = async (req, res, next) => {
   }
 }
 
-module.exports = {getAllEvents, getEventById, createEvent, updateEvent, deleteEvent};
+// Get vendors attending a specific event
+const getAttendingVendors = async (req, res, next) => {
+  const {event_id} = req.params;
+  try {
+    const vendors = await db.manyOrNone(`
+    SELECT 
+        V.vendor_id,
+        V.name AS vendor_name,
+        V.phone_number,
+        V.website,
+        V.email
+    FROM 
+        Vendors V
+    JOIN 
+        EventRequests ER ON V.vendor_id = ER.vendor_id
+    WHERE 
+        ER.event_id = $1 AND 
+        ER.approved = TRUE;
+    `, [event_id]);
+
+    if (vendors.length) {
+      res.locals.data = vendors;
+      next();
+    } else {
+      res.status(404).json({message: 'No vendors found for this event'});
+    }
+  } catch (error) {
+    console.error('Error fetching attending vendors:', error);
+    res.status(500).json({error: 'Internal Server Error'});
+  }
+}
+
+module.exports = {getAllEvents, getEventById, createEvent, updateEvent, deleteEvent, getAttendingVendors};

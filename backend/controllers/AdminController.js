@@ -33,7 +33,7 @@ const getAllEventRequests = async (req, res, next) => {
             res.locals.data = requests;
             next();
         } else {
-            res.status(404).json({message: 'No requests found for this event.'});
+            res.status(404).json({message: 'No requests found.'});
         }
     } catch (err) {
         console.error(err);
