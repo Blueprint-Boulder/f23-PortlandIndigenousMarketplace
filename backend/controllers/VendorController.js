@@ -153,12 +153,10 @@ const createVendor = async (req, res, next) => {
 };
 
 const createEventRequest = async (req, res, next) => {
-  const {vendorId, eventId} = req.body;
-
   try {
     await db.none(
         'INSERT INTO EventRequests (vendor_id, event_id) VALUES ($1, $2)',
-        [vendorId, eventId],
+        [req.params.vendorId, req.params.eventId],
     );
     next();
   } catch (err) {
