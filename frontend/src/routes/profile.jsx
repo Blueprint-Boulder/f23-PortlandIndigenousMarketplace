@@ -43,17 +43,20 @@ export default function Profile({vendorService, violationService}) {
 
     fetchVendor();
 
-    const fetchViolations = async () => {
-      const violationData = await violationService.getViolationsByVendorId(vendorData.vendor_id);
-    };
+    // const fetchViolations = async () => {
+    //   try {
+    //     const violationData = await violationService.getViolationsByVendorId(id);
+    //     setNumViolations(violationData.length);
+    //   } catch (err) {
+    //     console.log('Error fetching violations:', err);
+    //   }
+    // };
+
+    // fetchViolations();
   }, [navigate, user, id, vendor]);
 
   const handleViolation = () => {
     setOpenViolation(true);
-  };
-
-  const incrementViolations = () => {
-    setNumViolations(numViolations + 1);
   };
 
   const handleEditVendor = async () => {
@@ -108,29 +111,14 @@ export default function Profile({vendorService, violationService}) {
   };
 
   async function handleViolationSubmit(violation) {
-    if (editEvent) {
-      setEditEvent(true);
-      setModal(false);
-      const res = await eventService.updateEvent(currId, event);
-      console.log('Res status', res.status);
-      if (res !== undefined) {
-        console.log('Event updated successfully');
-        const updatedEvents = await eventService.getAllEvents();
-        setEvents(updatedEvents);
-      } else {
-        console.error('Failed to update event');
-      }
+    setOpenViolation(false); // close the modal
+    const newViolation = await violationService.createViolation(violation);
+
+    // ask: should I use try catch to account for errors ?
+    if (newViolation !== undefined) {
+      console.log('Violation added successfully');
     } else {
-      setEditEvent(false);
-      setModal(false);
-      const res = await eventService.createEvent(event);
-      if (res !== undefined) {
-        console.log('Event added successfully');
-        const updatedEvents = await eventService.getAllEvents();
-        setEvents(updatedEvents);
-      } else {
-        console.error('Failed to add event');
-      }
+      console.log('Failed to add violation');
     }
   };
 
@@ -164,7 +152,7 @@ export default function Profile({vendorService, violationService}) {
         <div className='flex flex-row justify-between'>
           <h1 className='flex-1'>Violations: {numViolations}</h1>
           {user.isadmin && (
-            <button className="bg-red drop-shadow-xl border border-0 rounded-md w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
+            <button className="bg-red drop-shadow-xl border border-0 rounded-md py-2 px-1 w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
           )}
         </div>
         <div className='flex flex-col items-center drop-shadow-lg'>
@@ -177,7 +165,9 @@ export default function Profile({vendorService, violationService}) {
           <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
         </div>
       </div>
-      {openViolation && <ViolationModal closeModal={setOpenViolation} vendor={vendor} setViolations={incrementViolations} handleSubmit={handleViolationSubmit} />}
+      {openViolation &&
+        <ViolationModal closeModal={setOpenViolation} vendorId={id} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
+      }
       {
         editModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
@@ -390,6 +380,7 @@ Profile.propTypes = {
   }).isRequired,
   violationService: PropTypes.shape({
     createViolation: PropTypes.func.isRequired,
+    getViolationsByVendorId: PropTypes.func.isRequired,
   }).isRequired,
 };
 
