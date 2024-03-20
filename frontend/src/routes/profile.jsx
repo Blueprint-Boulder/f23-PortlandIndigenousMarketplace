@@ -12,7 +12,7 @@ export default function Profile({vendorService, violationService}) {
   const id = parseInt(vendorId.slice(1));
   const [vendor, setVendor] = useState({});
   const [openViolation, setOpenViolation] = useState(false);
-  const [numViolations] = useState(0);
+  const [numViolations, setNumViolations] = useState(0);
   const [editModal, setEditModal] = useState(false);
   const [policyModal, setPolicyModal] = useState(false);
   const {user, setMessage, setBad} = useContext(Context);
@@ -30,7 +30,7 @@ export default function Profile({vendorService, violationService}) {
       navigate('/');
     }
 
-    const fetchVendor = async () => {
+    const fetchData = async () => {
       const vendorData = await vendorService.getVendorById(id);
       if (!vendorData) {
         setMessage('Vendor not found');
@@ -39,9 +39,14 @@ export default function Profile({vendorService, violationService}) {
       } else {
         setVendor(vendorData);
       }
+      try {
+        const violationData = await violationService.getViolationsByVendorId(id);
+        setNumViolations(violationData.length);
+      } catch (err) {
+        console.log('Error fetching violations:', err);
+      }
     };
 
-    fetchVendor();
 
     // const fetchViolations = async () => {
     //   try {
@@ -52,8 +57,8 @@ export default function Profile({vendorService, violationService}) {
     //   }
     // };
 
-    // fetchViolations();
-  }, [navigate, user, id, vendor]);
+    fetchData();
+  }, []);
 
   const handleViolation = () => {
     setOpenViolation(true);
@@ -120,6 +125,8 @@ export default function Profile({vendorService, violationService}) {
     } else {
       console.log('Failed to add violation');
     }
+
+    setNumViolations(numViolations + 1);
   };
 
   return (
