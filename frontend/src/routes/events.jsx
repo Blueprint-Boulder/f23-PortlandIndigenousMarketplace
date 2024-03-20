@@ -26,11 +26,11 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
     <form action="" className='grid z-50 gap-2 p-4 lg:grid-cols-12 grid-cols-3 left-0 right-0 top-0 bottom-0 mt-auto mb-auto h-4/6 lg:ml-auto lg:mr-auto rounded-sm lg:w-8/12 w-full absolute bg-grey-1'
       onSubmit={() => handleSubmit(eventInfo)}>
       <div className='lg:col-span-2 col-span-1 my-auto'>Event Name:</div>
-      <input className='lg:col-span-10 col-span-2 rounded-sm shadow-md p-1' required type="text" id='eventName' name='eventName' value={eventInfo.name} onChange={(e) => setEventInfo({...eventInfo, name: e.target.value})} />
+      <input className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1' required type="text" id='eventName' name='eventName' value={eventInfo.name} onChange={(e) => setEventInfo({...eventInfo, name: e.target.value})} />
       <div className='lg:col-span-2 col-span-1 row-span-2'>Description:</div>
-      <textarea className='lg:col-span-10 col-span-2 row-span-2 rounded-sm shadow-md p-1' required type="text" id='description' name='description' value={eventInfo.description} onChange={(e) => setEventInfo({...eventInfo, description: e.target.value})} />
+      <textarea className='lg:col-span-10 col-span-2 row-span-2 rounded-md shadow-md p-1' required type="text" id='description' name='description' value={eventInfo.description} onChange={(e) => setEventInfo({...eventInfo, description: e.target.value})} />
       <div className='lg:col-span-2 col-span-1 my-auto'>Location:</div>
-      <input className='lg:col-span-10 col-span-2 rounded-sm shadow-md p-1' required type="text" id='location' name='location' value={eventInfo.location} onChange={(e) => setEventInfo({...eventInfo, location: e.target.value})} />
+      <input className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1' required type="text" id='location' name='location' value={eventInfo.location} onChange={(e) => setEventInfo({...eventInfo, location: e.target.value})} />
       <div className='lg:col-span-2 col-span-1 my-auto'>Start Time:</div>
       <DatePicker
         id='start-time'
@@ -40,8 +40,8 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
         showTimeSelect
         timeIntervals={15}
         required
-        wrapperClassName='lg:col-span-10 col-span-2 rounded-sm shadow-md p-2 bg-white '
-        className='lg:col-span-10 w-full rounded-sm h-max  absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
+        wrapperClassName='lg:col-span-10 col-span-2 rounded-md shadow-md p-2 bg-white '
+        className='lg:col-span-10 w-full rounded-md h-max  absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
         timeCaption="Time"
         dateFormat="MMMM d, yyyy h:mm aa"
       />
@@ -53,16 +53,16 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
         onChange={(dateTime) => setEventInfo({...eventInfo, endtime: dateTime})}
         showTimeSelect
         timeIntervals={15}
-        wrapperClassName='lg:col-span-10 col-span-2 rounded-sm shadow-md p-2 bg-white '
-        className='lg:col-span-10 w-full h-max rounded-sm absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
+        wrapperClassName='lg:col-span-10 col-span-2 rounded-md shadow-md p-2 bg-white '
+        className='lg:col-span-10 w-full h-max rounded-md absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
         required
         timeCaption="Time"
         dateFormat="MMMM d, yyyy h:mm aa"
       />
       <div className='lg:col-span-2 col-span-1 my-auto'>Capacity:</div>
-      <input className='lg:col-span-10 col-span-2 rounded-sm shadow-md p-1' type="text" id='vendor-capacity' name='location' value={eventInfo.vendorCapacity} onChange={(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})} />
-      <button type='submit' className='bg-blue lg:col-span-8 col-span-2 rounded-sm shadow-sm text-white p-1 '>{editEvent ? 'Save Changes' : 'Add Event'}</button>
-      <button type='button' className='bg-red lg:col-span-4 col-span-1 rounded-sm shadow-sm text-white p-1 ' onClick={() => closeModal()}>Cancel</button>
+      <input className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1' type="text" id='vendor-capacity' name='location' value={eventInfo.vendorCapacity} onChange={(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})} />
+      <button type='submit' className='bg-blue lg:col-span-8 col-span-2 rounded-md shadow-sm text-white p-1 '>{editEvent ? 'Save Changes' : 'Add Event'}</button>
+      <button type='button' className='bg-red lg:col-span-4 col-span-1 rounded-md shadow-sm text-white p-1 ' onClick={() => closeModal()}>Cancel</button>
     </form>
 
   );
@@ -93,10 +93,11 @@ export default function Events({eventService}) {
     };
 
     fetchEvents();
-  }, [eventService]);
+  }, [eventService, currEvent]);
 
   async function handleSubmit(event) {
     // if we are editing an event we need to update the event
+    console.log('Event', event);
     if (editEvent) {
       setEditEvent(true);
       setModal(false);
@@ -104,31 +105,34 @@ export default function Events({eventService}) {
       console.log('Res status', res.status);
       if (res !== undefined) {
         console.log('Event updated successfully');
-        const updatedEvents = await eventService.getAllEvents();
-        setEvents(updatedEvents);
+        // const updatedEvents = await eventService.getAllEvents();
+        // setEvents(updatedEvents);
       } else {
         console.error('Failed to update event');
       }
+      setCurrEvent(null);
     } else { // else we are creating a new event
       setEditEvent(false);
       setModal(false);
       const res = await eventService.createEvent(event);
       if (res !== undefined) {
         console.log('Event added successfully');
-        const updatedEvents = await eventService.getAllEvents();
-        setEvents(updatedEvents);
+        // const updatedEvents = await eventService.getAllEvents();
+        // setEvents(updatedEvents);
       } else {
         console.error('Failed to add event');
       }
+      setCurrEvent(null);
     }
   };
 
   function closeModal() {
+    setCurrEvent(null);
     setModal(false);
   }
 
   const eventDisplay = (event) => (
-    <div className="bg-white shadow-lg relative rounded-lg p-4 max-w-sm mx-auto bm-4">
+    <div className="bg-white shadow-lg relative rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
       <div className="mt-2">
         <div className="text-lg font-semibold text-gray-900">{event.name}</div>
         <div className="text-grey-5">{event.description}</div>
@@ -179,7 +183,7 @@ export default function Events({eventService}) {
 
           <h1 className='color-white text-2xl text-center my-3 font-semibold'>Events</h1>
         </div>
-        <div className='flex flex-col space-y-4'>
+        <div className='flex flex-col space-y-4 mx-auto w-max'>
           {
             events && (Array.isArray(events) ? events.map((event, i) => (
               <div className='list-style:none' key={event.eventId}>{eventDisplay(event)}</div>

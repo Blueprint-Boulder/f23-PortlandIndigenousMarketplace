@@ -47,7 +47,7 @@ export default class EventsService {
     return await this.eventsRepository.createEvent(eventData);
   }
 
-  async updateEvent(event) {
+  async updateEvent(eventId, event) {
     const eventData = {
       name: event.name,
       location: event.location,
@@ -56,7 +56,7 @@ export default class EventsService {
       description: event.description,
       vendorCapacity: event.vendorCapacity,
     };
-    return await this.eventsRepository.updateEvent(event.eventId, eventData);
+    return await this.eventsRepository.updateEvent(eventId, eventData);
   }
 
   async deleteEvent(eventId) {
