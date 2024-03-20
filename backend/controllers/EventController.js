@@ -65,7 +65,7 @@ const updateEvent = async (req, res, next) => {
         starttime = $3, 
         endtime = $4,
         description = $5, 
-        vendor_capacity = $6
+        vendorCapacity = $6
       WHERE event_id = $7
       RETURNING *;
     `, [name, location, starttime, endtime, description, vendorCapacity, event_id]);
