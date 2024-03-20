@@ -36,10 +36,10 @@ router.get('/:vendorId', getVendorById, sendSuccessResponse);
 router.post('/', createVendor, sendSuccessResponse);
 
 // Create Vendor event request
-router.post('/events/request', verify('vendor'), createEventRequest, sendSuccessResponse);
+router.post('/events/:eventId/requests/:vendorId', verify('vendor'), verifyVendorHasSameVendorId, createEventRequest, sendSuccessResponse);
 
 // Get Vendor event request
-router.get('/events/request', verify('admin'), getEventRequest, sendSuccessResponse);
+router.get('/events/requests', verify('admin'), getEventRequest, sendSuccessResponse);
 
 // Edit vendor by id
 // This probably should be an admin-protected route. How does that work?

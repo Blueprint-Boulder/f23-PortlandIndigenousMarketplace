@@ -23,7 +23,7 @@ const {
 
 const sendSuccessResponse = require('../middleware/successResponse');
 
-router.get('/events/requests/:eventId', verify('admin'), getEventRequests, sendSuccessResponse);
+router.get('/events/:eventId/requests', verify('admin'), getEventRequests, sendSuccessResponse);
 
 router.get('/events/requests', verify('admin'), getAllEventRequests, sendSuccessResponse);
 
