@@ -12,7 +12,7 @@ export default function Profile({vendorService, violationService}) {
   const id = parseInt(vendorId.slice(1));
   const [vendor, setVendor] = useState({});
   const [openViolation, setOpenViolation] = useState(false);
-  const [numViolations, setNumViolations] = useState(0);
+  const [numViolations] = useState(0);
   const [editModal, setEditModal] = useState(false);
   const [policyModal, setPolicyModal] = useState(false);
   const {user, setMessage, setBad} = useContext(Context);
@@ -112,9 +112,9 @@ export default function Profile({vendorService, violationService}) {
 
   async function handleViolationSubmit(violation) {
     setOpenViolation(false); // close the modal
+    // typically we would want to call this variable res or response
     const newViolation = await violationService.createViolation(violation);
-
-    // ask: should I use try catch to account for errors ?
+    // ask: should I use try catch to account for errors ? Try catch is good, but typically if everything is working the backend will handle it, at least in this case
     if (newViolation !== undefined) {
       console.log('Violation added successfully');
     } else {

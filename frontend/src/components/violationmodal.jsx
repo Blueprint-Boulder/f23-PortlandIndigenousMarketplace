@@ -5,6 +5,7 @@ function ViolationModal({closeModal, vendorId, vendorName, handleSubmit}) { // a
   const [activeButtons, setButtons] = useState([]);
   const [violationData, setViolationData] = useState({type: '', description: '', vendor_id: vendorId});
 
+
   // ask if theres a way to disable the header button when the modal opens
 
   // const handleSubmit = () => {
