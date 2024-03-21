@@ -172,9 +172,10 @@ export default function Profile({vendorService, violationService}) {
           <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
         </div>
       </div>
-      {openViolation &&
-        <ViolationModal closeModal={setOpenViolation} vendorId={id} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
-      }
+      <>
+        {openViolation && <ViolationModal closeModal={setOpenViolation} vendorId={id} vendorName={vendor.name}handleSubmit={handleViolationSubmit} /> }
+        <div className={`${openViolation && 'blur'} w-full mx-auto flex flex-col justify-center pb-16`}></div>
+      </>
       {
         editModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
