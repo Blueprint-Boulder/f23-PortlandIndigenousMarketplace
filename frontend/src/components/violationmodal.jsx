@@ -6,6 +6,19 @@ function ViolationModal({closeModal, vendorId, vendorName, handleSubmit}) { // a
   const [violationData, setViolationData] = useState({type: '', description: '', vendor_id: vendorId});
 
 
+  // ask if theres a way to disable the header button when the modal opens
+
+  // const handleSubmit = () => {
+  //   console.log(`Posting message(${message}) to ${vendor.name}`);
+  //   console.log('... As long as someone finishes my code');
+  //   if (activeButtons.length == 0) {
+  //     alert('Must select a violated policy to submit!');
+  //     return;
+  //   }
+  //   setViolations();
+  //   closeModal(false);
+  // };
+
   const handleButtonClick = (content) => {
     // idea:
     // search through active button list
@@ -22,9 +35,9 @@ function ViolationModal({closeModal, vendorId, vendorName, handleSubmit}) { // a
   };
   // changed the code a little bit, easier to use react state and functions than form
   return (
-    <form action='' className="absolute inset-x-1/6 inset-y-auto mb-auto bg-grey-1 drop-shadow-xl rounded-md w-4/6 h-max" onSubmit = {() => handleSubmit(violationData)}>
+    <form action="" className="absolute inset-y-12 inset-x-1/6 mt-auto bg-white drop-shadow-xl rounded-md w-4/6 h-max overflow-y-auto" onSubmit={() => handleSubmit(violationData)}>
       <h2 className="w-full text-center bg-blue rounded-md h-8 mb-4 text-white">Add Violations To: {vendorName}</h2>
-      <textarea className="px-2 pt-1 ml-3 mb-0 rounded-lg border border-2 border-blue placeholder:text-blue" required type='text' name='message' value={violationData.message} onChange={(e) => setViolationData({...violationData, description: e.target.value})} placeholder="Enter Message Here ..."></textarea>
+      <textarea type='text' id="description" name="description" value={violationData.description} className="w-11/12 min-h-[1/5] px-2 pt-1 ml-3 mb-0 rounded-lg border border-2 border-blue placeholder:text-blue placeholder:italic" onChange={(e) => setViolationData({...violationData, description: e.target.value})} placeholder="Enter Message Here ..."></textarea>
       <h2 className="text-center text-blue">Select Violated Policies</h2>
       <div className="grid grid-cols-3 gap-x-0 gap-y-1 mb-1">
         <PolicyButton onClick={() => handleButtonClick(1)} content={1} activebuttons={activeButtons}/>
@@ -40,8 +53,7 @@ function ViolationModal({closeModal, vendorId, vendorName, handleSubmit}) { // a
         <PolicyButton onClick={() => handleButtonClick(11)} content={11} activebuttons={activeButtons}/>
       </div>
       <footer className='flex flex-row justify-center mt-6 pb-2'>
-        <input type="submit" className={`py-2 px-3 mb-1 mr-2 text-white drop-shadow-xl rounded-lg ${activeButtons.length == 0 ? 'disabled' : 'bg-blue'}`}
-        >Submit</input>
+        <button type="submit" className={`py-2 px-3 mb-1 mr-2 text-white drop-shadow-xl rounded-lg ${activeButtons.length == 0 ? 'hidden' : 'bg-blue'}`}>Submit</button>
         <button className="bg-red py-2 px-3 mb-1 text-white drop-shadow-xl rounded-lg" onClick={() => closeModal(false)}>Cancel</button>
       </footer>
     </form>
@@ -50,7 +62,7 @@ function ViolationModal({closeModal, vendorId, vendorName, handleSubmit}) { // a
 
 function PolicyButton({activebuttons, content, onClick}) {
   return (
-    <button name='violationNumber' className={`${activebuttons.includes(content) ? 'bg-red' : 'bg-blue'} text-white m-1 p-2 rounded-lg drop-shadow_xl`} onClick={onClick}> {content}</button> // used Harley's VendorButtons as inspo
+    <button type='button' value={content} name="policy" id="policy" className={`${activebuttons.includes(content) ? 'bg-red' : 'bg-blue'} text-white m-1 p-2 rounded-lg drop-shadow_xl`} onClick={onClick}> {content}</button> // used Harley's VendorButtons as inspo
   );
 }
 

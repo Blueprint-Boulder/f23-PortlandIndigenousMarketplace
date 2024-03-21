@@ -23,6 +23,8 @@ export default function Profile({vendorService, violationService}) {
 
   const navigate = useNavigate();
 
+  console.log(user);
+
   useEffect(() => {
     if (!user) {
       setMessage('Please log in');
@@ -46,17 +48,6 @@ export default function Profile({vendorService, violationService}) {
         console.log('Error fetching violations:', err);
       }
     };
-
-
-    // const fetchViolations = async () => {
-    //   try {
-    //     const violationData = await violationService.getViolationsByVendorId(id);
-    //     setNumViolations(violationData.length);
-    //   } catch (err) {
-    //     console.log('Error fetching violations:', err);
-    //   }
-    // };
-
     fetchData();
   }, []);
 
@@ -173,8 +164,10 @@ export default function Profile({vendorService, violationService}) {
         </div>
       </div>
       <>
-        {openViolation && <ViolationModal closeModal={setOpenViolation} vendorId={id} vendorName={vendor.name}handleSubmit={handleViolationSubmit} /> }
-        <div className={`${openViolation && 'blur'} w-full mx-auto flex flex-col justify-center pb-16`}></div>
+        {openViolation && (
+          <ViolationModal closeModal={setOpenViolation} vendorId={id} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
+        )}
+        <div className={`${openViolation ? 'blur' : ''} w-full h-full mx-auto pb-16`}></div>
       </>
       {
         editModal && (
