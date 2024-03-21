@@ -1,5 +1,7 @@
 import EventsRepository from './EventsRepository.js';
 import Event from '../../objects/Event.js';
+import Vendor from '../../objects/Vendor.js';
+import EventRequest from '../../objects/EventRequest.js';
 
 export default class EventsService {
   constructor(httpClient) {
@@ -47,7 +49,7 @@ export default class EventsService {
     return await this.eventsRepository.createEvent(eventData);
   }
 
-  async updateEvent(event) {
+  async updateEvent(eventId, event) {
     const eventData = {
       name: event.name,
       location: event.location,
@@ -56,10 +58,54 @@ export default class EventsService {
       description: event.description,
       vendorCapacity: event.vendorCapacity,
     };
-    return await this.eventsRepository.updateEvent(event.eventId, eventData);
+    return await this.eventsRepository.updateEvent(eventId, eventData);
   }
 
   async deleteEvent(eventId) {
     return await this.eventsRepository.deleteEvent(eventId);
+  }
+
+  async getAttendingVendors(eventId) {
+    const vendorsData = await this.eventsRepository.getAttendingVendors(eventId);
+    return vendorsData.map((data) => new Vendor(
+        data.vendor_id,
+        data.name,
+        data.email,
+        data.website,
+        data.phone_number,
+        data.image,
+    ));
+  }
+
+  async getEventRequests(eventId) {
+    const EventRequestsData = await this.eventsRepository.getEventRequests(eventId);
+    return EventRequestsData.map((data) => new EventRequest(
+        data.request_id,
+        data.vendor_id,
+        data.event_id,
+        data.approved,
+        data.requested_at,
+        data.approved_at,
+    ));
+  }
+
+  async getAllEventRequests() {
+    const EventRequestsData = await this.eventsRepository.getAllEventRequests();
+    return EventRequestsData.map((data) => new EventRequest(
+        data.request_id,
+        data.vendor_id,
+        data.event_id,
+        data.approved,
+        data.requested_at,
+        data.approved_at,
+    ));
+  }
+
+  async createEventRequest(eventId, vendorId) {
+    return await this.eventsRepository.createEventRequest(eventId, vendorId);
+  }
+
+  async updateEventRequest(eventId, vendorId, isAccepted) {
+    return await this.eventsRepository.updateEventRequest(eventId, vendorId, {approved: isAccepted});
   }
 }

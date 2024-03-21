@@ -5,7 +5,6 @@ import ViolationsService from '../../services/Violations/ViolationsService.js';
 import axios from 'axios';
 import HttpClient from '../../services/HttpClient.js';
 import Vendor from '../../objects/Vendor.js';
-import Violation from '../../objects/Violation.js';
 
 describe('Admins Service', function() {
   this.timeout(10000); // Set timeout for all tests in this describe block
