@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCaretDown, faCheck} from '@fortawesome/free-solid-svg-icons';
+import {faCaretDown, faCheck, faXmark} from '@fortawesome/free-solid-svg-icons';
 // import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
 import {Context} from '../services/context.jsx';
@@ -89,8 +89,6 @@ export default function Event({eventService, vendorService}) {
             }
             setApproved(newapproved);
             setPending(newpending);
-            console.log('Approved', approved);
-            console.log('Pending', pending);
           }
         }
       } catch (error) {
@@ -109,9 +107,9 @@ export default function Event({eventService, vendorService}) {
   //   'image' in vendor && vendor.image;
   // });
 
-  const toggleVendor = () => {
-    setVendorOpen(!vendorOpen); // Ensure `vendorOpen` state is used properly
-  };
+  // const toggleVendor = () => {
+  //   setVendorOpen(!vendorOpen); // Ensure `vendorOpen` state is used properly
+  // };
 
   async function handleRegister() {
     const res = await eventService.createEventRequest(event.eventId, user.id);
@@ -124,17 +122,18 @@ export default function Event({eventService, vendorService}) {
     }
   }
 
-  async function approveVendor(vendorId) {
+  async function updateRequest(vendorId) {
     let reqId = requests.filter((req) => req.vendorId === vendorId);
+    const approved = !reqId[0].approved;
     reqId = reqId[0].requestId;
     console.log('Req id', reqId);
-    const res = await eventService.updateEventRequest(reqId, {approved: true});
+    const res = await eventService.updateEventRequest(reqId, {approved: approved});
     console.log('Res status', res);
     if (!res) {
-      setMessage('Failed to approve vendor');
+      setMessage('Failed to update request');
       setBad(true);
     } else {
-      setMessage('Vendor approved');
+      setMessage('Request Updated');
     }
     setUpdate(!update);
   }
@@ -164,7 +163,7 @@ export default function Event({eventService, vendorService}) {
       {/* <button className="self-start ml-2 fixed" onClick={() => navigate(-1)}>
         <FontAwesomeIcon icon={faAnglesLeft} />
       </button> */}
-      <img src={bLogo} alt="Event Logo" className="w-2/3 py-0 bg-clip-padding bg-white drop-shadow-xl rounded-xl" />
+      <img src={bLogo} alt="Event Logo" className="w-2/3 lg:w-1/3 md:w-1/3 py-0 bg-clip-padding bg-white drop-shadow-xl rounded-xl" />
       <div className="text-2xl mt-2 font-bold tracking-wide">{name}</div>
       <div className='flex flex-row mt-2'>
         <div className="mr-2">About</div>
@@ -191,9 +190,16 @@ export default function Event({eventService, vendorService}) {
 
           <div alt='Attending Vendors' className='mt-1 text-base p-2 font-medium italic tracking-wide border-b'>Approved Requests</div>
           <div className='mt-1 text-base font-medium italic tracking-wide p-2 border-b'>Pending Requests</div>
-          <div alt='vendorImages' className='grid grid-cols-4 gap-3 w-2/3 mt-2 rounded-md border-none'>
+          <div alt='vendorImages' className='border-none'>
             {approved.map((vendor) => (
-              <img key={vendor.image} src={vendor.image} alt='vendors image' onClick={toggleVendor} className='w-18 h-14 bg-white rounded-md drop-shadow-xl' />
+              // <div key={vendor.id} className='flex flex-row justify-between w-full mx-4 items-center'>
+              //   <img key={vendor.image} src={vendor.image} alt='vendors image' onClick={toggleVendor} className='w-12 h-12 bg-white rounded-md drop-shadow-xl' />
+              //   <div className='text-xl' onClick={() => updateRequest(vendor.id)}><FontAwesomeIcon icon={faXmark} /></div>
+              // </div>
+              <div key={vendor.request_id} className='flex flex-row justify-between p-2'>
+                <div>{vendor.name}</div>
+                <div className='text-xl' onClick={() => updateRequest(vendor.id)}><FontAwesomeIcon icon={faXmark} /></div>
+              </div>
             ))}
           </div>
           <div className='mr-4'>
@@ -201,7 +207,7 @@ export default function Event({eventService, vendorService}) {
               return (
                 <div key={vendor.request_id} className='flex flex-row justify-between p-2'>
                   <div>{vendor.name}</div>
-                  <div className='text-xl' onClick={() => approveVendor(vendor.id)}><FontAwesomeIcon icon={faCheck} /></div>
+                  <div className='text-xl' onClick={() => updateRequest(vendor.id)}><FontAwesomeIcon icon={faCheck} /></div>
                 </div>
               );
             })}
