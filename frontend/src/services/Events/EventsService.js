@@ -105,7 +105,7 @@ export default class EventsService {
     return await this.eventsRepository.createEventRequest(eventId, vendorId);
   }
 
-  async updateEventRequest(eventId, vendorId, isAccepted) {
-    return await this.eventsRepository.updateEventRequest(eventId, vendorId, {approved: isAccepted});
+  async updateEventRequest(requestId, data) {
+    return await this.eventsRepository.updateEventRequest(requestId, data);
   }
 }

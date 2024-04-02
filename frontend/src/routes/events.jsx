@@ -23,7 +23,7 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
 
   return (
 
-    <form action="" className='grid z-50 gap-2 p-4 lg:grid-cols-12 grid-cols-3 left-0 right-0 top-0 bottom-0 mt-auto mb-auto h-4/6 lg:ml-auto lg:mr-auto rounded-sm lg:w-8/12 w-full absolute bg-grey-1'
+    <form action="" className='grid z-50 gap-2 p-4 lg:grid-cols-12 grid-cols-3 left-0 right-0 top-0 bottom-0 mt-auto mb-auto h-4/6 lg:ml-auto lg:mr-auto rounded-sm lg:w-8/12 w-full fixed bg-grey-1'
       onSubmit={() => handleSubmit(eventInfo)}>
       <div className='lg:col-span-2 col-span-1 my-auto'>Event Name:</div>
       <input className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1' required type="text" id='eventName' name='eventName' value={eventInfo.name} onChange={(e) => setEventInfo({...eventInfo, name: e.target.value})} />
