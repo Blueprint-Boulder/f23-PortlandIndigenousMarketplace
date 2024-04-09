@@ -18,7 +18,7 @@ services:
   # PostgreSQL
   database:
     hostname: database
-    image: postgres:latest
+    image: postgres:14
     container_name: postgres
     ports:
       - "${DATABASE_PORT}:5432"
