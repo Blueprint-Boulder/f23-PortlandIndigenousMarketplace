@@ -33,7 +33,7 @@ const upload = multer({ storage: storage }).single('img');
 
 const getVendor = async (req, res, next) => {
   try {
-    const data = await db.oneOrNone('SELECT * FROM Vendors WHERE email = $1', [
+    const data = await db.oneOrNone('SELECT * FROM vendor_full WHERE email = $1', [
       req.body.email,
     ]);
 
@@ -86,7 +86,7 @@ const authenticateVendor = async (req, res, next) => {
 const getVendors = async (req, res, next) => {
   try {
     // Retrieve all vendors from the database
-    const vendors = await db.manyOrNone('SELECT * FROM Vendors');
+    const vendors = await db.manyOrNone('SELECT * FROM vendor_full');
 
     // If vendors are found, add them to res.locals.data
     if (vendors.length) {
@@ -107,7 +107,7 @@ const getVendorById = async (req, res, next) => {
 
   try {
     const vendor = await db.oneOrNone(
-        'SELECT * FROM Vendors WHERE vendor_id = $1',
+        'SELECT * FROM vendor_full WHERE vendor_id = $1',
         [vendorId],
     );
     if (vendor) {
