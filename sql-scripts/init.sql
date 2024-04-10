@@ -41,18 +41,11 @@ CREATE TABLE IF NOT EXISTS Events (
 );
 
 -- Violations table
-CREATE TABLE IF NOT EXISTS Violation (
+CREATE TABLE IF NOT EXISTS Violations (
     violation_id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT
-);
-
--- Violations_to_Vendors table
-CREATE TABLE IF NOT EXISTS VendorViolations (
-    violation_id INT REFERENCES Violation(violation_id),
-    vendor_id INT REFERENCES Vendors(vendor_id),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (violation_id, vendor_id)
+    type INT NOT NULL,
+    description TEXT,
+    vendor_id INT NOT NULL REFERENCES Vendors(vendor_id)
 );
 
 -- Event_Requests table

@@ -179,12 +179,10 @@ const createVendor = async (req, res, next) => {
 };
 
 const createEventRequest = async (req, res, next) => {
-  const {vendorId, eventId} = req.body;
-
   try {
     await db.none(
         'INSERT INTO EventRequests (vendor_id, event_id) VALUES ($1, $2)',
-        [vendorId, eventId],
+        [req.params.vendorId, req.params.eventId],
     );
     next();
   } catch (err) {
@@ -357,14 +355,19 @@ const uploadProfilePic = (req, res, next) => {
   });
 };
 
-// Remove the profile pic for a given vendor
-const removeProfilePic = (req, res, next) => {
+const verifyVendorHasSameVendorId = async (req, res, next) => {
+  const vendor = res.locals.vendor;
+  const vendorId = Number(req.params.vendorId);
+  console.log("Vendor:", vendor);
+  console.log("Vendor ID:", vendorId);
 
-}
-
-// Retrieve the url of the picture for a given vendor id
-const fetchPicURL = (req,res,next) => {
-
+  if (vendor.vendor_id === vendorId) {
+    console.log("Vendor has same vendor ID");
+    next();
+  } else {
+    console.log("TruthValue:", vendor.vendor_id === vendorId)
+    res.status(403).json({error: 'Forbidden'});
+  }
 }
 
 module.exports = {
@@ -377,5 +380,6 @@ module.exports = {
   getEventRequest,
   updateVendor,
   updateAuthenticatedVendor,
-  uploadProfilePic
+  uploadProfilePic,
+  verifyVendorHasSameVendorId
 };
