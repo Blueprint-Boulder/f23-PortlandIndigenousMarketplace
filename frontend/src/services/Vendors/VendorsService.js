@@ -23,6 +23,23 @@ export default class VendorsService {
     ));
   }
 
+  async getPublicVendors() {
+    const vendorsData = await this.vendorsRepository.getPublicVendors();
+    if (vendorsData == undefined) {
+      return undefined;
+    }
+
+    return vendorsData.map((data) => new Vendor(
+        data.vendor_id,
+        data.name,
+        data.email,
+        data.website,
+        data.phone_number,
+        data.image,
+        data.is_public,
+    ));
+  }
+
   async getVendorById(vendorId) {
     const vendorData = await this.vendorsRepository.getVendorById(vendorId);
     return new Vendor(
@@ -32,6 +49,33 @@ export default class VendorsService {
         vendorData.website,
         vendorData.phone_number,
         vendorData.image,
+        vendorData.is_public,
+    );
+  }
+
+  async getPublicVendorById(vendorId) {
+    const vendorData = await this.vendorsRepository.getVendorById(vendorId);
+    return new Vendor(
+        vendorData.vendor_id,
+        vendorData.name,
+        vendorData.email,
+        vendorData.website,
+        vendorData.phone_number,
+        vendorData.image,
+        vendorData.is_public,
+    );
+  }
+
+  async getSelfVendor() {
+    const vendorData = await this.vendorsRepository.getOwnProfile();
+    return new Vendor(
+        vendorData.vendor_id,
+        vendorData.name,
+        vendorData.email,
+        vendorData.website,
+        vendorData.phone_number,
+        vendorData.image,
+        vendorData.is_public,
     );
   }
 
@@ -53,6 +97,7 @@ export default class VendorsService {
       website: vendor.website,
       phoneNumber: vendor.phoneNumber,
       image: vendor.image,
+      is_public: data.is_public,
     };
     return await this.vendorsRepository.createVendor(vendorData);
   }
@@ -63,6 +108,7 @@ export default class VendorsService {
       email: vendor.email,
       website: vendor.website,
       phone_number: vendor.phoneNumber,
+      is_public: vendor.is_public,
     };
     return await this.vendorsRepository.updateSelfVendor(vendorData);
   }
@@ -74,6 +120,7 @@ export default class VendorsService {
       website: vendor.website,
       phoneNumber: vendor.phoneNumber,
       image: vendor.image,
+      is_public: vendor.is_public,
     };
     return await this.vendorsRepository.updateVendor(vendor.vendorId, vendorData);
   }

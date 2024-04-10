@@ -9,13 +9,13 @@ export default class Vendor {
     website: string - (Optional) website of the vendor.
     phone_number: string - (Optional) phone number of the vendor.
     */
-  constructor(id, name, email, website = undefined, phoneNumber = undefined, image = undefined) {
-    this.id = id;
+  constructor(id, name, email, website = undefined, phoneNumber = undefined, image = undefined, isPublic = false) {
     this.name = name;
     this.email = email;
     this.website = website;
     this.phoneNumber = phoneNumber;
     this.image = image;
+    this.is_public = isPublic;
   }
 
   // Create a vendor object from json representation

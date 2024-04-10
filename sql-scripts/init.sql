@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS Vendors (
     phone_number VARCHAR(31),
     website VARCHAR(2083),
     email VARCHAR(320) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL  -- Remember to hash the passwords before storing
+    password VARCHAR(255) NOT NULL,  -- Remember to hash the passwords before storing
+    is_public BOOLEAN DEFAULT FALSE
 );
 
 -- Vendor Profile Picutres table

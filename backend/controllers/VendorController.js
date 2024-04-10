@@ -102,6 +102,26 @@ const getVendors = async (req, res, next) => {
   }
 };
 
+const getPublicVendors = async (req, res, next) => {
+  try {
+    // Retrieve all public vendors from the database
+    const vendors = await db.manyOrNone(
+        'SELECT * FROM vendor_full WHERE is_public = TRUE',
+    );
+    // If vendors are found, add them to res.locals.data
+    if (vendors.length) {
+      res.locals.data = vendors;
+      next(); // Proceed to the next middleware or route handler
+    } else {
+      // If no vendors are found, send a message indicating this
+      res.status(404).json({message: 'No vendors found'});
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: 'Internal Server Error'});
+  }
+};
+
 const getVendorById = async (req, res, next) => {
   const {vendorId} = req.params;
 
@@ -123,10 +143,52 @@ const getVendorById = async (req, res, next) => {
   }
 };
 
+const getPublicVendorById = async (req, res, next) => {
+  const {vendorId} = req.params;
+
+  try {
+    const vendor = await db.oneOrNone(
+        'SELECT * FROM vendor_full WHERE vendor_id = $1 AND is_public = TRUE',
+        [vendorId],
+    );
+    if (vendor) {
+      // Store the vendor data in res.locals.data for the middleware
+      res.locals.data = vendor;
+      next(); // Pass control to the next middleware
+    } else {
+      res.status(404).json({message: 'Vendor not found'});
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({error: 'Internal Server Error'});
+  }
+};
+
+const getSelfVendor = async (req, res, next) => {
+  const vendor = res.locals.vendor;
+
+  try {
+    const selfVendor = await db.oneOrNone(
+        'SELECT * FROM vendor_full WHERE vendor_id = $1',
+        [vendor.vendor_id],
+    );
+    if (selfVendor) {
+      // Store the vendor data in res.locals.data for the middleware
+      res.locals.data = selfVendor;
+      next(); // Pass control to the next middleware
+    } else {
+      res.status(404).json({message: 'Vendor not found'});
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({error: 'Internal Server Error'});
+  }
+};
+
 // Registers the vendor in the database
 const createVendor = async (req, res, next) => {
   // Get the values from the request body
-  const {name, email, phoneNumber, password, website} = req.body;
+  const {name, email, phoneNumber, password, website, is_public} = req.body;
 
   // Checks if the required fields are present
   if (!password || !email || !name) {
@@ -156,9 +218,10 @@ const createVendor = async (req, res, next) => {
                 email, \
                 phone_number, \
                 password, \
-                website\
-            ) VALUES ($1, $2, $3, $4, $5)',
-        [name, email, phoneNumber, passwordHash, website],
+                website, \
+                is_public\
+            ) VALUES ($1, $2, $3, $4, $5, $6)',
+        [name, email, phoneNumber, passwordHash, website, is_public],
     );
   } catch (err) {
     // Duplicate emails are not allowed
@@ -268,6 +331,7 @@ const updateVendor = async (req, res, next) => {
     phone_number,
     password,
     website,
+    is_public,
   } = req.body;
 
   // Hashes the password using bcrypt
@@ -288,9 +352,10 @@ const updateVendor = async (req, res, next) => {
                 email = $2, \
                 phone_number = $3, \
                 password = $4, \
-                website = $5 \
-            WHERE vendor_id = $6',
-        [name, email, phone_number, passwordHash, website, vendorId],
+                website = $5, \
+                is_public = $6 \
+            WHERE vendor_id = $7',
+        [name, email, phone_number, passwordHash, website, is_public, vendorId],
     );
   } catch (err) {
     // Duplicate emails are not allowed
@@ -373,8 +438,11 @@ const verifyVendorHasSameVendorId = async (req, res, next) => {
 module.exports = {
   getVendor,
   getVendors,
+  getPublicVendors,
   createVendor,
   getVendorById,
+  getPublicVendorById,
+  getSelfVendor,
   authenticateVendor,
   createEventRequest,
   getEventRequest,
