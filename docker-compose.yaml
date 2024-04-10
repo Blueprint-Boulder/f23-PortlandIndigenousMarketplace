@@ -10,6 +10,7 @@ services:
       - "${BACKEND_PORT}:3001"
     volumes:
       - ./backend:/app
+      - ./profilepics:/profilepics
     environment:
       - NODE_ENV=dev
     depends_on:
@@ -38,5 +39,6 @@ services:
     command: npm start
     volumes:
       - ./frontend:/app
+      - ./profilepics:/app/public/profilepics
     ports:
       - "3000:3000"
