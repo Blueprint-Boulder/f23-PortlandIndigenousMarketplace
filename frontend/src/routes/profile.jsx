@@ -9,7 +9,6 @@ import Alert from '../components/alert';
 
 export default function Profile({vendorService, violationService}) {
   const {vendorId} = useParams();
-  const id = parseInt(vendorId.slice(1));
   const [vendor, setVendor] = useState({});
   const [openViolation, setOpenViolation] = useState(false);
   const [numViolations, setNumViolations] = useState(0);
@@ -31,7 +30,8 @@ export default function Profile({vendorService, violationService}) {
     }
 
     const fetchVendor = async () => {
-      const vendorData = await vendorService.getVendorById(id);
+      console.log(vendorId);
+      const vendorData = await vendorService.getVendorById(vendorId);
       if (!vendorData) {
         setMessage('Vendor not found');
         setBad(true);
@@ -42,7 +42,7 @@ export default function Profile({vendorService, violationService}) {
     };
 
     fetchVendor();
-  }, [navigate, user, id, vendor]);
+  }, []);
 
   const handleViolation = () => {
     setOpenViolation(true);
@@ -56,7 +56,7 @@ export default function Profile({vendorService, violationService}) {
     const response = await vendorService.updateSelfVendor(vendorData);
     if (response) {
       setMessage('Updated succesfully');
-      const vendorData = await vendorService.getVendorById(id);
+      const vendorData = await vendorService.getVendorById(vendorId);
       setVendor(vendorData);
     } else {
       setBad(true);
@@ -112,7 +112,7 @@ export default function Profile({vendorService, violationService}) {
         </div>
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
         {
-          !user.isadmin && user.id === id &&
+          (user.id == vendorId || user.isadmin ) &&
           <button className='ml-auto' onClick={() => {
             setEditModal(true);
           }}>Edit</button>
