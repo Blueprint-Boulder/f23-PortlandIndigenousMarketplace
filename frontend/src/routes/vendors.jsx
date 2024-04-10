@@ -86,7 +86,7 @@ export default function Vendors({vendorService}) {
   // };
 
   const vendorDisplay = (vendor) => (
-    <div className="bg-white shadow-lg rounded-lg p-4 w-64 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/:${vendor.id}`)}>
+    <div className="bg-white shadow-lg rounded-lg p-4 w-64 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
       <div className="mt-2">
         <div className="text-lg font-semibold text-gray-900">{vendor.name}</div>
         <div className="text-blue underline">{vendor.website}</div>

@@ -20,6 +20,15 @@ CREATE TABLE IF NOT EXISTS Vendors (
     password VARCHAR(255) NOT NULL  -- Remember to hash the passwords before storing
 );
 
+-- Vendor Profile Picutres table
+-- Admins do not have profile pic. 1 pic per vendor, and keys need to be unique.
+-- File should be stored as image_key.file_ext in the filesystem.
+CREATE TABLE IF NOT EXISTS ProfilePictures (
+    vendor_id INT REFERENCES Vendors(vendor_id) NOT NULL UNIQUE,
+    image_key VARCHAR(60) NOT NULL UNIQUE,
+    file_ext VARCHAR(10) NOT NULL
+);
+
 -- Events table
 CREATE TABLE IF NOT EXISTS Events (
     event_id SERIAL PRIMARY KEY,
@@ -56,3 +65,9 @@ CREATE INDEX idx_vendor_email ON Vendors(email);
 -- Insert initial admin user - Uncomment and modify for initial setup
 INSERT INTO Admins (name, email, password)
 VALUES ('Admin', 'admin@pim.com', crypt('pim', gen_salt('bf')));
+
+CREATE VIEW vendor_full AS
+    SELECT A.*, NULLIF(CONCAT(B.image_key, '.', B.file_ext), '.') AS image 
+    FROM Vendors AS A  
+    LEFT JOIN ProfilePictures AS B
+    ON A.vendor_id = B.vendor_id;

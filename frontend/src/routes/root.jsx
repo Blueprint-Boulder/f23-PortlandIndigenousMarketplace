@@ -11,7 +11,7 @@ import BackButton from '../components/backbutton.jsx';
 export default function Root() {
   const [message, setMessage] = useState('');
   const [bad, setBad] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(false);
   const [cookie, setCookie] = useState(null);
   setTimeout(() => {
     setMessage(''); setBad(false);

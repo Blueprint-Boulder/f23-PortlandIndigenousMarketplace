@@ -86,7 +86,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/events/:eventId',
-        element: <Event eventService={eventService} />,
+        element: <Event eventService={eventService} vendorService={vendorService} />,
       },
       {
         path: '/events',
