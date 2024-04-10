@@ -9,7 +9,6 @@ import Alert from '../components/alert';
 
 export default function Profile({vendorService, violationService}) {
   const {vendorId} = useParams();
-  const id = parseInt(vendorId.slice(1));
   const [vendor, setVendor] = useState({});
   const [openViolation, setOpenViolation] = useState(false);
   const [numViolations, setNumViolations] = useState(0);
@@ -26,14 +25,14 @@ export default function Profile({vendorService, violationService}) {
   console.log(user);
 
   useEffect(() => {
-    if (!user) {
-      setMessage('Please log in');
-      setBad(true);
-      navigate('/');
-    }
+    // if (!user) {
+    //   setMessage('Please log in');
+    //   setBad(true);
+    //   navigate('/');
+    // }
 
     const fetchData = async () => {
-      const vendorData = await vendorService.getVendorById(id);
+      const vendorData = await vendorService.getVendorById(vendorId);
       if (!vendorData) {
         setMessage('Vendor not found');
         setBad(true);
@@ -59,7 +58,7 @@ export default function Profile({vendorService, violationService}) {
     const response = await vendorService.updateSelfVendor(vendorData);
     if (response) {
       setMessage('Updated succesfully');
-      const vendorData = await vendorService.getVendorById(id);
+      const vendorData = await vendorService.getVendorById(vendorId);
       setVendor(vendorData);
     } else {
       setBad(true);
@@ -121,15 +120,14 @@ export default function Profile({vendorService, violationService}) {
   };
 
   return (
-
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
-          <img className='w-20' src={'image' in vendor ? vendor.image : {}} alt="vendor profile pic" />
+          <img className='w-20' src={'/profilepics/' + vendor.image} alt="vendor profile pic" />
         </div>
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
         {
-          !user.isadmin && user.id === id &&
+          (user.id == vendorId || user.isadmin ) &&
           <button className='ml-auto' onClick={() => {
             setEditModal(true);
           }}>Edit</button>
