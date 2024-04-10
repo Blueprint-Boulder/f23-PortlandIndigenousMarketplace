@@ -64,10 +64,25 @@ CREATE INDEX idx_vendor_email ON Vendors(email);
 
 -- Insert initial admin user - Uncomment and modify for initial setup
 INSERT INTO Admins (name, email, password)
+<<<<<<< Updated upstream
 VALUES ('Admin', 'admin@pim.com', crypt('pim', gen_salt('bf')));
+=======
+<<<<<<< Updated upstream
+VALUES ('Admin', 'admin@pim.com', crypt('pim', gen_salt('bf')));
+=======
+VALUES ('Admin', 'admin@pim.com', crypt('pim', gen_salt('bf')));
+
+INSERT INTO Vendors (name, email, password)
+VALUES ('Vendor', 'vendor@pim.com', crypt('pim', gen_salt('bf')));
+>>>>>>> Stashed changes
 
 CREATE VIEW vendor_full AS
     SELECT A.*, NULLIF(CONCAT(B.image_key, '.', B.file_ext), '.') AS image 
     FROM Vendors AS A  
     LEFT JOIN ProfilePictures AS B
+<<<<<<< Updated upstream
     ON A.vendor_id = B.vendor_id;
+=======
+    ON A.vendor_id = B.vendor_id;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
