@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS Vendors (
     website VARCHAR(2083),
     email VARCHAR(320) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,  -- Remember to hash the passwords before storing
-    insta VARCHAR(255),
+    instagram VARCHAR(255),
     facebook VARCHAR(255),
     twitter VARCHAR(255),
     tiktok VARCHAR(255),

@@ -20,6 +20,12 @@ export default class VendorsService {
         data.website,
         data.phone_number,
         data.image,
+        data.instagram,
+        data.facebook,
+        data.twitter,
+        data.youtube,
+        data.tiktok,
+        data.pinterest,
     ));
   }
 
@@ -32,6 +38,12 @@ export default class VendorsService {
         vendorData.website,
         vendorData.phone_number,
         vendorData.image,
+        vendorData.instagram,
+        vendorData.facebook,
+        vendorData.twitter,
+        vendorData.youtube,
+        vendorData.tiktok,
+        vendorData.pinterest,
     );
   }
 
@@ -53,6 +65,12 @@ export default class VendorsService {
       website: vendor.website,
       phoneNumber: vendor.phoneNumber,
       image: vendor.image,
+      instagram: vendor.instagram,
+      facebook: vendor.facebook,
+      twitter: vendor.twitter,
+      youtube: vendor.youtube,
+      tiktok: vendor.tiktok,
+      pinterest: vendor.pinterest,
     };
     return await this.vendorsRepository.createVendor(vendorData);
   }
@@ -63,6 +81,12 @@ export default class VendorsService {
       email: vendor.email,
       website: vendor.website,
       phone_number: vendor.phoneNumber,
+      instagram: vendor.instagram,
+      facebook: vendor.facebook,
+      twitter: vendor.twitter,
+      youtube: vendor.youtube,
+      tiktok: vendor.tiktok,
+      pinterest: vendor.pinterest,
     };
     return await this.vendorsRepository.updateSelfVendor(vendorData);
   }
@@ -74,8 +98,14 @@ export default class VendorsService {
       website: vendor.website,
       phoneNumber: vendor.phoneNumber,
       image: vendor.image,
+      instagram: vendor.instagram,
+      facebook: vendor.facebook,
+      twitter: vendor.twitter,
+      youtube: vendor.youtube,
+      tiktok: vendor.tiktok,
+      pinterest: vendor.pinterest,
     };
-    return await this.vendorsRepository.updateVendor(vendor.vendorId, vendorData);
+    return await this.vendorsRepository.updateVendor(vendor.id, vendorData);
   }
 
   async deleteVendor(vendorId) {

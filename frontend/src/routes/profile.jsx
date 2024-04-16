@@ -5,69 +5,38 @@ import PropTypes from 'prop-types';
 import {Context} from '../services/context';
 import FooterPad from '../components/footerpad';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSquareFacebook} from '@fortawesome/free-brands-svg-icons';
-import {faSquareInstagram} from '@fortawesome/free-brands-svg-icons';
-import {faSquareXTwitter} from '@fortawesome/free-brands-svg-icons';
+import {faFacebook} from '@fortawesome/free-brands-svg-icons';
+import {faInstagram} from '@fortawesome/free-brands-svg-icons';
+import {faXTwitter} from '@fortawesome/free-brands-svg-icons';
+import {faYoutube} from '@fortawesome/free-brands-svg-icons';
+import {faPinterest} from '@fortawesome/free-brands-svg-icons';
+import {faTiktok} from '@fortawesome/free-brands-svg-icons';
 import ViolationModal from '../components/violationmodal';
 import Alert from '../components/alert';
 
-export default function Profile({vendorService, violationService}) {
-  const {vendorId} = useParams();
-  const [vendor, setVendor] = useState({});
-  const [openViolation, setOpenViolation] = useState(false);
-  const [numViolations, setNumViolations] = useState(0);
-  const [editModal, setEditModal] = useState(false);
-  const [policyModal, setPolicyModal] = useState(false);
-  const {user, setMessage, setBad} = useContext(Context);
-  const [socials] = useState({insta: 'https://www.instagram.com/', facebook: 'https://www.facebook.com/', x: 'https://twitter.com/?lang=en'});
-  const [vendorData, setVendorData] = useState({name: '', email: '', phoneNumber: '', website: ''});
+
+function EditModal({handleSubmit, setEditModal, vendorData, setVendorData}) {
   const [badLocal, setBadLocal] = useState(false);
   const [validEmail, setValidEmail] = useState(true);
   const [validWebsite, setValidWebsite] = useState(true);
 
-  const navigate = useNavigate();
-
-  console.log(user);
-
-  useEffect(() => {
-    // if (!user) {
-    //   setMessage('Please log in');
-    //   setBad(true);
-    //   navigate('/');
-    // }
-
-    const fetchData = async () => {
-      const vendorData = await vendorService.getVendorById(vendorId);
-      if (!vendorData) {
-        setMessage('Vendor not found');
-        setBad(true);
-        navigate('/vendors');
-      } else {
-        setVendor(vendorData);
-      }
-      try {
-        const violationData = await violationService.getViolationsByVendorId(vendorId);
-        setNumViolations(violationData.length);
-      } catch (err) {
-        console.log('Error fetching violations:', err);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const handleViolation = () => {
-    setOpenViolation(true);
-  };
-
-  const handleEditVendor = async () => {
-    const response = await vendorService.updateSelfVendor(vendorData);
-    if (response) {
-      setMessage('Updated succesfully');
-      const vendorData = await vendorService.getVendorById(vendorId);
-      setVendor(vendorData);
+  const handleWebsiteChange = (e) => {
+    const website = e.target.value;
+    const pattern = /[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+    if (website === '') {
+      setValidWebsite(true);
+      setBadLocal(false);
+      return;
+    }
+    if (pattern.test(website)) {
+      // The website input matches the pattern
+      setVendorData({...vendorData, website: website});
+      setBadLocal(false);
+      setValidWebsite(true);
     } else {
-      setBad(true);
-      setMessage('Failed to update');
+      // The website input does not match the pattern
+      setValidWebsite(false);
+      setBadLocal(true);
     }
   };
 
@@ -90,25 +59,124 @@ export default function Profile({vendorService, violationService}) {
     }
   };
 
-  const handleWebsiteChange = (e) => {
-    const website = e.target.value;
-    const pattern = /[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-    if (website === '') {
-      setValidWebsite(true);
-      setBadLocal(false);
-      return;
-    }
-    if (pattern.test(website)) {
-      // The website input matches the pattern
-      setVendorData({...vendorData, website: website});
-      setBadLocal(false);
-      setValidWebsite(true);
+
+  return (
+    <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-5/6 overflow-scroll'>
+      <div className='flex flex-col h-full'>
+        <form action="" onSubmit={(e) => {
+          if (badLocal) {
+            e.preventDefault();
+            return;
+          }
+          e.preventDefault(); // Prevents the default form submission behavior
+          handleSubmit();
+          setEditModal(false);
+        }} className='flex flex-col'>
+          <label htmlFor="legalName" className='py-4' >Name:</label>
+          <input type="text" id='legalName' value = {vendorData.name} name='legalName'onChange={(e) => setVendorData({...vendorData, name: e.target.value})}/>
+          {validEmail ? <label htmlFor="email" className='py-4'>Email:</label> : <Alert content="Must be a valid email" bad ={true}/>}
+          <input type="text" id='email' value = {vendorData.email} name='email'onChange={(e) => handleEmailChange(e)}/>
+          <label htmlFor="phoneNum" className='py-4'>Phone Number:</label>
+          <input type="text" id='phoneNum' value = {vendorData.phoneNumber} name='phoneNum'onChange={(e) => setVendorData({...vendorData, phoneNumber: e.target.value})}/>
+          {validWebsite ? <label htmlFor="website" className='py-4'>Website:</label> : <Alert content="Must be a valid website" bad ={true}/>}
+          <input type="text" id='website' value = {vendorData.website} name='website'onChange={(e) => handleWebsiteChange(e)}/>
+          <label htmlFor = 'instagram' className='py-4'>Instagram:</label>
+          <input type="text" id='instagram' value = {vendorData.instagram} name='instagram'onChange={(e) => setVendorData({...vendorData, instagram: e.target.value})}/>
+          <label htmlFor = 'facebook' className='py-4'>Facebook:</label>
+          <input type="text" id='facebook' value = {vendorData.facebook} name='facebook'onChange={(e) => setVendorData({...vendorData, facebook: e.target.value})}/>
+          <label htmlFor = 'twitter' className='py-4'>Twitter:</label>
+          <input type="text" id='twitter' value = {vendorData.twitter} name='twitter'onChange={(e) => setVendorData({...vendorData, twitter: e.target.value})}/>
+          <label htmlFor = 'youtube' className='py-4'>Youtube:</label>
+          <input type="text" id='youtube' value = {vendorData.youtube} name='youtube'onChange={(e) => setVendorData({...vendorData, youtube: e.target.value})}/>
+          <label htmlFor = 'pinterest' className='py-4'>Pinterest:</label>
+          <input type="text" id='pinterest' value = {vendorData.pinterest} name='pinterest'onChange={(e) => setVendorData({...vendorData, pinterest: e.target.value})}/>
+          <label htmlFor = 'tiktok' className='py-4'>Tiktok:</label>
+          <input type="text" id='tiktok' value = {vendorData.tiktok} name='tiktok'onChange={(e) => setVendorData({...vendorData, tiktok: e.target.value})}/>
+          <div className='flex justify-between bottom-0'>
+            <button type={badLocal ? '': 'submit'} className={`${badLocal ? 'bg-grey-1': 'bg-blue'} text-white p-5 mt-8 mb-4`}>Save Changes</button>
+            <button onClick={()=>{
+              setEditModal(false);
+            }} className='bg-red  text-white p-5 mt-8 mb-4 '>Cancel</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  );
+}
+
+export default function Profile({vendorService, violationService}) {
+  const {vendorId} = useParams();
+  const [vendor, setVendor] = useState({});
+  const [openViolation, setOpenViolation] = useState(false);
+  const [numViolations, setNumViolations] = useState(0);
+  const [editModal, setEditModal] = useState(false);
+  const [policyModal, setPolicyModal] = useState(false);
+  const {user, setMessage, setBad} = useContext(Context);
+  const [vendorData, setVendorData] = useState({name: '', email: '', phoneNumber: '', website: ''});
+
+
+  const navigate = useNavigate();
+
+  console.log(user);
+
+  useEffect(() => {
+    // if (!user) {
+    //   setMessage('Please log in');
+    //   setBad(true);
+    //   navigate('/');
+    // }
+
+    const fetchData = async () => {
+      const vendorData = await vendorService.getVendorById(vendorId);
+      if (!vendorData) {
+        setMessage('Vendor not found');
+        setBad(true);
+        navigate('/vendors');
+      } else {
+        setVendor(vendorData);
+        setVendorData(vendorData);
+        console.log('Vendor:', vendorData);
+      }
+      try {
+        const violationData = await violationService.getViolationsByVendorId(vendorId);
+        setNumViolations(violationData.length);
+      } catch (err) {
+        console.log('Error fetching violations:', err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleViolation = () => {
+    setOpenViolation(true);
+  };
+
+  const handleEditVendor = async () => {
+    if (!user.isadmin) {
+      const response = await vendorService.updateSelfVendor(vendorData);
+      if (response) {
+        setMessage('Updated succesfully');
+        const vendorData = await vendorService.getVendorById(vendorId);
+        setVendor(vendorData);
+      } else {
+        setBad(true);
+        setMessage('Failed to update');
+      }
     } else {
-      // The website input does not match the pattern
-      setValidWebsite(false);
-      setBadLocal(true);
+      console.log('Vendor data:', vendorData);
+      const response = await vendorService.updateVendor(vendorData);
+      if (response) {
+        setMessage('Updated succesfully');
+        const vendorData = await vendorService.getVendorById(vendorId);
+        setVendor(vendorData);
+      } else {
+        setBad(true);
+        setMessage('Failed to update');
+      }
     }
   };
+
 
   async function handleViolationSubmit(violation) {
     setOpenViolation(false); // close the modal
@@ -146,9 +214,12 @@ export default function Profile({vendorService, violationService}) {
         {/* <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li> dont think this is necessary */}
       </div>
       <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
-        {socials.insta && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.insta} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faSquareInstagram} size="2x"/></a></li>}
-        {socials.x && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.x} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faSquareXTwitter} size="2x"/></a></li>}
-        {socials.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.facebook} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faSquareFacebook} size="2x"/></a></li>}
+        {vendor.instagram && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.instagram} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faInstagram} size="2x"/></a></li>}
+        {vendor.twitter && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.twitter} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faXTwitter} size="2x"/></a></li>}
+        {vendor.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.facebook} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faFacebook} size="2x"/></a></li>}
+        {vendor.youtube && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.youtube} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faYoutube} size="2x"/></a></li>}
+        {vendor.pinterest && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.pinterest} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faPinterest} size="2x"/></a></li>}
+        {vendor.tiktok && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.tiktok} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faTiktok} size="2x"/></a></li>}
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <h1 className='text-xl'>Upcoming Events</h1>
@@ -179,32 +250,8 @@ export default function Profile({vendorService, violationService}) {
       </>
       {
         editModal && (
-          <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-5/6'>
-            <div className='flex flex-col h-full'>
-              <form action="" onSubmit={(e) => {
-                if (badLocal) {
-                  e.preventDefault();
-                  return;
-                }
-                e.preventDefault(); // Prevents the default form submission behavior
-                handleEditVendor();
-                setEditModal(false);
-              }} className='flex flex-col'>
-                <label htmlFor="legalName" className='py-4' >Name:</label>
-                <input type="text" id='legalName' name='legalName'onChange={(e) => setVendorData({...vendorData, name: e.target.value})}/>
-                {validEmail ? <label htmlFor="email" className='py-4'>Email:</label> : <Alert content="Must be a valid email" bad ={true}/>}
-                <input type="text" id='email' name='email'onChange={(e) => handleEmailChange(e)}/>
-                <label htmlFor="phoneNum" className='py-4'>Phone Number:</label>
-                <input type="text" id='phoneNum' name='phoneNum'onChange={(e) => setVendorData({...vendorData, phoneNumber: e.target.value})}/>
-                {validWebsite ? <label htmlFor="website" className='py-4'>Website:</label> : <Alert content="Must be a valid website" bad ={true}/>}
-                <input type="text" id='website' name='website'onChange={(e) => handleWebsiteChange(e)}/>
-                <button type={badLocal ? '': 'submit'} className={`${badLocal ? 'bg-grey-1': 'bg-blue'} text-white p-5 mt-8 mb-4`}>Save Changes</button>
-              </form>
-              <button onClick={()=>{
-                setEditModal(false);
-              }} className='bg-blue text-white p-5'>Cancel</button>
-            </div>
-          </div>
+          <EditModal handleSubmit = {handleEditVendor} setEditModal = {setEditModal}
+            vendorData = {vendorData} setVendorData={setVendorData}></EditModal>
         )
       }
       {
@@ -393,9 +440,17 @@ Profile.propTypes = {
   vendorService: PropTypes.shape({
     getVendorById: PropTypes.func.isRequired,
     updateSelfVendor: PropTypes.func.isRequired,
+    updateVendor: PropTypes.func.isRequired,
   }).isRequired,
   violationService: PropTypes.shape({
     createViolation: PropTypes.func.isRequired,
     getViolationsByVendorId: PropTypes.func.isRequired,
   }).isRequired,
+};
+
+EditModal.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  setEditModal: PropTypes.func.isRequired,
+  vendorData: PropTypes.object.isRequired,
+  setVendorData: PropTypes.func.isRequired,
 };
