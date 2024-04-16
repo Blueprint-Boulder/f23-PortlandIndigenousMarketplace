@@ -153,18 +153,17 @@ export default function Events({eventService}) {
           <EventModal editEvent={editEvent} handleSubmit={handleSubmit}/>
         )}
         <h1 className='color-white text-2xl text-center my-3 font-semibold'>Events</h1>
-      <div className='flex flex-col space-y-4'>
-        {
-          events && (Array.isArray(events) ? events.map((event, i) => (
-            <div className='list-style:none' key={event.eventId}>{eventDisplay(event)}</div>
-          )) : eventDisplay(events))
-        }
+        <div className='flex flex-col space-y-4'>
+          {
+            events && (Array.isArray(events) ? events.map((event, i) => (
+              <div className='list-style:none' key={event.eventId}>{eventDisplay(event)}</div>
+            )) : eventDisplay(events))
+          }
+        </div>
+        <FooterPad/>
       </div>
-      <FooterPad/>
-    </div>
     </div>
   );
-
 }
 
 Events.propTypes = {
