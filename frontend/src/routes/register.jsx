@@ -16,6 +16,12 @@ export default function Register({vendorService, adminService}) {
   const [pass2, setPass2] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState();
+  const [instagram, setInstagram] = useState();
+  const [facebook, setFacebook] = useState();
+  const [twitter, setTwitter] = useState();
+  const [youtube, setYoutube] = useState();
+  const [tiktok, setTiktok] = useState();
+  const [pinterest, setPinterest] = useState();
   const [website, setWebsite] = useState();
   const {setMessage, setBad} = useContext(Context);
   const [validEmail, setValidEmail] = useState(true);
@@ -25,7 +31,7 @@ export default function Register({vendorService, adminService}) {
   const navigate = useNavigate();
 
   async function handleRegister() {
-    const vendor = {name: name, email: email, website: website, phoneNumber: phone, image: ''};
+    const vendor = {name: name, email: email, website: website, phoneNumber: phone, image: '', instagram: instagram, facebook: facebook, twitter: twitter, youtube: youtube, tiktok: tiktok, pinterest: pinterest};
 
     const response = await vendorService.createVendor(vendor, pass);
     console.log(response);
@@ -148,6 +154,43 @@ export default function Register({vendorService, adminService}) {
               placeholder="Phone Number"
               onChange={(e) => handlePhoneChange(e)}></input>
           </div>
+          <div className="m-2">
+            <input
+              className="p-1 rounded-lg w-3/4"
+              placeholder="Instagram"
+              onChange={(e) => setInstagram(e)}></input>
+          </div>
+          <div className="m-2">
+            <input
+              className="p-1 rounded-lg w-3/4"
+              placeholder="Facebook"
+              onChange={(e) => setFacebook(e)}></input>
+          </div>
+          <div className="m-2">
+            <input
+              className="p-1 rounded-lg w-3/4"
+              placeholder="Twitter (X)"
+              onChange={(e) => setTwitter(e)}></input>
+          </div>
+          <div className="m-2">
+            <input
+              className="p-1 rounded-lg w-3/4"
+              placeholder="Youtube"
+              onChange={(e) => setYoutube(e)}></input>
+          </div>
+          <div className="m-2">
+            <input
+              className="p-1 rounded-lg w-3/4"
+              placeholder="Tiktok"
+              onChange={(e) => setTiktok(e)}></input>
+          </div>
+          <div className="m-2">
+            <input
+              className="p-1 rounded-lg w-3/4"
+              placeholder="Pinterest"
+              onChange={(e) => setPinterest(e)}></input>
+          </div>
+
           <div className="m-2">
             <input
               className="p-1 rounded-lg w-3/4"
