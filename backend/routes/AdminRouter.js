@@ -3,7 +3,6 @@ const router = express.Router();
 
 // Auth Controller Imports
 const {
-  verifyAdminToken,
   signAdminToken,
   verify,
 } = require('../controllers/AuthController');
@@ -12,7 +11,7 @@ const {
 const {
     getEventRequests,
     getAllEventRequests,
-    getViolations,
+    getViolationsByVendorId,
     getAllViolations,
     createVendorViolation,
     deleteVendorViolation,
@@ -24,17 +23,17 @@ const {
 
 const sendSuccessResponse = require('../middleware/successResponse');
 
-router.get('/events/requests/:eventId', verify('admin'), getEventRequests, sendSuccessResponse);
+router.get('/events/:eventId/requests', verify('admin'), getEventRequests, sendSuccessResponse);
 
 router.get('/events/requests', verify('admin'), getAllEventRequests, sendSuccessResponse);
 
-router.get('/violations/:vendorId', verify('admin'), getViolations, sendSuccessResponse);
+router.get('/violations/:vendorId', verify('admin'), getViolationsByVendorId, sendSuccessResponse);
 
 router.get('/violations', verify('admin'), getAllViolations, sendSuccessResponse);
 
-router.put('events/requests/:requestId', verify('admin'), processEventRequest, sendSuccessResponse);
+router.put('/events/requests/:requestId', verify('admin'), processEventRequest, sendSuccessResponse);
 
-router.post('/violations/:vendorId', verify('admin'), createVendorViolation, sendSuccessResponse);
+router.post('/violations', verify('admin'), createVendorViolation, sendSuccessResponse);
 
 router.delete('/violations/:violationId', verify('admin'), deleteVendorViolation, sendSuccessResponse);
 

@@ -6,6 +6,7 @@ const {
   createEvent,
   updateEvent,
   deleteEvent,
+  getAttendingVendors,
 } = require('../controllers/EventController');
 const sendSuccessResponse = require('../middleware/successResponse');
 const {verify} = require('../controllers/AuthController');
@@ -23,5 +24,7 @@ router.post('/', verify('admin'), createEvent, sendSuccessResponse);
 router.put('/:event_id', verify('admin'), updateEvent, sendSuccessResponse);
 
 router.delete('/:event_id', verify('admin'), deleteEvent, sendSuccessResponse);
+
+router.get('/:event_id/vendors', getAttendingVendors, sendSuccessResponse);
 
 module.exports = router;

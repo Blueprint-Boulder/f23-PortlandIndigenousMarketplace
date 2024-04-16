@@ -5,9 +5,35 @@ const db = require('../database');
 const {hash, genSalt} = require('bcryptjs');
 const bcrypt = require('bcryptjs');
 
+// Imports for file uploading
+const {v4} = require('uuid');
+const mime = require('mime-types');
+const multer  = require('multer');
+
+// TODO: add file upload limits
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    console.log("Destination called");
+    cb(null, '/profilepics');
+  },
+  filename: function (req, file, cb) {
+    const uuid = v4();
+    const fileExt = mime.extension(file.mimetype);
+    const fileName = `${uuid}.${fileExt}`;
+
+    console.log("Filename called");
+
+    req.uuid = uuid;
+    req.fileExt = fileExt;
+
+    cb(null, fileName);
+  }
+})
+const upload = multer({ storage: storage }).single('img');
+
 const getVendor = async (req, res, next) => {
   try {
-    const data = await db.oneOrNone('SELECT * FROM Vendors WHERE email = $1', [
+    const data = await db.oneOrNone('SELECT * FROM vendor_full WHERE email = $1', [
       req.body.email,
     ]);
 
@@ -60,7 +86,7 @@ const authenticateVendor = async (req, res, next) => {
 const getVendors = async (req, res, next) => {
   try {
     // Retrieve all vendors from the database
-    const vendors = await db.manyOrNone('SELECT * FROM Vendors');
+    const vendors = await db.manyOrNone('SELECT * FROM vendor_full');
 
     // If vendors are found, add them to res.locals.data
     if (vendors.length) {
@@ -81,7 +107,7 @@ const getVendorById = async (req, res, next) => {
 
   try {
     const vendor = await db.oneOrNone(
-        'SELECT * FROM Vendors WHERE vendor_id = $1',
+        'SELECT * FROM vendor_full WHERE vendor_id = $1',
         [vendorId],
     );
     if (vendor) {
@@ -100,7 +126,7 @@ const getVendorById = async (req, res, next) => {
 // Registers the vendor in the database
 const createVendor = async (req, res, next) => {
   // Get the values from the request body
-  const {name, email, phoneNumber, password, website} = req.body;
+  const {name, email, phoneNumber, password, website, instagram, facebook, twitter, tiktok, youtube, pintrest} = req.body;
 
   // Checks if the required fields are present
   if (!password || !email || !name) {
@@ -130,9 +156,15 @@ const createVendor = async (req, res, next) => {
                 email, \
                 phone_number, \
                 password, \
-                website\
-            ) VALUES ($1, $2, $3, $4, $5)',
-        [name, email, phoneNumber, passwordHash, website],
+                website,\
+                instagram, \
+                facebook, \
+                twitter, \
+                tiktok, \
+                youtube,\
+                pintrest, \
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
+        [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pintrest],
     );
   } catch (err) {
     // Duplicate emails are not allowed
@@ -153,12 +185,10 @@ const createVendor = async (req, res, next) => {
 };
 
 const createEventRequest = async (req, res, next) => {
-  const {vendorId, eventId} = req.body;
-
   try {
     await db.none(
         'INSERT INTO EventRequests (vendor_id, event_id) VALUES ($1, $2)',
-        [vendorId, eventId],
+        [req.params.vendorId, req.params.eventId],
     );
     next();
   } catch (err) {
@@ -244,6 +274,12 @@ const updateVendor = async (req, res, next) => {
     phone_number,
     password,
     website,
+    instagram,
+    facebook,
+    twitter,
+    tiktok,
+    youtube,
+    pintrest,
   } = req.body;
 
   // Hashes the password using bcrypt
@@ -264,9 +300,15 @@ const updateVendor = async (req, res, next) => {
                 email = $2, \
                 phone_number = $3, \
                 password = $4, \
-                website = $5 \
+                website = $5, \
+                instagram = $6, \
+                facebook = $7, \
+                twitter = $8, \
+                tiktok = $9, \
+                youtube = $10, \
+                pintrest = $11 \
             WHERE vendor_id = $6',
-        [name, email, phone_number, passwordHash, website, vendorId],
+        [name, email, phone_number, passwordHash, website, vendorId, instagram, facebook, twitter, tiktok, youtube, pintrest],
     );
   } catch (err) {
     // Duplicate emails are not allowed
@@ -284,6 +326,68 @@ const updateVendor = async (req, res, next) => {
   next();
 };
 
+// Upload a profile pic. If one exists for the vendor, remove it.
+const uploadProfilePic = (req, res, next) => {
+  console.log(req.body);
+  
+  // img is the form field for the profile pic
+  upload(req, res, async (err) => {
+    if (err instanceof multer.MulterError){
+      console.log("Multer error occurred handling file upload.");
+      console.log(err);
+      return res.status(500).json({error: err});
+    } else if (err) {
+      // Find out the difference between these two error conditions
+      console.log(err);
+      return res.status(500).json({error: err});
+    }
+
+    // Vendor id for database entry
+    const vendor_id = res.locals.vendor['vendor_id'];
+
+    // Get file name from request
+    const uuid = req.uuid;
+    const fileExt = req.fileExt;
+
+    // Upload metadata to database
+    try {
+      await db.none(
+        `INSERT INTO ProfilePictures (vendor_id, image_key, file_ext) VALUES ($1, $2, $3)`,
+        [vendor_id, uuid, fileExt]);
+    } catch (err) {
+      // Duplicate emails are not allowed
+      if (err.code === '23505') {
+        res.status(400).json({error: 'This vendor already has a profile pic, or the UUID creation failed to be unique.'});
+        return;
+      }
+
+      // TODO: If database entry fails, delete photo from filesystem!
+
+      // Other internal error
+      console.log(err);
+      res.status(500).json({error: err});
+      return;
+    }
+
+    next();
+  });
+};
+
+const verifyVendorHasSameVendorId = async (req, res, next) => {
+  const vendor = res.locals.vendor;
+  const vendorId = Number(req.params.vendorId);
+  console.log("Vendor:", vendor);
+  console.log("Vendor ID:", vendorId);
+
+  if (vendor.vendor_id === vendorId) {
+    console.log("Vendor has same vendor ID");
+    next();
+  } else {
+    console.log("TruthValue:", vendor.vendor_id === vendorId)
+    res.status(403).json({error: 'Forbidden'});
+  }
+}
+
 module.exports = {
   getVendor,
   getVendors,
@@ -294,4 +398,6 @@ module.exports = {
   getEventRequest,
   updateVendor,
   updateAuthenticatedVendor,
+  uploadProfilePic,
+  verifyVendorHasSameVendorId
 };

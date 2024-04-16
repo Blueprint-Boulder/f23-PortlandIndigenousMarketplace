@@ -45,6 +45,7 @@ export default class VendorsService {
   }
 
   async createVendor(vendor, password) {
+    console.log('creating vendor', vendor);
     const vendorData = {
       name: vendor.name,
       email: vendor.email,

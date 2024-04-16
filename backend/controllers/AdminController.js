@@ -33,7 +33,7 @@ const getAllEventRequests = async (req, res, next) => {
             res.locals.data = requests;
             next();
         } else {
-            res.status(404).json({message: 'No requests found for this event.'});
+            res.status(404).json({message: 'No requests found.'});
         }
     } catch (err) {
         console.error(err);
@@ -41,10 +41,10 @@ const getAllEventRequests = async (req, res, next) => {
     }
 }
 
-const getViolations = async (req, res, next) => {
+const getViolationsByVendorId = async (req, res, next) => {
     try {
         const violations = await db.manyOrNone(
-            'SELECT * FROM VendorViolations WHERE vendor_id = $1',
+            'SELECT * FROM Violations WHERE vendor_id = $1',
             [req.params.vendorId],
         );
     
@@ -62,7 +62,7 @@ const getViolations = async (req, res, next) => {
 
 const getAllViolations = async (req, res, next) => {
     try {
-        const violations = await db.manyOrNone('SELECT * FROM VendorViolations');
+        const violations = await db.manyOrNone('SELECT * FROM Violations');
     
         if (violations.length) {
             res.locals.data = violations;
@@ -78,21 +78,23 @@ const getAllViolations = async (req, res, next) => {
 
 const createVendorViolation = async (req, res, next) => {
     try {
+        const {type, description, vendor_id} = req.body;
+
         await db.none(
-            'INSERT INTO VendorViolations (vendor_id) VALUES ($1)',
-            [req.params.vendorId],
+            'INSERT INTO Violations (type, description, vendor_id) VALUES ($1, $2, $3)',
+            [type, description, vendor_id],
         );
         next();
     } catch (err) {
         console.error(err);
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({error: 'Error creating violation.'});
     }
 }
 
 const deleteVendorViolation = async (req, res, next) => {
     try {
         await db.none(
-            'DELETE FROM VendorViolations WHERE violation_id = $1',
+            'DELETE FROM Violations WHERE violation_id = $1',
             [req.params.violationId],
         );
         next();
@@ -201,7 +203,7 @@ const authenticateAdmin = async (req, res, next) => {
 module.exports = {
     getEventRequests,
     getAllEventRequests,
-    getViolations,
+    getViolationsByVendorId,
     getAllViolations,
     createVendorViolation,
     deleteVendorViolation,

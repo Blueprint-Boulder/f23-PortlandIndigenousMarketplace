@@ -7,54 +7,148 @@ import FooterPad from '../components/footerpad';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSquareFacebook} from '@fortawesome/free-brands-svg-icons';
 import {faSquareInstagram} from '@fortawesome/free-brands-svg-icons';
-import { faSquareXTwitter } from '@fortawesome/free-brands-svg-icons';
+import {faSquareXTwitter} from '@fortawesome/free-brands-svg-icons';
+import ViolationModal from '../components/violationmodal';
+import Alert from '../components/alert';
 
-export default function Profile({vendorService}) {
+export default function Profile({vendorService, violationService}) {
   const {vendorId} = useParams();
-  const id = parseInt(vendorId.slice(1));
-  const [vendor] = useState(vendorService.getVendorById(id));
-
+  const [vendor, setVendor] = useState({});
+  const [openViolation, setOpenViolation] = useState(false);
+  const [numViolations, setNumViolations] = useState(0);
   const [editModal, setEditModal] = useState(false);
   const [policyModal, setPolicyModal] = useState(false);
   const {user, setMessage, setBad} = useContext(Context);
-  const [socials] = useState({insta: "https://www.instagram.com/", facebook: "https://www.facebook.com/", x: "https://twitter.com/?lang=en"});
+  const [socials] = useState({insta: 'https://www.instagram.com/', facebook: 'https://www.facebook.com/', x: 'https://twitter.com/?lang=en'});
+  const [vendorData, setVendorData] = useState({name: '', email: '', phoneNumber: '', website: ''});
+  const [badLocal, setBadLocal] = useState(false);
+  const [validEmail, setValidEmail] = useState(true);
+  const [validWebsite, setValidWebsite] = useState(true);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user) {
-      setMessage('Please log in');
-      setBad(true);
-      navigate('/');
-    } else if (user.isadmin) {
-      setMessage('What should an admin see?');
-    }
-  }, [navigate, user]);
+  console.log(user);
 
+  useEffect(() => {
+    // if (!user) {
+    //   setMessage('Please log in');
+    //   setBad(true);
+    //   navigate('/');
+    // }
+
+    const fetchData = async () => {
+      const vendorData = await vendorService.getVendorById(vendorId);
+      if (!vendorData) {
+        setMessage('Vendor not found');
+        setBad(true);
+        navigate('/vendors');
+      } else {
+        setVendor(vendorData);
+      }
+      try {
+        const violationData = await violationService.getViolationsByVendorId(vendorId);
+        setNumViolations(violationData.length);
+      } catch (err) {
+        console.log('Error fetching violations:', err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleViolation = () => {
+    setOpenViolation(true);
+  };
+
+  const handleEditVendor = async () => {
+    const response = await vendorService.updateSelfVendor(vendorData);
+    if (response) {
+      setMessage('Updated succesfully');
+      const vendorData = await vendorService.getVendorById(vendorId);
+      setVendor(vendorData);
+    } else {
+      setBad(true);
+      setMessage('Failed to update');
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    const pattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/;
+    if (email === '') {
+      setValidEmail(true);
+      setBadLocal(false);
+      return;
+    }
+    if (pattern.test(email)) {
+      setVendorData({...vendorData, email: email});
+      setBadLocal(false);
+      setValidEmail(true);
+    } else {
+      // The website input does not match the pattern
+      setValidEmail(false);
+      setBadLocal(true);
+    }
+  };
+
+  const handleWebsiteChange = (e) => {
+    const website = e.target.value;
+    const pattern = /[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+    if (website === '') {
+      setValidWebsite(true);
+      setBadLocal(false);
+      return;
+    }
+    if (pattern.test(website)) {
+      // The website input matches the pattern
+      setVendorData({...vendorData, website: website});
+      setBadLocal(false);
+      setValidWebsite(true);
+    } else {
+      // The website input does not match the pattern
+      setValidWebsite(false);
+      setBadLocal(true);
+    }
+  };
+
+  async function handleViolationSubmit(violation) {
+    setOpenViolation(false); // close the modal
+    // typically we would want to call this variable res or response
+    const newViolation = await violationService.createViolation(violation);
+    // ask: should I use try catch to account for errors ? Try catch is good, but typically if everything is working the backend will handle it, at least in this case
+    if (newViolation !== undefined) {
+      console.log('Violation added successfully');
+    } else {
+      console.log('Failed to add violation');
+    }
+
+    setNumViolations(numViolations + 1);
+  };
 
   return (
-
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
-          <img className='w-20' src={vendor.image} alt="" />
+          <img className='w-20' src={'/profilepics/' + vendor.image} alt="vendor profile pic" />
         </div>
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
-        <button className='ml-auto' onClick={() => {
-          setEditModal(true);
-        }}>Edit</button>
+        {
+          (user.id == vendorId || user.isadmin ) &&
+          <button className='ml-auto' onClick={() => {
+            setEditModal(true);
+          }}>Edit</button>
+        }
       </div>
       <hr className='bg-grey-1 w-9/12 drop-shadow-lg'/>
       <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4'>
         <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.email}</li>
-        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.phone_number}</li>
+        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.phoneNumber}</li>
         <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.website}</li>
-        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li>
+        {/* <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li> dont think this is necessary */}
       </div>
       <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
-        {socials.insta && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.insta} target="_blank"><FontAwesomeIcon icon={faSquareInstagram} size="2x"/></a></li>}
-        {socials.x && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.x} target="_blank"><FontAwesomeIcon icon={faSquareXTwitter} size="2x"/></a></li>}
-        {socials.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.facebook} target="_blank"><FontAwesomeIcon icon={faSquareFacebook} size="2x"/></a></li>}
+        {socials.insta && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.insta} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faSquareInstagram} size="2x"/></a></li>}
+        {socials.x && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.x} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faSquareXTwitter} size="2x"/></a></li>}
+        {socials.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.facebook} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faSquareFacebook} size="2x"/></a></li>}
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <h1 className='text-xl'>Upcoming Events</h1>
@@ -62,7 +156,10 @@ export default function Profile({vendorService}) {
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <div className='flex flex-row justify-between'>
-          <h1 className='flex-1'>Violations</h1>
+          <h1 className='flex-1'>Violations: {numViolations}</h1>
+          {user.isadmin && (
+            <button className="bg-red drop-shadow-xl border border-0 rounded-md py-2 px-1 w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
+          )}
         </div>
         <div className='flex flex-col items-center drop-shadow-lg'>
           <button onClick={() => {
@@ -74,40 +171,38 @@ export default function Profile({vendorService}) {
           <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
         </div>
       </div>
+      <>
+        {openViolation && (
+          <ViolationModal closeModal={setOpenViolation} vendorId={id} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
+        )}
+        <div className={`${openViolation ? 'blur' : ''} w-full h-full mx-auto pb-16`}></div>
+      </>
       {
         editModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-5/6'>
             <div className='flex flex-col h-full'>
-              <form action="" className='flex flex-col'>
-                <label htmlFor="legalName" className='py-4'>Name:</label>
-                <input type="text" id='legalName' name='legalName'/>
-                <label htmlFor="email" className='py-4'>Email:</label>
-                <input type="text" id='email' name='email'/>
+              <form action="" onSubmit={(e) => {
+                if (badLocal) {
+                  e.preventDefault();
+                  return;
+                }
+                e.preventDefault(); // Prevents the default form submission behavior
+                handleEditVendor();
+                setEditModal(false);
+              }} className='flex flex-col'>
+                <label htmlFor="legalName" className='py-4' >Name:</label>
+                <input type="text" id='legalName' name='legalName'onChange={(e) => setVendorData({...vendorData, name: e.target.value})}/>
+                {validEmail ? <label htmlFor="email" className='py-4'>Email:</label> : <Alert content="Must be a valid email" bad ={true}/>}
+                <input type="text" id='email' name='email'onChange={(e) => handleEmailChange(e)}/>
                 <label htmlFor="phoneNum" className='py-4'>Phone Number:</label>
-                <input type="text" id='phoneNum' name='phoneNum'/>
-                <label htmlFor="website" className='py-4'>Website:</label>
-                <input type="text" id='website' name='website'/>
-                <label htmlFor="location" className='py-4'>Location:</label>
-                <input type="text" id='location' name='location'/>
-                <div className='py-4 grid grid-cols-1 md:grid-cols-3'>
-                  <div className="py-2">
-                      <label htmlFor="insta">Instagram:</label>
-                      <input type="text" id='insta' name='insta'/>
-                  </div>
-                  <div className="py-2">
-                      <label htmlFor="x">X:</label>
-                      <input type="text" id='x' name='x'/>
-                  </div>
-                  <div className="py-2">
-                      <label htmlFor="facebook">Facebook:</label>
-                      <input type="text" id='facebook' name='facebook'/>
-                  </div>
-              </div>
-                <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
+                <input type="text" id='phoneNum' name='phoneNum'onChange={(e) => setVendorData({...vendorData, phoneNumber: e.target.value})}/>
+                {validWebsite ? <label htmlFor="website" className='py-4'>Website:</label> : <Alert content="Must be a valid website" bad ={true}/>}
+                <input type="text" id='website' name='website'onChange={(e) => handleWebsiteChange(e)}/>
+                <button type={badLocal ? '': 'submit'} className={`${badLocal ? 'bg-grey-1': 'bg-blue'} text-white p-5 mt-8 mb-4`}>Save Changes</button>
               </form>
               <button onClick={()=>{
                 setEditModal(false);
-              }} className='bg-blue text-white p-5'>Close Edit</button>
+              }} className='bg-blue text-white p-5'>Cancel</button>
             </div>
           </div>
         )
@@ -115,10 +210,10 @@ export default function Profile({vendorService}) {
       {
         policyModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
-          <div className='flex flex-col justify-center h-full'>
-            <div className='overflow-auto max-h-full'>
-              <p className='overflow-x-scroll text-left p-5'>
-                <h1 className='font-bold'>Mission Statement:</h1>
+            <div className='flex flex-col justify-center h-full'>
+              <div className='overflow-auto max-h-full'>
+                <p className='overflow-x-scroll text-left p-5'>
+                  <h1 className='font-bold'>Mission Statement:</h1>
                 Portland Indigenous Marketplace supports indigenous artists and
                 entrepreneurs by providing barrier-free, culturally respectful spaces that
                 encourage cultural resilience and economic sustainability by promoting
@@ -140,7 +235,7 @@ export default function Profile({vendorService}) {
                 and federal policies, rules and guidelines. All vendors are asked to comply
                 with the rules and policies outlined by the Vendor Policy Committee to
                 remain a vendor in good standing.
-                This is a live document and this organization’s serving Board, Executive
+                This is a live document and this organization&apos;s serving Board, Executive
                 Director, and the Vendor Policy Committee reserve the right to modify the
                 policies of the Indigenous Marketplace as circumstances warrant. Vendors
                 will receive advance warning, and a revised copy of the rules as soon as
@@ -153,7 +248,7 @@ export default function Profile({vendorService}) {
                   <p>
                   1. a. Vendors agree to donate one raffle item to the organization per
                   marketplace day that they participate in as a vendor. The item
-                  donated should be a true representation of the vendor's talent/booth
+                  donated should be a true representation of the vendor&apos;s talent/booth
                   with a value of at least $20. Upon review donation could qualify for a
                   maximum of 2 days raffle donation.
                   b. In Nov/Dec of each year every approved vendor will be asked to
@@ -224,7 +319,7 @@ export default function Profile({vendorService}) {
 
                   <p>
                   9. While imitation is the sincerest form of flattery, please respect your
-                  fellow vendors’ ideas and concepts and refrain from copying them.
+                  fellow vendors&apos; ideas and concepts and refrain from copying them.
                   </p>
                   <p>
                   10. Vendors agree to engage in respectful communications with staff, community members, and volunteers.
@@ -242,26 +337,26 @@ export default function Profile({vendorService}) {
                 volunteers or staff the Vendor Policy Committee will review complaint. If
                 the complaint is found valid the vendor of interest will receive a notice of
                 the appropriate level of accountability.
-                <p>
+                  <p>
                 1. First infraction. A warning will be issued (exhibit 3) to vendor
                 in writing/email and recorded in file/history of vendor.
-                </p>
-                <p>
+                  </p>
+                  <p>
                 2. Second infraction. A face to face or zoom meeting will be
                 needed with staff and Vendor Policy Committee before
                 returning to in person events. This infraction will be recorded in
                 writing/email to the vendor and recorded in file/history of
                 vendor (exhibit 3).
-                </p>
-                <p>
+                  </p>
+                  <p>
                 3. A plan of separation for the Indigenous Marketplace
                 programming and the Vendor. For severe infractions including
                 but not limited to violence and hate the plan of separation may
                 be permanent. This plan of separation will be shared in
                 writing/email to the vendor and recorded in file/history of
                 vendor (exhibit 2).
-                </p>
-                <p>
+                  </p>
+                  <p>
                 4. Extreme Exceptions: Staff and the Vendor Policy Committee
                 hold the right for severe violations that include but not limited
                 to violence and hate to recommend the plan of separation to be
@@ -270,12 +365,12 @@ export default function Profile({vendorService}) {
                 Board of Directors of the Portland Indigenous Marketplace.
                 This Extreme Exception will be shared in writing/email to the
                 vendor and recorded in file/history of vendor (exhibit 2).
-                </p>
+                  </p>
                 Portland Indigenous Marketplace is committed to providing access, equal
                 opportunity and reasonable accommodation for individuals with
                 disabilities, medical needs and other barriers in its services, programs, and
-                activities. To request reasonable accommodations through contact below. 
-                <a className='font-bold' href="mailto:info@indigenousmarketplace.org">info@indigenousmarketplace.org</a> 
+                activities. To request reasonable accommodations through contact below.
+                  <a className='font-bold' href="mailto:info@indigenousmarketplace.org">info@indigenousmarketplace.org</a>
                 or <p className='font-bold'>503-901-3881</p>
                 Thank you for being a part of the Indigenous Marketplace community!
                   </p>
@@ -297,5 +392,10 @@ export default function Profile({vendorService}) {
 Profile.propTypes = {
   vendorService: PropTypes.shape({
     getVendorById: PropTypes.func.isRequired,
+    updateSelfVendor: PropTypes.func.isRequired,
+  }).isRequired,
+  violationService: PropTypes.shape({
+    createViolation: PropTypes.func.isRequired,
+    getViolationsByVendorId: PropTypes.func.isRequired,
   }).isRequired,
 };
