@@ -105,15 +105,48 @@ function EditModal({handleSubmit, setEditModal, vendorData, setVendorData}) {
   );
 }
 
+function ViewViolations({closeModal, vioData, vioService, idVendor}) {
+  // using logic from vendor's page to display violations in the modal
+  // separating display into 2 parts:
+    // violationDisplay handles the appearance of a single violation
+    // the returned html handles the appearance of all the violations
+  const violationDisplay = (violation) => (
+    <div className="bg-white shadow-lg rounded-lg p-4 w-64 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
+      <div className="mt-2">
+        <div className="text-lg font-semibold text-gray-900">{violation.violation_id}</div>
+        <div className="text-blue underline">{violation.type}</div>
+        <div className="mt-1 text-grey-5">{violation.description}</div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="absolute inset-y-12 inset-x-1/6 mt-auto bg-white drop-shadow-xl rounded-md w-4/6 h-max overflow-y-auto">
+      <div className='flex flex-col space-y-4'>
+        {
+          vioData && (Array.isArray(vioData) ? vioData.map((violation, i) => (
+            <li className='[list-style:none]' key={i}>{violationDisplay(violation)}</li>
+          )) : violationDisplay(violation))
+        }
+      </div>
+      <footer className='flex flex-row justify-center mt-6 pb-2'>
+        <button className="bg-red py-2 px-3 mb-1 text-white drop-shadow-xl rounded-lg" onClick={() => closeModal(false)}>Close</button>
+      </footer>
+    </div>
+  );
+}
+
 export default function Profile({vendorService, violationService}) {
   const {vendorId} = useParams();
   const [vendor, setVendor] = useState({});
-  const [openViolation, setOpenViolation] = useState(false);
+  const [addViolation, setAddViolation] = useState(false);
+  const [viewViolation, setViewViolation] = useState(false);
   const [numViolations, setNumViolations] = useState(0);
   const [editModal, setEditModal] = useState(false);
   const [policyModal, setPolicyModal] = useState(false);
   const {user, setMessage, setBad} = useContext(Context);
   const [vendorData, setVendorData] = useState({name: '', email: '', phoneNumber: '', website: ''});
+  const [violationData, setViolationData] = useState([]);
 
 
   const navigate = useNavigate();
@@ -139,8 +172,9 @@ export default function Profile({vendorService, violationService}) {
         console.log('Vendor:', vendorData);
       }
       try {
-        const violationData = await violationService.getViolationsByVendorId(vendorId);
-        setNumViolations(violationData.length);
+        const vioData = await violationService.getViolationsByVendorId(vendorId);
+        setViolationData(vioData);
+        setNumViolations(vioData.length);
       } catch (err) {
         console.log('Error fetching violations:', err);
       }
@@ -149,7 +183,11 @@ export default function Profile({vendorService, violationService}) {
   }, []);
 
   const handleViolation = () => {
-    setOpenViolation(true);
+    setAddViolation(true);
+  };
+
+  const handleViewViolation = () => {
+    setViewViolation(true);
   };
 
   const handleEditVendor = async () => {
@@ -179,7 +217,7 @@ export default function Profile({vendorService, violationService}) {
 
 
   async function handleViolationSubmit(violation) {
-    setOpenViolation(false); // close the modal
+    setAddViolation(false); // close the modal
     // typically we would want to call this variable res or response
     const newViolation = await violationService.createViolation(violation);
     // ask: should I use try catch to account for errors ? Try catch is good, but typically if everything is working the backend will handle it, at least in this case
@@ -227,8 +265,8 @@ export default function Profile({vendorService, violationService}) {
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <div className='flex flex-row justify-between'>
-          <h1 className='flex-1'>Violations: {numViolations}</h1>
-          {user.isadmin && (
+          <button className='bg-red drop-shadow-xl border border-0 rounded-md py-2 px-1 w-4/12 h-2/12' onClick={() => handleViewViolation()}>Violations: {numViolations}</button>
+          {user.isadmin && ( // ask is there a different way to search for admin
             <button className="bg-red drop-shadow-xl border border-0 rounded-md py-2 px-1 w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
           )}
         </div>
@@ -242,12 +280,15 @@ export default function Profile({vendorService, violationService}) {
           <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
         </div>
       </div>
-      <>
-        {openViolation && (
-          <ViolationModal closeModal={setOpenViolation} vendorId={id} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
+      {
+        viewViolation && (
+          <ViewViolations closeModal={setViewViolation} vioData={violationData} vioService={violationService} idVendor={vendorId}/>
+        )
+      }
+      {
+        addViolation && (
+          <ViolationModal closeModal={setAddViolation} vendorId={vendorId} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
         )}
-        <div className={`${openViolation ? 'blur' : ''} w-full h-full mx-auto pb-16`}></div>
-      </>
       {
         editModal && (
           <EditModal handleSubmit = {handleEditVendor} setEditModal = {setEditModal}
@@ -453,4 +494,13 @@ EditModal.propTypes = {
   setEditModal: PropTypes.func.isRequired,
   vendorData: PropTypes.object.isRequired,
   setVendorData: PropTypes.func.isRequired,
+};
+
+ViewViolations.propTypes = {
+  vioService: PropTypes.shape({
+    getViolationsByVendorId: PropTypes.func.isRequired,
+  }).isRequired,
+  closeModal: PropTypes.func.isRequired,
+  idVendor: PropTypes.number.isRequired,
+  vioData: PropTypes.array.isRequired,
 };
