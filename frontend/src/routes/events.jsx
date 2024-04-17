@@ -22,7 +22,6 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
 
 
   return (
-
     <form action="" className='grid z-50 gap-2 p-4 lg:grid-cols-12 grid-cols-3 left-0 right-0 top-0 bottom-0 mt-auto mb-auto h-4/6 lg:ml-auto lg:mr-auto rounded-sm lg:w-8/12 w-full fixed bg-grey-1'
       onSubmit={() => handleSubmit(eventInfo)}>
       <div className='lg:col-span-2 col-span-1 my-auto'>Event Name:</div>
@@ -141,7 +140,7 @@ export default function Events({eventService}) {
     const endTimeAMPM = event.endtime.slice(9);
   
     return (
-      <div className="bg-white shadow-lg relative rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
+      <div className="bg-white shadow-lg absolute right-0 left-0 rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
         <div className="mt-2">
           <div className="text-lg font-semibold text-gray-900">{event.name}</div>
           <div className="text-grey-5">{event.description}</div>
