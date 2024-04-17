@@ -194,7 +194,6 @@ export default function Events({eventService}) {
       </div>
     </>
   );
-
 }
 
 Events.propTypes = {

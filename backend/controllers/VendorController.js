@@ -126,16 +126,18 @@ const getVendorById = async (req, res, next) => {
 // Registers the vendor in the database
 const createVendor = async (req, res, next) => {
   // Get the values from the request body
-  const {name, email, phoneNumber, password, website} = req.body;
+  const {name, email, phoneNumber, password, website, instagram, facebook, twitter, tiktok, youtube, pinterest} = req.body;
 
-  // Checks if the required fields are present
-  if (!password || !email || !name) {
+  // Checks if the required fields are present, password is no longer required
+  if (!email || !name) {
     console.log(req.body);
     return res.status(400).json({
       error: 'Missing required fields',
       data: req.body,
     });
   }
+
+  // Don't think we necessarily need to change the password everytime, so I made it conditional
 
   // Hashes the password using bcrypt
   let passwordHash;
@@ -147,8 +149,6 @@ const createVendor = async (req, res, next) => {
     res.status(495).json({error: "Error hashing password"});
     return;
   }
-
-  // Inserts the vendor into the database
   try {
     await db.none(
         'INSERT INTO Vendors (\
@@ -156,9 +156,15 @@ const createVendor = async (req, res, next) => {
                 email, \
                 phone_number, \
                 password, \
-                website\
-            ) VALUES ($1, $2, $3, $4, $5)',
-        [name, email, phoneNumber, passwordHash, website],
+                website,\
+                instagram, \
+                facebook, \
+                twitter, \
+                tiktok, \
+                youtube,\
+                pinterest \
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
+        [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pinterest],
     );
   } catch (err) {
     // Duplicate emails are not allowed
@@ -176,6 +182,9 @@ const createVendor = async (req, res, next) => {
   }
 
   next();
+ 
+  // Inserts the vendor into the database
+  
 };
 
 const createEventRequest = async (req, res, next) => {
@@ -262,50 +271,102 @@ const updateAuthenticatedVendor = async (req, res, next) => {
 
 const updateVendor = async (req, res, next) => {
   const {vendorId} = req.params;
+  console.log('request body: ', req.body);
   const {
     name,
     email,
-    phone_number,
-    password,
+    phoneNumber,
     website,
+    instagram,
+    facebook,
+    twitter,
+    tiktok,
+    youtube,
+    pinterest,
+    id,
   } = req.body;
 
-  // Hashes the password using bcrypt
-  let passwordHash;
-  try {
-    const salt = await genSalt(10);
-    passwordHash = await hash(password, salt);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({error: err});
-    return;
-  }
-
-  try {
-    await db.none(
-        'UPDATE Vendors SET \
-                name = $1, \
-                email = $2, \
-                phone_number = $3, \
-                password = $4, \
-                website = $5 \
-            WHERE vendor_id = $6',
-        [name, email, phone_number, passwordHash, website, vendorId],
-    );
-  } catch (err) {
-    // Duplicate emails are not allowed
-    if (err.code === '23505') {
-      res.status(400).json({error: 'A vendor with that email already exists'});
+ 
+  if('password' in req.body){
+    // Hashes the password using bcrypt
+    const {password} = req.body;
+    let passwordHash;
+    try {
+      const salt = await genSalt(10);
+      passwordHash = await hash(password, salt);
+    } catch (err) {
+      console.log(err);
+      res.status(495).json({error: "Error hashing password"});
       return;
     }
-
-    // Other internal error
-    console.log(err);
-    res.status(500).json({error: err});
-    return;
+    try {
+      await db.none(
+          'UPDATE Vendors SET\
+                  name = $1, \
+                  email = $2, \
+                  phone_number = $3, \
+                  password = $4, \
+                  website = $5,\
+                  instagram = $6, \
+                  facebook = $7, \
+                  twitter = $8, \
+                  tiktok = $9, \
+                  youtube = $10,\
+                  pinterest = $11 \
+              WHERE vendor_id = $12',
+          [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pinterest, id],
+      );
+    } catch (err) {
+      // Duplicate emails are not allowed
+      if (err.code === '23505') {
+        res
+            .status(400)
+            .json({error: 'A vendor with that email already exists'});
+        return;
+      }
+  
+      // Other internal error
+      console.log(err);
+      res.status(500).json({error: "Internal Server Error"});
+      return;
+    }
+  
+    next();
+  } else {
+    try {
+      await db.none(
+        'UPDATE Vendors SET\
+          name = $1, \
+          email = $2, \
+          phone_number = $3, \
+          website = $4,\
+          instagram = $5, \
+          facebook = $6, \
+          twitter = $7, \
+          tiktok = $8, \
+          youtube = $9,\
+          pinterest = $10 \
+      WHERE vendor_id = $11',
+      [name, email, phoneNumber, website, instagram, facebook, twitter, tiktok, youtube, pinterest, id],
+      );
+    } catch (err) {
+      // Duplicate emails are not allowed
+      if (err.code === '23505') {
+        res
+            .status(400)
+            .json({error: 'A vendor with that email already exists'});
+        return;
+      }
+  
+      // Other internal error
+      console.log(err);
+      res.status(500).json({error: "Internal Server Error"});
+      return;
+    }
+  
+    next();
   }
 
-  next();
 };
 
 // Upload a profile pic. If one exists for the vendor, remove it.
