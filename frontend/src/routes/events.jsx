@@ -131,28 +131,41 @@ export default function Events({eventService}) {
     setModal(false);
   }
 
-  const eventDisplay = (event) => (
-    <div className="bg-white shadow-lg relative rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
-      <div className="mt-2">
-        <div className="text-lg font-semibold text-gray-900">{event.name}</div>
-        <div className="text-grey-5">{event.description}</div>
-        <div className="mt-3 text-grey-5">{event.date} • {event.starttime} - {event.endtime}</div>
-        <div className="mt-1 text-sm text-grey-5 relative">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8C15 9.65685 13.6569 11 12 11Z" />
-          </svg>
-          {event.location}
-
+  const eventDisplay = (event) => {
+    // Extract hours, minutes, and AM/PM from starttime and endtime
+    const startTimeHours = event.starttime.slice(0, 2);
+    const startTimeMinutes = event.starttime.slice(3, 5);
+    const startTimeAMPM = event.starttime.slice(9);
+    const endTimeHours = event.endtime.slice(0, 2);
+    const endTimeMinutes = event.endtime.slice(3, 5);
+    const endTimeAMPM = event.endtime.slice(9);
+  
+    return (
+      <div className="bg-white shadow-lg relative rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
+        <div className="mt-2">
+          <div className="text-lg font-semibold text-gray-900">{event.name}</div>
+          <div className="text-grey-5">{event.description}</div>
+          <div className="mt-3 text-grey-5">
+            {event.date} • {startTimeHours}:{startTimeMinutes} {startTimeAMPM} - {endTimeHours}:{endTimeMinutes} {endTimeAMPM}
+          </div>
+          <div className="mt-1 text-sm text-grey-5 relative">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8C15 9.65685 13.6569 11 12 11Z" />
+            </svg>
+            {event.location}
+          </div>
+          <Link to={`/events/:${event.eventId}`} className="mt-2 text-blue p-2 rounded-md inline-block">
+            View Event Details
+          </Link>
+          {user && user.isadmin && <button onClick={() => {
+            setEditEvent(true); setModal(true); setCurrEvent(event);
+          }} className='hover:bg-blue absolute right-0 bottom-0 mr-6 mb-6 text-md text-blue px-1  bg-white'>Edit</button>}
         </div>
-        <Link to={`/events/:${event.eventId}`} className="mt-2 text-blue p-2 rounded-md inline-block">
-          View Event Details
-        </Link>
-        {user && user.isadmin && <button onClick={() => {
-          setEditEvent(true); setModal(true); setCurrEvent(event);
-        }} className='hover:bg-blue absolute right-0 bottom-0 mr-6 mb-6 text-md text-blue px-1  bg-white'>Edit</button>}
       </div>
-    </div>
-  );
+    );
+  };
+  
+  
 
   if (error) {
     return (
