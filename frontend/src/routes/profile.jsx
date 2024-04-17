@@ -105,34 +105,38 @@ function EditModal({handleSubmit, setEditModal, vendorData, setVendorData}) {
   );
 }
 
-function ViewViolations({closeModal, vioData, vioService, idVendor}) {
+function ViewViolations({closeModal, vioData}) {
   // using logic from vendor's page to display violations in the modal
   // separating display into 2 parts:
-    // violationDisplay handles the appearance of a single violation
-    // the returned html handles the appearance of all the violations
+  // violationDisplay handles the appearance of a single violation
+  // the returned html handles the appearance of all the violations
   const violationDisplay = (violation) => (
-    <div className="bg-white shadow-lg rounded-lg p-4 w-64 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
-      <div className="mt-2">
-        <div className="text-lg font-semibold text-gray-900">{violation.violation_id}</div>
-        <div className="text-blue underline">{violation.type}</div>
+    <div className="bg-white shadow-xl rounded-lg p-4 w-48 max-w-md mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
+      <div className="mt-1">
+        <div className="text-lg font-semibold text-gray-900">Policy Number Violated: {violation.type}</div>
         <div className="mt-1 text-grey-5">{violation.description}</div>
       </div>
     </div>
   );
 
   return (
-    <div className="absolute inset-y-12 inset-x-1/6 mt-auto bg-white drop-shadow-xl rounded-md w-4/6 h-max overflow-y-auto">
-      <div className='flex flex-col space-y-4'>
-        {
-          vioData && (Array.isArray(vioData) ? vioData.map((violation, i) => (
-            <li className='[list-style:none]' key={i}>{violationDisplay(violation)}</li>
-          )) : violationDisplay(violation))
-        }
+    <>
+      <div aria-hidden="true" className="fixed inset-0 w-full h-screen bg-black/50 cursor-pointer">
       </div>
-      <footer className='flex flex-row justify-center mt-6 pb-2'>
-        <button className="bg-red py-2 px-3 mb-1 text-white drop-shadow-xl rounded-lg" onClick={() => closeModal(false)}>Close</button>
-      </footer>
-    </div>
+
+      <div className="absolute inset-y-12 inset-x-1/6 bg-white drop-shadow-xl rounded-md w-10/12 h-max overflow-y-auto">
+        <div className='flex flex-col space-y-4 overflow-y-scroll max-h-80 py-4'>
+          {
+            vioData && (Array.isArray(vioData) ? vioData.map((violation, i) => (
+              <li className='[list-style:none]' key={i}>{violationDisplay(violation)}</li>
+            )) : violationDisplay(violation))
+          }
+        </div>
+        <footer className='flex flex-row justify-center mt-2 pb-1'>
+          <button className="bg-red py-2 px-3 mb-1 text-white drop-shadow-xl rounded-lg" onClick={() => closeModal(false)}>Close</button>
+        </footer>
+      </div>
+    </>
   );
 }
 
@@ -282,7 +286,7 @@ export default function Profile({vendorService, violationService}) {
       </div>
       {
         viewViolation && (
-          <ViewViolations closeModal={setViewViolation} vioData={violationData} vioService={violationService} idVendor={vendorId}/>
+          <ViewViolations closeModal={setViewViolation} vioData={violationData}/>
         )
       }
       {
@@ -473,7 +477,6 @@ export default function Profile({vendorService, violationService}) {
       }
       <FooterPad/>
     </div>
-
   );
 }
 
@@ -497,10 +500,6 @@ EditModal.propTypes = {
 };
 
 ViewViolations.propTypes = {
-  vioService: PropTypes.shape({
-    getViolationsByVendorId: PropTypes.func.isRequired,
-  }).isRequired,
   closeModal: PropTypes.func.isRequired,
-  idVendor: PropTypes.number.isRequired,
   vioData: PropTypes.array.isRequired,
 };
