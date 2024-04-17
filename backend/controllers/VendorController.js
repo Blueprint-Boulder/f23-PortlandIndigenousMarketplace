@@ -283,6 +283,7 @@ const updateVendor = async (req, res, next) => {
     tiktok,
     youtube,
     pinterest,
+    id,
   } = req.body;
 
  
@@ -300,20 +301,20 @@ const updateVendor = async (req, res, next) => {
     }
     try {
       await db.none(
-          'UPDATE Vendors SET(\
-                  name, \
-                  email, \
-                  phone_number, \
-                  password, \
-                  website,\
-                  instagram, \
-                  facebook, \
-                  twitter, \
-                  tiktok, \
-                  youtube,\
-                  pinterest\
-              ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
-          [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pinterest],
+          'UPDATE Vendors SET\
+                  name = $1, \
+                  email = $2, \
+                  phone_number = $3, \
+                  password = $4, \
+                  website = $5,\
+                  instagram = $6, \
+                  facebook = $7, \
+                  twitter = $8, \
+                  tiktok = $9, \
+                  youtube = $10,\
+                  pinterest = $11 \
+              WHERE vendor_id = $12',
+          [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pinterest, id],
       );
     } catch (err) {
       // Duplicate emails are not allowed
@@ -334,19 +335,19 @@ const updateVendor = async (req, res, next) => {
   } else {
     try {
       await db.none(
-          'UPDATE Vendors SET (\
-                  name, \
-                  email, \
-                  phone_number, \
-                  website,\
-                  instagram, \
-                  facebook, \
-                  twitter, \
-                  tiktok, \
-                  youtube,\
-                  pinterest \
-              ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-          [name, email, phoneNumber, website, instagram, facebook, twitter, tiktok, youtube, pinterest],
+        'UPDATE Vendors SET\
+          name = $1, \
+          email = $2, \
+          phone_number = $3, \
+          website = $4,\
+          instagram = $5, \
+          facebook = $6, \
+          twitter = $7, \
+          tiktok = $8, \
+          youtube = $9,\
+          pinterest = $10 \
+      WHERE vendor_id = $11',
+      [name, email, phoneNumber, website, instagram, facebook, twitter, tiktok, youtube, pinterest, id],
       );
     } catch (err) {
       // Duplicate emails are not allowed
