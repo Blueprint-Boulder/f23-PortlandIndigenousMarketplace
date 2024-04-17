@@ -11,6 +11,9 @@ import {faXTwitter} from '@fortawesome/free-brands-svg-icons';
 import {faYoutube} from '@fortawesome/free-brands-svg-icons';
 import {faPinterest} from '@fortawesome/free-brands-svg-icons';
 import {faTiktok} from '@fortawesome/free-brands-svg-icons';
+import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
+import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
+
 // import {faCheck} from '@fortawesome/free-solid-svg-icons';
 import ViolationModal from '../components/violationmodal';
 
@@ -102,8 +105,8 @@ function EditModal({handleSubmit, setEditModal, vendorData, setVendorData, user}
           {user.isadmin &&
           <div className='py-4 w-full flex'>
             <div>Reset Password</div>
-            <div onClick= {() => handleChecked()} className={`w-6 mx-2 h-6 rounded-md border-2 ${checked ? 'bg-blue' : 'bg-white'}`}>
-              {/* <FontAwesomeIcon icon={faCheck}/> */}
+            <div onClick= {() => handleChecked()} className='mx-4' >
+              <FontAwesomeIcon icon = {checked? faCaretUp: faCaretDown}/>
             </div>
           </div>
           }
