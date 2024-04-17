@@ -7,6 +7,10 @@ import FooterPad from '../components/footerpad';
 import ViolationModal from '../components/violationmodal';
 import Alert from '../components/alert';
 
+function editModal({handleSubmit, closeModal}){
+
+}
+
 export default function Profile({vendorService, violationService}) {
   const {vendorId} = useParams();
   const [vendor, setVendor] = useState({});
@@ -15,7 +19,8 @@ export default function Profile({vendorService, violationService}) {
   const [editModal, setEditModal] = useState(false);
   const [policyModal, setPolicyModal] = useState(false);
   const {user, setMessage, setBad} = useContext(Context);
-
+  const [validEmail, setValidEmail] = useState(true);
+  const [modalOpen, setModalOpen] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -99,6 +104,92 @@ export default function Profile({vendorService, violationService}) {
     }
   };
 
+  async function handleSubmit(profile){
+    console.log("Profile", profile);
+    if(modalOpen){
+      const res = await profileService.editProfile(); //Need to update with actual service
+      console.log("Res status", res.status);
+      if (res !== undefined){
+        console.log("Profile updated successfully")
+      }else{
+        console.log("Failed to update Profile")
+      }
+
+    }
+  }
+  function EditProfileModal({ handleSubmit, vendor }) {
+    const [profileInfo, setProfileInfo] = useState({
+      name: vendor.name,
+      email: vendor.email,
+      phoneNum: vendor.phoneNumber,
+      website: vendor.website,
+      insta: vendor.insta,
+      x: vendor.x,
+      facebook: vendor.facebook,
+    });
+  
+    return (
+      <form
+        action=''
+        className='grid z-50 gap-2 p-4 lg:grid-cols-12 grid-cols-3 left-0 right-0 top-0 bottom-0 mt-auto mb-auto h-4/6 lg:ml-auto lg:mr-auto rounded-sm lg:w-8/12 w-full fixed bg-grey-1'
+        onSubmit={() => handleSubmit(profileInfo)}
+      >
+        <div className='lg:col-span-2 col-span-1 my-auto'>Name:</div>
+        <input
+          className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1'
+          required
+          type='text'
+          id='name'
+          name='name'
+          value={profileInfo.name}
+          onChange={(e) => setProfileInfo({ ...profileInfo, name: e.target.value })}
+        />
+        <div className='lg:col-span-2 col-span-1 my-auto'>Email:</div>
+        <input
+          className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1'
+          required
+          type='text'
+          id='email'
+          name='email'
+          value={profileInfo.email}
+          onChange={(e) => setProfileInfo({ ...profileInfo, email: e.target.value })}
+        />
+        <div className='lg:col-span-2 col-span-1 my-auto'>Phone Number:</div>
+        <input
+          className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1'
+          required
+          type='text'
+          id='phoneNum'
+          name='phoneNum'
+          value={profileInfo.phoneNum}
+          onChange={(e) => setProfileInfo({ ...profileInfo, phoneNum: e.target.value })}
+        />
+        <div className='lg:col-span-2 col-span-1 my-auto'>Website:</div>
+        <input
+          className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1'
+          required
+          type='text'
+          id='website'
+          name='website'
+          value={profileInfo.website}
+          onChange={(e) => setProfileInfo({ ...profileInfo, website: e.target.value })}
+        />
+       <div className='lg:col-span-12 col-span-3 my-auto'>Social Handles:</div> 
+       <input type="text" className='lg:col-span-4 col-span-1 rounded-md shadow-md p-1 placeholder:italic placeholder:text-slate-400' placeholder="Instagram" id='insta' name='insta' value={profileInfo.insta} onChange={(e) => setProfileInfo({ ...profileInfo, insta: e.target.value })}/>
+       <input type="text" className='lg:col-span-4 col-span-1 rounded-md shadow-md p-1 placeholder:italic placeholder:text-slate-400' placeholder="X" id='x' name='x' value={profileInfo.x} onChange={(e) => setProfileInfo({ ...profileInfo, x: e.target.value })}/>
+       <input type="text" className='lg:col-span-4 col-span-1 rounded-md shadow-md p-1 placeholder:italic placeholder:text-slate-400' placeholder="Facebook" id='facebook' name='facebook' value={profileInfo.facebook} onChange={(e) => setProfileInfo({ ...profileInfo, facebook: e.target.value })}/>
+        <button
+          onClick={() => {
+            setEditModal(false);
+          }}
+          className='bg-red lg:col-span-4 col-span-1 rounded-md shadow-sm text-white p-1 '
+        >
+          Cancel
+        </button>
+        <button type='submit' className='bg-blue lg:col-span-8 col-span-2 rounded-md shadow-sm text-white p-1 '>Save Changes</button>
+      </form>
+    );
+  }
   return (
     <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
@@ -121,9 +212,9 @@ export default function Profile({vendorService, violationService}) {
         {/* <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li> dont think this is necessary */}
       </div>
       <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
-        {socials.insta && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.insta} target="_blank"><FontAwesomeIcon icon={faSquareInstagram} size="2x"/></a></li>}
+        {/* {socials.insta && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.insta} target="_blank"><FontAwesomeIcon icon={faSquareInstagram} size="2x"/></a></li>}
         {socials.x && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.x} target="_blank"><FontAwesomeIcon icon={faSquareXTwitter} size="2x"/></a></li>}
-        {socials.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.facebook} target="_blank"><FontAwesomeIcon icon={faSquareFacebook} size="2x"/></a></li>}
+        {socials.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={socials.facebook} target="_blank"><FontAwesomeIcon icon={faSquareFacebook} size="2x"/></a></li>} */}
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <h1 className='text-xl'>Upcoming Events</h1>
@@ -148,37 +239,10 @@ export default function Profile({vendorService, violationService}) {
       </div>
       {openViolation && <ViolationModal closeModal={setOpenViolation} vendor={vendor} setViolations={incrementViolations} />}
       {
-        editModal && (
-          <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-5/6'>
-            <div className='flex flex-col h-full'>
-              <form action="" onSubmit={(e) => {
-                if (badLocal) {
-                  e.preventDefault();
-                  return;
-                }
-                e.preventDefault(); // Prevents the default form submission behavior
-                handleEditVendor();
-                setEditModal(false);
-              }} className='flex flex-col'>
-                <label htmlFor="legalName" className='py-4' >Name:</label>
-                <input type="text" id='legalName' name='legalName'onChange={(e) => setVendorData({...vendorData, name: e.target.value})}/>
-                {validEmail ? <label htmlFor="email" className='py-4'>Email:</label> : <Alert content="Must be a valid email" bad ={true}/>}
-                <input type="text" id='email' name='email'onChange={(e) => handleEmailChange(e)}/>
-                <label htmlFor="phoneNum" className='py-4'>Phone Number:</label>
-                <input type="text" id='phoneNum' name='phoneNum'/>
-                <label htmlFor="website" className='py-4'>Website:</label>
-                <input type="text" id='website' name='website'/>
-                <label htmlFor="location" className='py-4'>Location:</label>
-                <input type="text" id='location' name='location'/>
-                <button type='submit' className='bg-blue text-white p-5 mt-8 mb-4'>Save Changes</button>
-              </form>
-              <button onClick={()=>{
-                setEditModal(false);
-              }} className='bg-blue text-white p-5'>Cancel</button>
-            </div>
-          </div>
-        )
-      }
+      editModal && (
+        <EditProfileModal handleSubmit={handleSubmit} vendor={vendor} />
+      )
+    }
       {
         policyModal && (
           <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
