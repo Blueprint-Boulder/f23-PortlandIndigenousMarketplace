@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Context} from '../services/context';
 import {Link} from 'react-router-dom';
 import FooterPad from '../components/footerpad';
+// import moment from 'moment';
 
 
 import DatePicker from 'react-datepicker';
@@ -10,7 +11,10 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 function EventModal({editEvent, handleSubmit, closeModal}) {
-  const [eventInfo, setEventInfo] = useState({name: '', description: '', location: '', starttime: new Date(), endtime: new Date(), vendorCapacity: 0});
+  // const moment = require('moment');
+  // const [eventInfo, setEventInfo] = useState({name: '', description: '', location: '', starttime: new Date(), endtime: new Date(), vendorCapacity: 0});
+  // const m = moment(new Date(eventInfo.startTime));
+  // m.format('h:mma');
   return (
 
     <form action="" className='grid z-50 gap-2 p-4 lg:grid-cols-12 grid-cols-3 left-0 right-0 top-0 bottom-0 mt-auto mb-auto h-4/6 lg:ml-auto lg:mr-auto rounded-sm lg:w-8/12 w-full absolute bg-grey-1' onSubmit = {() => handleSubmit(eventInfo)}>
@@ -32,7 +36,7 @@ function EventModal({editEvent, handleSubmit, closeModal}) {
         wrapperClassName='lg:col-span-10 col-span-2 rounded-sm shadow-md p-2 bg-white '
         className='lg:col-span-10 w-full rounded-sm h-max  absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
         timeCaption="Time"
-        dateFormat="MMMM d, yyyy h:mm aa"
+        dateFormat="MMMM d, yyyy h:mm"
       />
       <div className='lg:col-span-2 col-span-1 my-auto' >End Time:</div>
       <DatePicker
@@ -46,7 +50,7 @@ function EventModal({editEvent, handleSubmit, closeModal}) {
         className='lg:col-span-10 w-full h-max rounded-sm absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
         required
         timeCaption="Time"
-        dateFormat="MMMM d, yyyy h:mm aa"
+        dateFormat="MMMM d, yyyy h:mm"
       />
       <div className='lg:col-span-2 col-span-1 my-auto'>Capacity:</div>
       <input className='lg:col-span-10 col-span-2 rounded-sm shadow-md p-1' type="text" id='vendor-capacity' name='location' onChange = {(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})}/>
