@@ -28,7 +28,12 @@ export default function Profile({vendorService, violationService}) {
   const {user, setMessage, setBad} = useContext(Context);
   const [vendorData, setVendorData] = useState({name: '', email: '', phoneNumber: '', website: ''});
 
+  // When true, the upload profile modal appears
   const [showUploadModal, setShowUploadModal] = useState(false);
+
+  // Used to refresh the profile image
+  const [profileImage, setProfileImage] = useState('/Copy of PIM_logo_black.png');
+
 
   const navigate = useNavigate();
 
@@ -61,6 +66,10 @@ export default function Profile({vendorService, violationService}) {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setProfileImage(vendor.image == undefined ? '/Copy of PIM_logo_black.png' : `/profilepics/${vendor.image}`);
+  }, [vendor.image]);
 
   const handleViolation = () => {
     setOpenViolation(true);
@@ -106,6 +115,8 @@ export default function Profile({vendorService, violationService}) {
     setNumViolations(numViolations + 1);
   };
 
+  console.log('Image: ', vendor.image);
+
   return (
     <div className='items-center w-screen flex flex-col z-1 space-y-4 items-center'>
       {
@@ -113,7 +124,7 @@ export default function Profile({vendorService, violationService}) {
       }
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
-          <img className='w-20' src={'/profilepics/' + vendor.image} alt="vendor profile pic" onClick={() => {
+          <img className='w-20' src={profileImage} alt="vendor profile pic" onClick={() => {
             setShowUploadModal(!showUploadModal);
           }}/>
         </div>
