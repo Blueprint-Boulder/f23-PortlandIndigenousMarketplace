@@ -10,6 +10,9 @@ const {v4} = require('uuid');
 const mime = require('mime-types');
 const multer  = require('multer');
 
+// Delete old profile image
+const { unlink } = require('node:fs/promises');
+
 // TODO: add file upload limits
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -400,16 +403,54 @@ const uploadProfilePic = (req, res, next) => {
     } catch (err) {
       // Duplicate emails are not allowed
       if (err.code === '23505') {
-        res.status(400).json({error: 'This vendor already has a profile pic, or the UUID creation failed to be unique.'});
-        return;
+        // Get the old profile image
+        const old_file = await db.oneOrNone(
+          `SELECT * FROM ProfilePictures WHERE vendor_id = $1`,
+          [vendor_id]
+        )
+
+        // Delete old profile image in filesystem
+        // https://nodejs.org/api/fs.html#promise-example
+        const deleteStatus = (async function(path) {
+          try {
+            await unlink(path);
+            console.log(`successfully deleted ${path}`);
+
+            return true;
+          } catch (error) {
+            console.error('Failed to delete old profile image: ', error.message);
+            res.status(500).json({msg: "Failed to delete old profile image", error: err});
+            return false;
+          }
+        })(`/profilepics/${old_file['image_key']}.${old_file['file_ext']}`);
+
+        if(deleteStatus){
+          try{
+            // Retry file upload
+            await db.none(
+              `INSERT INTO ProfilePictures (vendor_id, image_key, file_ext) VALUES ($1, $2, $3) ON CONFLICT (vendor_id) DO UPDATE SET vendor_id=$1, image_key=$2, file_ext=$3`,
+              [vendor_id, uuid, fileExt]);
+
+            console.log("Uploaded new image.");
+            res.status(200).send();
+          } catch (error){
+            console.log(error);
+            res.status(500).json({error: error});
+            return;
+          }
+          
+        } else {
+          return;
+        }
       }
 
-      // TODO: If database entry fails, delete photo from filesystem!
-
-      // Other internal error
-      console.log(err);
-      res.status(500).json({error: err});
-      return;
+      // If we didn't send a response by now, send generic fail?
+      if(err != undefined && !res.headersSent){
+        // Other internal error
+        console.log(err);
+        res.status(500).json({error: err});
+        return;
+      }
     }
 
     next();
