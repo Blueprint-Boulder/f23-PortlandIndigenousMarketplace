@@ -14,9 +14,11 @@ import {faTiktok} from '@fortawesome/free-brands-svg-icons';
 import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
 import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
 
+// Import the Modal used for uploading a new profile picture
+import UploadPhotoModal from '../components/UploadPhotoModal';
+
 // import {faCheck} from '@fortawesome/free-solid-svg-icons';
 import ViolationModal from '../components/violationmodal';
-
 
 function EditModal({handleSubmit, setEditModal, vendorData, setVendorData, user}) {
   const [badLocal, setBadLocal] = useState(false);
@@ -149,6 +151,7 @@ function EditModal({handleSubmit, setEditModal, vendorData, setVendorData, user}
   );
 }
 
+
 export default function Profile({vendorService, violationService}) {
   const {vendorId} = useParams();
   const [vendor, setVendor] = useState({});
@@ -159,6 +162,7 @@ export default function Profile({vendorService, violationService}) {
   const {user, setMessage, setBad} = useContext(Context);
   const [vendorData, setVendorData] = useState({name: '', email: '', phoneNumber: '', website: ''});
 
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -237,10 +241,15 @@ export default function Profile({vendorService, violationService}) {
   };
 
   return (
-    <div className='items-center w-screen flex flex-col space-y-4 items-center'>
+    <div className='items-center w-screen flex flex-col z-1 space-y-4 items-center'>
+      {
+        showUploadModal ? <UploadPhotoModal vendorService={vendorService} showUploadModal={showUploadModal} setShowUploadModal={setShowUploadModal}></UploadPhotoModal> : <></>
+      }
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
-          <img className='w-20' src={'/profilepics/' + vendor.image} alt="vendor profile pic" />
+          <img className='w-20' src={'/profilepics/' + vendor.image} alt="vendor profile pic" onClick={() => {
+            setShowUploadModal(!showUploadModal);
+          }}/>
         </div>
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
         {
