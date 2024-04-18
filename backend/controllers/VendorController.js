@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
     const fileExt = mime.extension(file.mimetype);
     const fileName = `${uuid}.${fileExt}`;
 
-    console.log("Filename called");
+    console.log(`Filename: ${fileName}`);
 
     req.uuid = uuid;
     req.fileExt = fileExt;
@@ -419,14 +419,14 @@ const uploadProfilePic = (req, res, next) => {
 const verifyVendorHasSameVendorId = async (req, res, next) => {
   const vendor = res.locals.vendor;
   const vendorId = Number(req.params.vendorId);
-  console.log("Vendor:", vendor);
-  console.log("Vendor ID:", vendorId);
+  // console.log("Vendor:", vendor);
+  // console.log("Vendor ID:", vendorId);
 
   if (vendor.vendor_id === vendorId) {
-    console.log("Vendor has same vendor ID");
+    // console.log("Vendor has same vendor ID");
     next();
   } else {
-    console.log("TruthValue:", vendor.vendor_id === vendorId)
+    console.log("Vendor trying to edit someone else");
     res.status(403).json({error: 'Forbidden'});
   }
 }

@@ -15,7 +15,7 @@ const signToken = async (req, res, next) => {
   // Return the token in a cookie
   res.cookie('auth', token, {secure: false});
 
-  console.log('Token:', token);
+  // console.log('Token:', token);
 
   next();
 };
