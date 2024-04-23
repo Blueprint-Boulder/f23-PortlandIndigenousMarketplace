@@ -10,6 +10,9 @@ const {v4} = require('uuid');
 const mime = require('mime-types');
 const multer  = require('multer');
 
+// Delete old profile image
+const { unlink } = require('node:fs/promises');
+
 // TODO: add file upload limits
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -21,7 +24,7 @@ const storage = multer.diskStorage({
     const fileExt = mime.extension(file.mimetype);
     const fileName = `${uuid}.${fileExt}`;
 
-    console.log("Filename called");
+    console.log(`Filename: ${fileName}`);
 
     req.uuid = uuid;
     req.fileExt = fileExt;
@@ -126,16 +129,18 @@ const getVendorById = async (req, res, next) => {
 // Registers the vendor in the database
 const createVendor = async (req, res, next) => {
   // Get the values from the request body
-  const {name, email, phoneNumber, password, website, instagram, facebook, twitter, tiktok, youtube, pintrest} = req.body;
+  const {name, email, phoneNumber, password, website, instagram, facebook, twitter, tiktok, youtube, pinterest} = req.body;
 
-  // Checks if the required fields are present
-  if (!password || !email || !name) {
+  // Checks if the required fields are present, password is no longer required
+  if (!email || !name) {
     console.log(req.body);
     return res.status(400).json({
       error: 'Missing required fields',
       data: req.body,
     });
   }
+
+  // Don't think we necessarily need to change the password everytime, so I made it conditional
 
   // Hashes the password using bcrypt
   let passwordHash;
@@ -147,8 +152,6 @@ const createVendor = async (req, res, next) => {
     res.status(495).json({error: "Error hashing password"});
     return;
   }
-
-  // Inserts the vendor into the database
   try {
     await db.none(
         'INSERT INTO Vendors (\
@@ -162,9 +165,9 @@ const createVendor = async (req, res, next) => {
                 twitter, \
                 tiktok, \
                 youtube,\
-                pintrest, \
+                pinterest \
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
-        [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pintrest],
+        [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pinterest],
     );
   } catch (err) {
     // Duplicate emails are not allowed
@@ -182,6 +185,9 @@ const createVendor = async (req, res, next) => {
   }
 
   next();
+ 
+  // Inserts the vendor into the database
+  
 };
 
 const createEventRequest = async (req, res, next) => {
@@ -268,62 +274,102 @@ const updateAuthenticatedVendor = async (req, res, next) => {
 
 const updateVendor = async (req, res, next) => {
   const {vendorId} = req.params;
+  console.log('request body: ', req.body);
   const {
     name,
     email,
-    phone_number,
-    password,
+    phoneNumber,
     website,
     instagram,
     facebook,
     twitter,
     tiktok,
     youtube,
-    pintrest,
+    pinterest,
+    id,
   } = req.body;
 
-  // Hashes the password using bcrypt
-  let passwordHash;
-  try {
-    const salt = await genSalt(10);
-    passwordHash = await hash(password, salt);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({error: err});
-    return;
-  }
-
-  try {
-    await db.none(
-        'UPDATE Vendors SET \
-                name = $1, \
-                email = $2, \
-                phone_number = $3, \
-                password = $4, \
-                website = $5, \
-                instagram = $6, \
-                facebook = $7, \
-                twitter = $8, \
-                tiktok = $9, \
-                youtube = $10, \
-                pintrest = $11 \
-            WHERE vendor_id = $6',
-        [name, email, phone_number, passwordHash, website, vendorId, instagram, facebook, twitter, tiktok, youtube, pintrest],
-    );
-  } catch (err) {
-    // Duplicate emails are not allowed
-    if (err.code === '23505') {
-      res.status(400).json({error: 'A vendor with that email already exists'});
+ 
+  if('password' in req.body){
+    // Hashes the password using bcrypt
+    const {password} = req.body;
+    let passwordHash;
+    try {
+      const salt = await genSalt(10);
+      passwordHash = await hash(password, salt);
+    } catch (err) {
+      console.log(err);
+      res.status(495).json({error: "Error hashing password"});
       return;
     }
-
-    // Other internal error
-    console.log(err);
-    res.status(500).json({error: err});
-    return;
+    try {
+      await db.none(
+          'UPDATE Vendors SET\
+                  name = $1, \
+                  email = $2, \
+                  phone_number = $3, \
+                  password = $4, \
+                  website = $5,\
+                  instagram = $6, \
+                  facebook = $7, \
+                  twitter = $8, \
+                  tiktok = $9, \
+                  youtube = $10,\
+                  pinterest = $11 \
+              WHERE vendor_id = $12',
+          [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pinterest, id],
+      );
+    } catch (err) {
+      // Duplicate emails are not allowed
+      if (err.code === '23505') {
+        res
+            .status(400)
+            .json({error: 'A vendor with that email already exists'});
+        return;
+      }
+  
+      // Other internal error
+      console.log(err);
+      res.status(500).json({error: "Internal Server Error"});
+      return;
+    }
+  
+    next();
+  } else {
+    try {
+      await db.none(
+        'UPDATE Vendors SET\
+          name = $1, \
+          email = $2, \
+          phone_number = $3, \
+          website = $4,\
+          instagram = $5, \
+          facebook = $6, \
+          twitter = $7, \
+          tiktok = $8, \
+          youtube = $9,\
+          pinterest = $10 \
+      WHERE vendor_id = $11',
+      [name, email, phoneNumber, website, instagram, facebook, twitter, tiktok, youtube, pinterest, id],
+      );
+    } catch (err) {
+      // Duplicate emails are not allowed
+      if (err.code === '23505') {
+        res
+            .status(400)
+            .json({error: 'A vendor with that email already exists'});
+        return;
+      }
+  
+      // Other internal error
+      console.log(err);
+      res.status(500).json({error: "Internal Server Error"});
+      return;
+    }
+  
+    next();
   }
 
-  next();
 };
 
 // Upload a profile pic. If one exists for the vendor, remove it.
@@ -357,16 +403,54 @@ const uploadProfilePic = (req, res, next) => {
     } catch (err) {
       // Duplicate emails are not allowed
       if (err.code === '23505') {
-        res.status(400).json({error: 'This vendor already has a profile pic, or the UUID creation failed to be unique.'});
-        return;
+        // Get the old profile image
+        const old_file = await db.oneOrNone(
+          `SELECT * FROM ProfilePictures WHERE vendor_id = $1`,
+          [vendor_id]
+        )
+
+        // Delete old profile image in filesystem
+        // https://nodejs.org/api/fs.html#promise-example
+        const deleteStatus = (async function(path) {
+          try {
+            await unlink(path);
+            console.log(`successfully deleted ${path}`);
+
+            return true;
+          } catch (error) {
+            console.error('Failed to delete old profile image: ', error.message);
+            res.status(500).json({msg: "Failed to delete old profile image", error: err});
+            return false;
+          }
+        })(`/profilepics/${old_file['image_key']}.${old_file['file_ext']}`);
+
+        if(deleteStatus){
+          try{
+            // Retry file upload
+            await db.none(
+              `INSERT INTO ProfilePictures (vendor_id, image_key, file_ext) VALUES ($1, $2, $3) ON CONFLICT (vendor_id) DO UPDATE SET vendor_id=$1, image_key=$2, file_ext=$3`,
+              [vendor_id, uuid, fileExt]);
+
+            console.log("Uploaded new image.");
+            res.status(200).send();
+          } catch (error){
+            console.log(error);
+            res.status(500).json({error: error});
+            return;
+          }
+          
+        } else {
+          return;
+        }
       }
 
-      // TODO: If database entry fails, delete photo from filesystem!
-
-      // Other internal error
-      console.log(err);
-      res.status(500).json({error: err});
-      return;
+      // If we didn't send a response by now, send generic fail?
+      if(err != undefined && !res.headersSent){
+        // Other internal error
+        console.log(err);
+        res.status(500).json({error: err});
+        return;
+      }
     }
 
     next();
@@ -376,14 +460,14 @@ const uploadProfilePic = (req, res, next) => {
 const verifyVendorHasSameVendorId = async (req, res, next) => {
   const vendor = res.locals.vendor;
   const vendorId = Number(req.params.vendorId);
-  console.log("Vendor:", vendor);
-  console.log("Vendor ID:", vendorId);
+  // console.log("Vendor:", vendor);
+  // console.log("Vendor ID:", vendorId);
 
   if (vendor.vendor_id === vendorId) {
-    console.log("Vendor has same vendor ID");
+    // console.log("Vendor has same vendor ID");
     next();
   } else {
-    console.log("TruthValue:", vendor.vendor_id === vendorId)
+    console.log("Vendor trying to edit someone else");
     res.status(403).json({error: 'Forbidden'});
   }
 }

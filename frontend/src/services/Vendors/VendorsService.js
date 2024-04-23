@@ -75,6 +75,10 @@ export default class VendorsService {
     return await this.vendorsRepository.createVendor(vendorData);
   }
 
+  async uploadVendorPhoto(image) {
+    return await this.vendorsRepository.uploadProfileImage(image);
+  }
+
   async updateSelfVendor(vendor) {
     const vendorData = {
       name: vendor.name,
@@ -92,20 +96,21 @@ export default class VendorsService {
   }
 
   async updateVendor(vendor) {
-    const vendorData = {
-      name: vendor.name,
-      email: vendor.email,
-      website: vendor.website,
-      phoneNumber: vendor.phoneNumber,
-      image: vendor.image,
-      instagram: vendor.instagram,
-      facebook: vendor.facebook,
-      twitter: vendor.twitter,
-      youtube: vendor.youtube,
-      tiktok: vendor.tiktok,
-      pinterest: vendor.pinterest,
-    };
-    return await this.vendorsRepository.updateVendor(vendor.id, vendorData);
+    // const vendorData = {
+    //   name: vendor.name,
+    //   email: vendor.email,
+    //   website: vendor.website,
+    //   phoneNumber: vendor.phoneNumber,
+    //   image: vendor.image,
+    //   instagram: vendor.instagram,
+    //   facebook: vendor.facebook,
+    //   twitter: vendor.twitter,
+    //   youtube: vendor.youtube,
+    //   tiktok: vendor.tiktok,
+    //   pinterest: vendor.pinterest,
+
+    // };
+    return await this.vendorsRepository.updateVendor(vendor.id, vendor);
   }
 
   async deleteVendor(vendorId) {

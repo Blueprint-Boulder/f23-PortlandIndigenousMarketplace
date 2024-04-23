@@ -64,6 +64,25 @@ export default class VendorsRepository {
     }
   }
 
+  async uploadProfileImage(image) {
+    // Create a formdata object and add the Profile Image as "img"
+    const formData = new FormData();
+    formData.append('img', image);
+
+    try {
+      const res = await this.httpClient.axiosInstance.post('/vendors/image', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      return res.data;
+    } catch (error) {
+      console.error(`Error uploading profile image.`);
+      console.error(error);
+      return undefined;
+    }
+  }
+
   async deleteVendor(vendorId) {
     try {
       const response = await this.httpClient.axiosInstance.delete(`/vendors/${vendorId}`);

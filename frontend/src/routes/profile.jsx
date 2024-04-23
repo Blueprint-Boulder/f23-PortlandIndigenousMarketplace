@@ -11,99 +11,12 @@ import {faXTwitter} from '@fortawesome/free-brands-svg-icons';
 import {faYoutube} from '@fortawesome/free-brands-svg-icons';
 import {faPinterest} from '@fortawesome/free-brands-svg-icons';
 import {faTiktok} from '@fortawesome/free-brands-svg-icons';
+
+// Import the Modal used for uploading a new profile picture
+import UploadPhotoModal from '../components/UploadPhotoModal';
 import ViolationModal from '../components/violationmodal';
-import Alert from '../components/alert';
+import EditProfileModal from '../components/EditProfileModal';
 
-
-function EditModal({handleSubmit, setEditModal, vendorData, setVendorData}) {
-  const [badLocal, setBadLocal] = useState(false);
-  const [validEmail, setValidEmail] = useState(true);
-  const [validWebsite, setValidWebsite] = useState(true);
-
-  const handleWebsiteChange = (e) => {
-    const website = e.target.value;
-    const pattern = /[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-    if (website === '') {
-      setValidWebsite(true);
-      setBadLocal(false);
-      return;
-    }
-    if (pattern.test(website)) {
-      // The website input matches the pattern
-      setVendorData({...vendorData, website: website});
-      setBadLocal(false);
-      setValidWebsite(true);
-    } else {
-      // The website input does not match the pattern
-      setValidWebsite(false);
-      setBadLocal(true);
-    }
-  };
-
-  const handleEmailChange = (e) => {
-    const email = e.target.value;
-    const pattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/;
-    if (email === '') {
-      setValidEmail(true);
-      setBadLocal(false);
-      return;
-    }
-    if (pattern.test(email)) {
-      setVendorData({...vendorData, email: email});
-      setBadLocal(false);
-      setValidEmail(true);
-    } else {
-      // The website input does not match the pattern
-      setValidEmail(false);
-      setBadLocal(true);
-    }
-  };
-
-
-  return (
-    <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-5/6 overflow-scroll'>
-      <div className='flex flex-col h-full'>
-        <form action="" onSubmit={(e) => {
-          if (badLocal) {
-            e.preventDefault();
-            return;
-          }
-          e.preventDefault(); // Prevents the default form submission behavior
-          handleSubmit();
-          setEditModal(false);
-        }} className='flex flex-col'>
-          <label htmlFor="legalName" className='py-4' >Name:</label>
-          <input type="text" id='legalName' value = {vendorData.name} name='legalName'onChange={(e) => setVendorData({...vendorData, name: e.target.value})}/>
-          {validEmail ? <label htmlFor="email" className='py-4'>Email:</label> : <Alert content="Must be a valid email" bad ={true}/>}
-          <input type="text" id='email' value = {vendorData.email} name='email'onChange={(e) => handleEmailChange(e)}/>
-          <label htmlFor="phoneNum" className='py-4'>Phone Number:</label>
-          <input type="text" id='phoneNum' value = {vendorData.phoneNumber} name='phoneNum'onChange={(e) => setVendorData({...vendorData, phoneNumber: e.target.value})}/>
-          {validWebsite ? <label htmlFor="website" className='py-4'>Website:</label> : <Alert content="Must be a valid website" bad ={true}/>}
-          <input type="text" id='website' value = {vendorData.website} name='website'onChange={(e) => handleWebsiteChange(e)}/>
-          <label htmlFor = 'instagram' className='py-4'>Instagram:</label>
-          <input type="text" id='instagram' value = {vendorData.instagram} name='instagram'onChange={(e) => setVendorData({...vendorData, instagram: e.target.value})}/>
-          <label htmlFor = 'facebook' className='py-4'>Facebook:</label>
-          <input type="text" id='facebook' value = {vendorData.facebook} name='facebook'onChange={(e) => setVendorData({...vendorData, facebook: e.target.value})}/>
-          <label htmlFor = 'twitter' className='py-4'>Twitter:</label>
-          <input type="text" id='twitter' value = {vendorData.twitter} name='twitter'onChange={(e) => setVendorData({...vendorData, twitter: e.target.value})}/>
-          <label htmlFor = 'youtube' className='py-4'>Youtube:</label>
-          <input type="text" id='youtube' value = {vendorData.youtube} name='youtube'onChange={(e) => setVendorData({...vendorData, youtube: e.target.value})}/>
-          <label htmlFor = 'pinterest' className='py-4'>Pinterest:</label>
-          <input type="text" id='pinterest' value = {vendorData.pinterest} name='pinterest'onChange={(e) => setVendorData({...vendorData, pinterest: e.target.value})}/>
-          <label htmlFor = 'tiktok' className='py-4'>Tiktok:</label>
-          <input type="text" id='tiktok' value = {vendorData.tiktok} name='tiktok'onChange={(e) => setVendorData({...vendorData, tiktok: e.target.value})}/>
-          <div className='flex justify-between bottom-0'>
-            <button type={badLocal ? '': 'submit'} className={`${badLocal ? 'bg-grey-1': 'bg-blue'} text-white p-5 mt-8 mb-4`}>Save Changes</button>
-            <button onClick={()=>{
-              setEditModal(false);
-            }} className='bg-red  text-white p-5 mt-8 mb-4 '>Cancel</button>
-          </div>
-        </form>
-
-      </div>
-    </div>
-  );
-}
 
 export default function Profile({vendorService, violationService}) {
   const {vendorId} = useParams();
@@ -114,6 +27,12 @@ export default function Profile({vendorService, violationService}) {
   const [policyModal, setPolicyModal] = useState(false);
   const {user, setMessage, setBad} = useContext(Context);
   const [vendorData, setVendorData] = useState({name: '', email: '', phoneNumber: '', website: ''});
+
+  // When true, the upload profile modal appears
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
+  // Used to refresh the profile image
+  const [profileImage, setProfileImage] = useState('/Copy of PIM_logo_black.png');
 
 
   const navigate = useNavigate();
@@ -147,6 +66,10 @@ export default function Profile({vendorService, violationService}) {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setProfileImage(vendor.image == undefined ? '/Copy of PIM_logo_black.png' : `/profilepics/${vendor.image}`);
+  }, [vendor.image]);
 
   const handleViolation = () => {
     setOpenViolation(true);
@@ -192,11 +115,18 @@ export default function Profile({vendorService, violationService}) {
     setNumViolations(numViolations + 1);
   };
 
+  console.log('Image: ', vendor.image);
+
   return (
-    <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
+    <div className='items-center w-screen flex flex-col z-1 space-y-4 items-center'>
+      {
+        showUploadModal ? <UploadPhotoModal vendorService={vendorService} showUploadModal={showUploadModal} setShowUploadModal={setShowUploadModal}></UploadPhotoModal> : <></>
+      }
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='rounded-full'>
-          <img className='w-20' src={'/profilepics/' + vendor.image} alt="vendor profile pic" />
+          <img className='w-20' src={profileImage} alt="vendor profile pic" onClick={() => {
+            setShowUploadModal(!showUploadModal);
+          }}/>
         </div>
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
         {
@@ -250,8 +180,8 @@ export default function Profile({vendorService, violationService}) {
       </>
       {
         editModal && (
-          <EditModal handleSubmit = {handleEditVendor} setEditModal = {setEditModal}
-            vendorData = {vendorData} setVendorData={setVendorData}></EditModal>
+          <EditProfileModal handleSubmit = {handleEditVendor} setEditModal = {setEditModal}
+            vendorData = {vendorData} setVendorData={setVendorData} user = {user}></EditProfileModal>
         )
       }
       {
@@ -448,9 +378,10 @@ Profile.propTypes = {
   }).isRequired,
 };
 
-EditModal.propTypes = {
+EditProfileModal.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   setEditModal: PropTypes.func.isRequired,
   vendorData: PropTypes.object.isRequired,
   setVendorData: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };
