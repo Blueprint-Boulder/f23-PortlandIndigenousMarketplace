@@ -8,24 +8,43 @@ import bLogo from '../assets/PIM_logo_black.png';
 
 function LogoutModal({ handleLogout, closeModal }) {
   return (
-    <div className="modal d-inline-flex align-items-center justify-content-center" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Logout Confirmation</h5>
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeModal}>
-              <span aria-hidden="true">&times;</span>
+    <div
+      className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+    >
+      <div className="relative w-auto my-6 mx-auto max-w-3xl">
+        {/*content*/}
+        <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+          {/*header*/}
+          <div className="flex items-start justify-between p-3 border-b border-solid border-blueGray-200 rounded-t">
+            <h3 className="text-xl font-semibold">Logout Confirmation</h3>
+            <button
+              className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+              onClick={closeModal}
+            >
+              <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                ×
+              </span>
             </button>
           </div>
-          <div className="modal-body">
-            <p>Are you sure you want to logout?</p>
+          {/*body*/}
+          <div className="relative p-6 flex-auto">
+            <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
+              Are you sure you want to logout?
+            </p>
           </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-primary" onClick={handleLogout}>
-              Yes
-            </button>
-            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={closeModal}>
+          {/*footer*/}
+          <div className="flex items-center justify-end p-1 border-t border-solid border-blueGray-200 rounded-b">
+            <button
+              className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+              type="button"
+              onClick={closeModal}>
               No
+            </button>
+            <button
+              className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+              type="button"
+              onClick={handleLogout}>
+              Yes
             </button>
           </div>
         </div>
@@ -65,7 +84,6 @@ export default function Logout({ vendorService, adminService }) {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Logout Page</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
         <style>
           {`
             body {
@@ -79,7 +97,7 @@ export default function Logout({ vendorService, adminService }) {
             }
             .logout-button {
               padding: 10px 20px;
-              background-color: #007bff;
+              background-color: black;
               color: #fff;
               border: none;
               border-radius: 5px;
@@ -111,9 +129,6 @@ export default function Logout({ vendorService, adminService }) {
           {showModal && <LogoutModal handleLogout={handleLogout} closeModal={closeModal} />}
           <FooterPad />
         </div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
       </body>
     </html>
   );
@@ -123,3 +138,6 @@ Logout.propTypes = {
   vendorService: PropTypes.object,
   adminService: PropTypes.object,
 };
+
+
+
