@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "react-datepicker": "^6.2.0"
+    "react-datepicker": "^6.2.0",
+    "react-error-boundary": "^4.0.13"
   }
 }

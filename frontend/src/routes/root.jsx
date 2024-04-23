@@ -7,6 +7,43 @@ import {Context} from '../services/context.jsx';
 import Cookies from 'js-cookie';
 import User from '../objects/User';
 import BackButton from '../components/backbutton.jsx';
+import {useNavigate} from 'react-router-dom';
+// import {ErrorBoundary} from 'react-error-boundary';
+
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {hasError: false};
+  }
+
+  static getDerivedStateFromError(error) {
+    return {hasError: true};
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Uncaught error:', error, errorInfo);
+  }
+
+  goBack() {
+    this.setState({hasError: false});
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div>
+          <h1>Something went wrong</h1>
+          <p className='text-blue' onClick = {() => {
+            this.goBack();
+          }}>Go back</p>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 export default function Root() {
   const [message, setMessage] = useState('');
@@ -43,7 +80,9 @@ export default function Root() {
         {message && <Alert content = {message} bad ={bad}/>}
         {/* <Header /> */}
         <BackButton/>
-        <Outlet/>
+        <ErrorBoundary>
+          <Outlet/>
+        </ErrorBoundary>
         <Footer/>
       </div>
     </Context.Provider>
