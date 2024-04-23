@@ -138,7 +138,7 @@ export default function Events({eventService}) {
     const endTimeHours = event.endtime.slice(0, 2);
     const endTimeMinutes = event.endtime.slice(3, 5);
     const endTimeAMPM = event.endtime.slice(9);
-  
+
     return (
       <div className="bg-white shadow-lg absolute right-0 left-0 rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
         <div className="mt-2">
@@ -163,8 +163,7 @@ export default function Events({eventService}) {
       </div>
     );
   };
-  
-  
+
 
   if (error) {
     return (
