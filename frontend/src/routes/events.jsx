@@ -174,7 +174,7 @@ export default function Events({eventService}) {
       {modal && (
         <EventModal editEvent={editEvent} handleSubmit={handleSubmit} closeModal={closeModal} currEvent={currEvent}/>
       )}
-      <div className={`${modal && 'blur'} w-full mx-auto flex flex-col justify-center pb-16`}>
+      <div className={`${modal && 'blur-sm'} w-full mx-auto flex flex-col justify-center pb-16`}>
         <div className='static'>
           {!modal && user && user.isadmin && <button className='bg-white hover:bg-blue shadow-sm absolute right-0 text-black w-max m-2 p-2 rounded-lg'
             onClick={() => {
