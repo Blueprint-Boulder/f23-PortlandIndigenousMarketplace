@@ -86,13 +86,18 @@ export default function Vendors({vendorService}) {
   // };
 
   const vendorDisplay = (vendor) => (
-    <div className="bg-white shadow-lg rounded-lg p-4 w-64 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
-      <div className="mt-2">
-        <div className="text-lg font-semibold text-gray-900">{vendor.name}</div>
-        <div className="text-blue underline">{vendor.website}</div>
-        <div className="mt-1 text-grey-5">{vendor.phoneNumber}</div>
-        <div className="mt-1 text-grey-5 relative">
-          {vendor.email}
+    <div className="bg-white shadow-lg rounded-lg p-4 w-10/12 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
+      <div className = 'flex justify-between'>
+        <div className="mt-2 ">
+          <img src={vendor.image || '/Copy of PIM_logo_black.png'} alt={vendor.name} className="w-24 h-24 mx-auto rounded-full" />
+        </div>
+        <div className="mt-2 mx-2 w-6/12 truncate">
+          <div className="text-lg font-semibold text-gray-900 truncate">{vendor.name}</div>
+          <div className="text-blue underline truncate">{vendor.website}</div>
+          <div className="mt-1 text-grey-5 truncate">{`(${vendor.phoneNumber.slice(0, 3)}) ${vendor.phoneNumber.slice(3, 6)}-${vendor.phoneNumber.slice(6, 10)}`}</div>
+          <div className="mt-1 text-grey-5 relative truncate">
+            {vendor.email}
+          </div>
         </div>
       </div>
     </div>
