@@ -40,9 +40,21 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
         timeIntervals={15}
         required
         wrapperClassName='lg:col-span-10 col-span-2 rounded-md shadow-md p-2 bg-white '
-        className='lg:col-span-10 w-full rounded-md h-max  absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
+        className='lg:col-span-10 w-full rounded-md h-max absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
         timeCaption="Time"
         dateFormat="MMMM d, yyyy h:mm aa"
+        popperPlacement="bottom-start"
+        // popperModifiers={{
+        //   flip: {
+        //     behavior: ['bottom'], // don't allow it to flip to be above
+        //   },
+        //   preventOverflow: {
+        //     enabled: false, // tell it not to try to stay within the view (this prevents the popper from covering the element you clicked)
+        //   },
+        //   hide: {
+        //     enabled: false, // turn off since needs preventOverflow to be enabled
+        //   },
+        // }}
       />
       <div className='lg:col-span-2 col-span-1 my-auto'>End Time:</div>
       <DatePicker
@@ -57,9 +69,10 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
         required
         timeCaption="Time"
         dateFormat="MMMM d, yyyy h:mm aa"
+        popperPlacement="bottom-start"
       />
       <div className='lg:col-span-2 col-span-1 my-auto'>Capacity:</div>
-      <input className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1' type="text" id='vendor-capacity' name='location' value={eventInfo.vendorCapacity} onChange={(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})} />
+      <input required className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1' type="number" min={0} id='vendor-capacity' value={eventInfo.vendorCapacity} onChange={(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})} />
       <button type='submit' className='bg-blue lg:col-span-8 col-span-2 rounded-md shadow-sm text-white p-1 '>{editEvent ? 'Save Changes' : 'Add Event'}</button>
       <button type='button' className='bg-red lg:col-span-4 col-span-1 rounded-md shadow-sm text-white p-1 ' onClick={() => closeModal()}>Cancel</button>
     </form>
@@ -82,7 +95,8 @@ export default function Events({eventService}) {
         if (fetchedEvents.length === 0) {
           setError('There are currently no events.');
         } else {
-          setEvents(fetchedEvents);
+          console.log('Date value: ', Date(fetchedEvents[0].date).getTime()- Date(fetchedEvents[0].date).getTime());
+          setEvents(fetchedEvents.toSorted((e1, e2) => Date(e2.date).valueOf() - Date(e1.date).valueOf()));
           setError(''); // Reset error state if events are fetched successfully
         }
       } catch (error) {
@@ -104,8 +118,8 @@ export default function Events({eventService}) {
       console.log('Res status', res.status);
       if (res !== undefined) {
         console.log('Event updated successfully');
-        // const updatedEvents = await eventService.getAllEvents();
-        // setEvents(updatedEvents);
+        const updatedEvents = await eventService.getAllEvents();
+        setEvents(updatedEvents.toSorted((e1, e2) => Date(e2.date).valueOf() - Date(e1.date).valueOf()));
       } else {
         console.error('Failed to update event');
       }
@@ -116,12 +130,11 @@ export default function Events({eventService}) {
       const res = await eventService.createEvent(event);
       if (res !== undefined) {
         console.log('Event added successfully');
-        // const updatedEvents = await eventService.getAllEvents();
-        // setEvents(updatedEvents);
+        const updatedEvents = await eventService.getAllEvents();
+        setEvents(updatedEvents.toSorted((e1, e2) => Date(e2.date).valueOf() - Date(e1.date).valueOf()));
       } else {
         console.error('Failed to add event');
       }
-      setCurrEvent(null);
     }
   };
 
@@ -138,12 +151,12 @@ export default function Events({eventService}) {
     const endTimeHours = event.endtime.slice(0, 2);
     const endTimeMinutes = event.endtime.slice(3, 5);
     const endTimeAMPM = event.endtime.slice(9);
-
+    const description = event.description.length > 50 ? `${event.description.slice(0, 50)}. . .` : event.description;
     return (
-      <div className="bg-white shadow-lg absolute right-0 left-0 rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
+      <div className="bg-white shadow-lg mx-auto w-10/12 relative rounded-lg p-4 max-w-sm ">
         <div className="mt-2">
           <div className="text-lg font-semibold text-gray-900">{event.name}</div>
-          <div className="text-grey-5">{event.description}</div>
+          <div className="text-grey-5 h-12">{description}</div>
           <div className="mt-3 text-grey-5">
             {event.date} • {startTimeHours}:{startTimeMinutes} {startTimeAMPM} - {endTimeHours}:{endTimeMinutes} {endTimeAMPM}
           </div>
