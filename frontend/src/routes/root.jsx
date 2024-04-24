@@ -35,7 +35,7 @@ class ErrorBoundary extends React.Component {
         <div>
           <h1>Something went wrong</h1>
           <p className='text-blue' onClick = {() => {
-            this.goBack();
+            this.goBack(); 
           }}>Go back</p>
         </div>
       );
