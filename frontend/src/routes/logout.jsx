@@ -1,20 +1,20 @@
 
-import React, { useContext, useState } from 'react';
-import { Context } from '../services/context.jsx';
-import { useNavigate } from 'react-router-dom';
+import React, {useContext, useState} from 'react';
+import {Context} from '../services/context.jsx';
+import {useNavigate} from 'react-router-dom';
 import FooterPad from '../components/footerpad.jsx';
 import PropTypes from 'prop-types';
 import bLogo from '../assets/PIM_logo_black.png';
 
-function LogoutModal({ handleLogout, closeModal }) {
+function LogoutModal({handleLogout, closeModal}) {
   return (
     <div
       className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
     >
       <div className="relative w-auto my-6 mx-auto max-w-3xl">
-        {/*content*/}
+        {/* content*/}
         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-          {/*header*/}
+          {/* header*/}
           <div className="flex items-start justify-between p-3 border-b border-solid border-blueGray-200 rounded-t">
             <h3 className="text-xl font-semibold">Logout Confirmation</h3>
             <button
@@ -26,13 +26,13 @@ function LogoutModal({ handleLogout, closeModal }) {
               </span>
             </button>
           </div>
-          {/*body*/}
+          {/* body*/}
           <div className="relative p-6 flex-auto">
             <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
               Are you sure you want to logout?
             </p>
           </div>
-          {/*footer*/}
+          {/* footer*/}
           <div className="flex items-center justify-end p-1 border-t border-solid border-blueGray-200 rounded-b">
             <button
               className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -54,8 +54,8 @@ function LogoutModal({ handleLogout, closeModal }) {
 }
 
 
-export default function Logout({ vendorService, adminService }) {
-  const { setUser, user, setMessage } = useContext(Context);
+export default function Logout({vendorService, adminService}) {
+  const {setUser, user, setMessage} = useContext(Context);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
@@ -139,5 +139,9 @@ Logout.propTypes = {
   adminService: PropTypes.object,
 };
 
+LogoutModal.propTypes = {
+  handleLogout: PropTypes.func,
+  closeModal: PropTypes.func,
+};
 
 
