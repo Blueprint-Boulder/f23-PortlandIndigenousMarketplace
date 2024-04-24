@@ -89,7 +89,7 @@ export default function Logout({vendorService, adminService}) {
             body {
               font-family: Arial, sans-serif;
               text-align: center;
-              padding-top: 50px;
+              // padding-top: 25px;
             }
             .logout-message {
               font-size: 24px;
@@ -120,7 +120,7 @@ export default function Logout({vendorService, adminService}) {
         </style>
       </head>
       <body>
-        <img src={bLogo} alt="Event Logo" className="logo" />
+        <img src={bLogo} alt="Event Logo" className="logo mx-auto" />
         <div className="logout-message">Hate to see you go! See you next time!</div>
         <div className="center">
           <div className="logout-button" onClick={openModal}>
