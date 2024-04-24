@@ -120,23 +120,18 @@ function ViewViolations({closeModal, vioData}) {
   );
 
   return (
-    <>
-      <div aria-hidden="true" className="fixed inset-0 w-full h-screen bg-black/50 cursor-pointer">
+    <div className="absolute z-20 inset-y-12 inset-x-1/6 bg-white drop-shadow-xl rounded-md py-4 w-10/12 h-max overflow-y-auto">
+      <div className='flex flex-col space-y-4 overflow-y-scroll max-h-80'>
+        {
+          vioData && (Array.isArray(vioData) ? vioData.map((violation, i) => (
+            <li className='[list-style:none]' key={i}>{violationDisplay(violation)}</li>
+          )) : violationDisplay(violation))
+        }
       </div>
-
-      <div className="absolute inset-y-12 inset-x-1/6 bg-white drop-shadow-xl rounded-md w-10/12 h-max overflow-y-auto">
-        <div className='flex flex-col space-y-4 overflow-y-scroll max-h-80 py-4'>
-          {
-            vioData && (Array.isArray(vioData) ? vioData.map((violation, i) => (
-              <li className='[list-style:none]' key={i}>{violationDisplay(violation)}</li>
-            )) : violationDisplay(violation))
-          }
-        </div>
-        <footer className='flex flex-row justify-center mt-2 pb-1'>
-          <button className="bg-red py-2 px-3 mb-1 text-white drop-shadow-xl rounded-lg" onClick={() => closeModal(false)}>Close</button>
-        </footer>
-      </div>
-    </>
+      <footer className='flex flex-row justify-center mt-2'>
+        <button className="bg-red py-2 px-3 mb-1 text-white drop-shadow-xl rounded-lg" onClick={() => closeModal(false)}>Close</button>
+      </footer>
+    </div>
   );
 }
 
@@ -235,89 +230,92 @@ export default function Profile({vendorService, violationService}) {
   };
 
   return (
-    <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
-      <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
-        <div className='rounded-full'>
-          <img className='w-20' src={'/profilepics/' + vendor.image} alt="vendor profile pic" />
-        </div>
-        <h1 className='text-xl ml-4'>{vendor.name}</h1>
-        {
-          (user.id == vendorId || user.isadmin ) &&
+    <>
+      <div aria-hidden="true" className={`${viewViolation ? 'fixed backdrop-blur-md z-10 top-0 left-0 flex align-items-center justify-content-center w-full h-screen bg-black/50 blur-md cursor-pointer' : ''}`}>
+      </div>
+      <div className='items-center h-[80vh] w-screen flex flex-col space-y-4 items-center'>
+        <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
+          <div className='rounded-full'>
+            <img className='w-20' src={'/profilepics/' + vendor.image} alt="vendor profile pic" />
+          </div>
+          <h1 className='text-xl ml-4'>{vendor.name}</h1>
+          {
+            (user.id == vendorId || user.isadmin ) &&
           <button className='ml-auto' onClick={() => {
             setEditModal(true);
           }}>Edit</button>
-        }
-      </div>
-      <hr className='bg-grey-1 w-9/12 drop-shadow-lg'/>
-      <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4'>
-        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.email}</li>
-        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.phoneNumber}</li>
-        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.website}</li>
-        {/* <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li> dont think this is necessary */}
-      </div>
-      <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
-        {vendor.instagram && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.instagram} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faInstagram} size="2x"/></a></li>}
-        {vendor.twitter && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.twitter} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faXTwitter} size="2x"/></a></li>}
-        {vendor.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.facebook} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faFacebook} size="2x"/></a></li>}
-        {vendor.youtube && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.youtube} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faYoutube} size="2x"/></a></li>}
-        {vendor.pinterest && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.pinterest} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faPinterest} size="2x"/></a></li>}
-        {vendor.tiktok && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.tiktok} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faTiktok} size="2x"/></a></li>}
-      </div>
-      <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
-        <h1 className='text-xl'>Upcoming Events</h1>
-        <p>Insert upcoming events modal/reference here</p>
-      </div>
-      <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
-        <div className='flex flex-row justify-between'>
-          <button className='bg-red drop-shadow-xl border border-0 rounded-md py-2 px-1 w-4/12 h-2/12' onClick={() => handleViewViolation()}>Violations: {numViolations}</button>
-          {user.isadmin && ( // ask is there a different way to search for admin
-            <button className="bg-red drop-shadow-xl border border-0 rounded-md py-2 px-1 w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
-          )}
+          }
         </div>
-        <div className='flex flex-col items-center drop-shadow-lg'>
-          <button onClick={() => {
-            setPolicyModal(true);
-          }}>
-            <img src={handbook} alt="Policy Handbook" />
-          </button>
+        <hr className='bg-grey-1 w-9/12 drop-shadow-lg'/>
+        <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4'>
+          <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.email}</li>
+          <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.phoneNumber}</li>
+          <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.website}</li>
+          {/* <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li> dont think this is necessary */}
+        </div>
+        <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
+          {vendor.instagram && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.instagram} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faInstagram} size="2x"/></a></li>}
+          {vendor.twitter && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.twitter} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faXTwitter} size="2x"/></a></li>}
+          {vendor.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.facebook} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faFacebook} size="2x"/></a></li>}
+          {vendor.youtube && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.youtube} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faYoutube} size="2x"/></a></li>}
+          {vendor.pinterest && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.pinterest} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faPinterest} size="2x"/></a></li>}
+          {vendor.tiktok && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.tiktok} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faTiktok} size="2x"/></a></li>}
+        </div>
+        <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
+          <h1 className='text-xl'>Upcoming Events</h1>
+          <p>Insert upcoming events modal/reference here</p>
+        </div>
+        <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
+          <div className='flex flex-row justify-between'>
+            <button className='bg-red drop-shadow-xl border border-0 rounded-md py-2 px-1 w-4/12 h-2/12' onClick={() => handleViewViolation()}>Violations: {numViolations}</button>
+            {user.isadmin && ( // ask is there a different way to search for admin
+              <button className="bg-red drop-shadow-xl border border-0 rounded-md py-2 px-1 w-4/12 h-2/12" onClick={() => handleViolation()}>Add A Violation</button>
+            )}
+          </div>
+          <div className='flex flex-col items-center drop-shadow-lg'>
+            <button onClick={() => {
+              setPolicyModal(true);
+            }}>
+              <img src={handbook} alt="Policy Handbook" />
+            </button>
 
-          <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
+            <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
+          </div>
         </div>
-      </div>
-      {
-        viewViolation && (
-          <ViewViolations closeModal={setViewViolation} vioData={violationData}/>
-        )
-      }
-      {
-        addViolation && (
-          <ViolationModal closeModal={setAddViolation} vendorId={vendorId} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
-        )}
-      {
-        editModal && (
-          <EditModal handleSubmit = {handleEditVendor} setEditModal = {setEditModal}
-            vendorData = {vendorData} setVendorData={setVendorData}></EditModal>
-        )
-      }
-      {
-        policyModal && (
-          <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
-            <div className='flex flex-col justify-center h-full'>
-              <div className='overflow-auto max-h-full'>
-                <p className='overflow-x-scroll text-left p-5'>
-                  <h1 className='font-bold'>Mission Statement:</h1>
+        {
+          viewViolation && (
+            <ViewViolations closeModal={setViewViolation} vioData={violationData}/>
+          )
+        }
+        {
+          addViolation && (
+            <ViolationModal closeModal={setAddViolation} vendorId={vendorId} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
+          )}
+        {
+          editModal && (
+            <EditModal handleSubmit = {handleEditVendor} setEditModal = {setEditModal}
+              vendorData = {vendorData} setVendorData={setVendorData}></EditModal>
+          )
+        }
+        {
+          policyModal && (
+            <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-4/6'>
+              <div className='flex flex-col justify-center h-full'>
+                <div className='overflow-auto max-h-full'>
+                  <p className='overflow-x-scroll text-left p-5'>
+                    <h1 className='font-bold'>Mission Statement:</h1>
                 Portland Indigenous Marketplace supports indigenous artists and
                 entrepreneurs by providing barrier-free, culturally respectful spaces that
                 encourage cultural resilience and economic sustainability by promoting
                 public education through cultural arts
-                  <h1 className='font-bold'>Introduction:</h1>
-                  <p>
+                    <h1 className='font-bold'>Introduction:</h1>
+                    <p>
                    The nonprofit Portland Indigenous Marketplace and their
                     Indigenous Marketplace programming together with vendors and event
                                    staff have compiled this Vendor Policy Handbook to better communicate all
                                    rules and expectations from vendors that are part of the Indigenous
                                    Marketplace programming.
-                  </p>
+                    </p>
                 By following the rules and policies outlined in this Vendor Policy Handbook
                 you help keep the Indigenous Marketplace community a supportive, viable
                 and enjoyable environment for the entire community. As an approved
@@ -336,8 +334,8 @@ export default function Profile({vendorService, violationService}) {
                 or 503-901-3881
                 Portland Indigenous Marketplace:Vendor Policy Handbook
 
-                  <h1 className='font-bold'>Indigenous Marketplace Vendor Policies:</h1>
-                  <p>
+                    <h1 className='font-bold'>Indigenous Marketplace Vendor Policies:</h1>
+                    <p>
                   1. a. Vendors agree to donate one raffle item to the organization per
                   marketplace day that they participate in as a vendor. The item
                   donated should be a true representation of the vendor&apos;s talent/booth
@@ -347,8 +345,8 @@ export default function Profile({vendorService, violationService}) {
                   donate a Silent Auction item with a value of a minimum of $50.
                   This donation will be needed to participate as an approved
                   Indigenous Marketplace vendor into the following of each year.
-                  </p>
-                  <p>
+                    </p>
+                    <p>
                   2. Vendors agree that all products are made or designed by the Vendor.
                   Used or flea-market goods, manufactured items, or commercialbrand merchandise are not permitted for sale at the Indigenous
                   Marketplace events. Buying products from another vendor,
@@ -359,7 +357,7 @@ export default function Profile({vendorService, violationService}) {
                   Exhibit 3 (upon approval each vendor may have 1 approved item that they did
                   not make or design if the Vendor Policy Committee finds that the item integrates
                   into the vendors booth).
-                  </p>
+                    </p>
                 3. Attendance tracking begins with the first scheduled market day.
                 Vendors agree to cancel a market date by notifying staff at least 48
                 hours in advance. Notice must be given by calling the general PIM
@@ -368,7 +366,7 @@ export default function Profile({vendorService, violationService}) {
                 per market year. In addition, 2 emergency cancellations are permitted
                 without proper notice.
 
-                  <p>
+                    <p>
                   4. Vendors agree to set up by the start time of the Indigenous
                   marketplace events and stay for the duration of marketplace hours. If
                   vendor is running late or if a need to leave before the marketplace
@@ -377,16 +375,16 @@ export default function Profile({vendorService, violationService}) {
                   taken to ensure the safety of our customers and fellow vendors. Staff
                   reserves the right to ask vendor to cover table until the end of planned
                   marketplace hours.
-                  </p>
-                  <p>
+                    </p>
+                    <p>
                   5. Vendor space at the Indigenous Marketplace events will only be
                   shared with other approved Indigenous Marketplace vendors. Any
                   family or friends with the intent to vend will need to complete a
                   vendor application and be approved before vending. (Family, friends
                   and staff are welcomed in your space if they are there to support not sell their
                   own products)
-                  </p>
-                  <p>
+                    </p>
+                    <p>
                   6. Vendors agree when using canopies/tents they must have four
                   grounded and weighted corners. A minimum of 20 pounds of weight
                   is required to hold down and to secure EACH canopy leg. Weights will
@@ -395,25 +393,25 @@ export default function Profile({vendorService, violationService}) {
                   due to fly-aways of their display, canopy or inventory** PIM staff
                   strongly encourage set ups that can be stabilized when winds pick up.
                   PIM is not responsible for any personal losses or damages.
-                  </p>
-                  <p>
+                    </p>
+                    <p>
                   7. Vendors agree not to drive any motorized vehicle in the marketplace
                   area during marketplace hours. If late arrivals or early pack ups
                   occur, you will not be able to drive your vehicle into the marketplace
                   area to unload or load but carts and equipment may be available for
                   loading/unloading needs.
-                  </p>
-                  <p>
+                    </p>
+                    <p>
                   8. Before leaving the market, all vendors must clean their booth spaces
                   and ensure that all litter, broken equipment, produce, and other
                   product debris is removed.
-                  </p>
+                    </p>
 
-                  <p>
+                    <p>
                   9. While imitation is the sincerest form of flattery, please respect your
                   fellow vendors&apos; ideas and concepts and refrain from copying them.
-                  </p>
-                  <p>
+                    </p>
+                    <p>
                   10. Vendors agree to engage in respectful communications with staff, community members, and volunteers.
                   Complaints concerning policies 1-10 must be submitted by completing the
                   Indigenous Marketplace Complaint Form in hardcopy (Exhibit 1) or digital
@@ -423,32 +421,32 @@ export default function Profile({vendorService, violationService}) {
                   person of interest, either through vendor name, business name or booth
                   location on the day of the infraction, plus provide the staff with written
                   evidence as to the nature of the alleged violation.
-                  </p>
-                  <h1 className='font-bold'>What happens when a policy complaint occurs?</h1>
-                  <p>When a complaint is brought forward by community, vendors,
+                    </p>
+                    <h1 className='font-bold'>What happens when a policy complaint occurs?</h1>
+                    <p>When a complaint is brought forward by community, vendors,
                 volunteers or staff the Vendor Policy Committee will review complaint. If
                 the complaint is found valid the vendor of interest will receive a notice of
                 the appropriate level of accountability.
-                  <p>
+                    <p>
                 1. First infraction. A warning will be issued (exhibit 3) to vendor
                 in writing/email and recorded in file/history of vendor.
-                  </p>
-                  <p>
+                    </p>
+                    <p>
                 2. Second infraction. A face to face or zoom meeting will be
                 needed with staff and Vendor Policy Committee before
                 returning to in person events. This infraction will be recorded in
                 writing/email to the vendor and recorded in file/history of
                 vendor (exhibit 3).
-                  </p>
-                  <p>
+                    </p>
+                    <p>
                 3. A plan of separation for the Indigenous Marketplace
                 programming and the Vendor. For severe infractions including
                 but not limited to violence and hate the plan of separation may
                 be permanent. This plan of separation will be shared in
                 writing/email to the vendor and recorded in file/history of
                 vendor (exhibit 2).
-                  </p>
-                  <p>
+                    </p>
+                    <p>
                 4. Extreme Exceptions: Staff and the Vendor Policy Committee
                 hold the right for severe violations that include but not limited
                 to violence and hate to recommend the plan of separation to be
@@ -457,26 +455,27 @@ export default function Profile({vendorService, violationService}) {
                 Board of Directors of the Portland Indigenous Marketplace.
                 This Extreme Exception will be shared in writing/email to the
                 vendor and recorded in file/history of vendor (exhibit 2).
-                  </p>
+                    </p>
                 Portland Indigenous Marketplace is committed to providing access, equal
                 opportunity and reasonable accommodation for individuals with
                 disabilities, medical needs and other barriers in its services, programs, and
                 activities. To request reasonable accommodations through contact below.
-                  <a className='font-bold' href="mailto:info@indigenousmarketplace.org">info@indigenousmarketplace.org</a>
+                    <a className='font-bold' href="mailto:info@indigenousmarketplace.org">info@indigenousmarketplace.org</a>
                 or <p className='font-bold'>503-901-3881</p>
                 Thank you for being a part of the Indigenous Marketplace community!
+                    </p>
                   </p>
-                </p>
+                </div>
+                <button onClick={()=>{
+                  setPolicyModal(false);
+                }} className='bg-blue text-white p-5'>Close Handbook</button>
               </div>
-              <button onClick={()=>{
-                setPolicyModal(false);
-              }} className='bg-blue text-white p-5'>Close Handbook</button>
             </div>
-          </div>
-        )
-      }
-      <FooterPad/>
-    </div>
+          )
+        }
+        <FooterPad/>
+      </div>
+    </>
   );
 }
 
