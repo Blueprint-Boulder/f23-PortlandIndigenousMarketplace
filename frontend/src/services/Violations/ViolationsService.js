@@ -28,12 +28,12 @@ export default class ViolationsService {
   }
 
   async createViolation(violation) {
-    const violationData = {
-      type: violation.type,
-      description: violation.description,
-      vendorId: violation.vendorId,
-    };
-    return await this.violationsRepository.createViolation(violationData);
+    // const violationData = {
+    //   type: violation.type,
+    //   description: violation.description,
+    //   vendor_id: violation.vendorId,
+    // };
+    return await this.violationsRepository.createViolation(violation);
   }
 
   async updateViolation(violation) {

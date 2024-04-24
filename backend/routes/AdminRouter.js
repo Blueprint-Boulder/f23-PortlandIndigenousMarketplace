@@ -23,7 +23,7 @@ const {
 
 const sendSuccessResponse = require('../middleware/successResponse');
 
-router.get('/events/requests/:eventId', verify('admin'), getEventRequests, sendSuccessResponse);
+router.get('/events/:eventId/requests', verify('admin'), getEventRequests, sendSuccessResponse);
 
 router.get('/events/requests', verify('admin'), getAllEventRequests, sendSuccessResponse);
 
@@ -31,7 +31,7 @@ router.get('/violations/:vendorId', verify('admin'), getViolationsByVendorId, se
 
 router.get('/violations', verify('admin'), getAllViolations, sendSuccessResponse);
 
-router.put('events/requests/:requestId', verify('admin'), processEventRequest, sendSuccessResponse);
+router.put('/events/requests/:requestId', verify('admin'), processEventRequest, sendSuccessResponse);
 
 router.post('/violations', verify('admin'), createVendorViolation, sendSuccessResponse);
 

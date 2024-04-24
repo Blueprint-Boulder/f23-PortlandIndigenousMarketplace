@@ -7,7 +7,7 @@ export default function BackButton() {
   const navigate = useNavigate();
 
   return (
-    <div className='absolute w-12 h-12 left-2 top-2'>
+    <div className='absolute w-12 h-12 left-2 top-11'>
       <button
         onClick={() => {
           navigate(-1);

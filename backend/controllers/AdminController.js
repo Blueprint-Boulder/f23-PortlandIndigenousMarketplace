@@ -33,7 +33,7 @@ const getAllEventRequests = async (req, res, next) => {
             res.locals.data = requests;
             next();
         } else {
-            res.status(404).json({message: 'No requests found for this event.'});
+            res.status(404).json({message: 'No requests found.'});
         }
     } catch (err) {
         console.error(err);
@@ -78,11 +78,11 @@ const getAllViolations = async (req, res, next) => {
 
 const createVendorViolation = async (req, res, next) => {
     try {
-        const {type, description, vendorId} = req.body;
+        const {type, description, vendor_id} = req.body;
 
         await db.none(
             'INSERT INTO Violations (type, description, vendor_id) VALUES ($1, $2, $3)',
-            [type, description, vendorId],
+            [type, description, vendor_id],
         );
         next();
     } catch (err) {

@@ -10,6 +10,7 @@ const {
   getEventRequest,
   updateVendor,
   updateAuthenticatedVendor,
+  uploadProfilePic,
   verifyVendorHasSameVendorId,
 } = require('../controllers/VendorController');
 
@@ -36,10 +37,10 @@ router.get('/:vendorId', getVendorById, sendSuccessResponse);
 router.post('/', createVendor, sendSuccessResponse);
 
 // Create Vendor event request
-router.post('/events/request', verify('vendor'), createEventRequest, sendSuccessResponse);
+router.post('/events/:eventId/requests/:vendorId', verify('vendor'), verifyVendorHasSameVendorId, createEventRequest, sendSuccessResponse);
 
 // Get Vendor event request
-router.get('/events/request', verify('admin'), getEventRequest, sendSuccessResponse);
+router.get('/events/requests', verify('admin'), getEventRequest, sendSuccessResponse);
 
 // Edit vendor by id
 // This probably should be an admin-protected route. How does that work?
@@ -49,5 +50,14 @@ router.get('/violations/:vendorId', verify('vendor'), verifyVendorHasSameVendorI
 
 // Route for vendor to update themself. ID is retrieved from the token.
 router.put('/', verify('vendor'), updateAuthenticatedVendor, sendSuccessResponse);
+
+// Vendor upload photo for self
+router.post('/image', verify('vendor'), uploadProfilePic, sendSuccessResponse);
+
+// Upload Vendor Photo (probably for admin use)
+router.post('/:vendorId/image');
+
+// Get Vendor Photo URL
+router.get('/:vendorId/image');
 
 module.exports = router;
