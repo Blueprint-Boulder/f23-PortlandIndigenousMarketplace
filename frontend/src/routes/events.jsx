@@ -132,21 +132,16 @@ export default function Events({eventService}) {
   }
 
   const eventDisplay = (event) => {
-    // Extract hours, minutes, and AM/PM from starttime and endtime
-    const startTimeHours = event.starttime.slice(0, 2);
-    const startTimeMinutes = event.starttime.slice(3, 5);
-    const startTimeAMPM = event.starttime.slice(9);
-    const endTimeHours = event.endtime.slice(0, 2);
-    const endTimeMinutes = event.endtime.slice(3, 5);
-    const endTimeAMPM = event.endtime.slice(9);
+    const start = new Date(`${event.startDate} ${event.starttime}`);
+    const end = new Date(`${event.endDate} ${event.endtime}`);
 
     return (
-      <div className="bg-white shadow-lg absolute right-0 left-0 rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
+      <div className="bg-white shadow-lg right-0 left-0 rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
         <div className="mt-2">
           <div className="text-lg font-semibold text-gray-900">{event.name}</div>
           <div className="text-grey-5">{event.description}</div>
           <div className="mt-3 text-grey-5">
-            {event.date} • {startTimeHours}:{startTimeMinutes} {startTimeAMPM} - {endTimeHours}:{endTimeMinutes} {endTimeAMPM}
+            {event.date} • {start.toLocaleTimeString('en-US', {timeStyle: 'short'})} - {end.toLocaleTimeString('en-US', {timeStyle: 'short'})}
           </div>
           <div className="mt-1 text-sm text-grey-5 relative">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
