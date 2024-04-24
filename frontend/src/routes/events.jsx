@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Context} from '../services/context';
 import {Link} from 'react-router-dom';
 import FooterPad from '../components/footerpad';
+// import moment from 'moment';
 
 
 import DatePicker from 'react-datepicker';
@@ -42,7 +43,7 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
         wrapperClassName='lg:col-span-10 col-span-2 rounded-md shadow-md p-2 bg-white '
         className='lg:col-span-10 w-full rounded-md h-max  absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
         timeCaption="Time"
-        dateFormat="MMMM d, yyyy h:mm aa"
+        dateFormat="MMMM d, yyyy h:mm"
       />
       <div className='lg:col-span-2 col-span-1 my-auto'>End Time:</div>
       <DatePicker
@@ -56,7 +57,7 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
         className='lg:col-span-10 w-full h-max rounded-md absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
         required
         timeCaption="Time"
-        dateFormat="MMMM d, yyyy h:mm aa"
+        dateFormat="MMMM d, yyyy h:mm"
       />
       <div className='lg:col-span-2 col-span-1 my-auto'>Capacity:</div>
       <input className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1' type="text" id='vendor-capacity' name='location' value={eventInfo.vendorCapacity} onChange={(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})} />
