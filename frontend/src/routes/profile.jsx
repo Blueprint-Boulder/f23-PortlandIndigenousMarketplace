@@ -35,6 +35,9 @@ export default function Profile({vendorService, violationService}) {
   // Used to refresh the profile image
   const [profileImage, setProfileImage] = useState('/Copy of PIM_logo_black.png');
 
+  // When true, the profile image is covered to show the edit button
+  const [uploadNewImage, setUploadNewImage] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -124,11 +127,22 @@ export default function Profile({vendorService, violationService}) {
         showUploadModal ? <UploadPhotoModal vendorService={vendorService} showUploadModal={showUploadModal} setShowUploadModal={setShowUploadModal}></UploadPhotoModal> : <></>
       }
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
-        <div className='rounded-full'>
-          <img className='w-20' src={profileImage} alt="vendor profile pic" onClick={() => {
-            setShowUploadModal(!showUploadModal);
-          }}/>
-        </div>
+        <figure className='w-20 h-fit align-middle' onClick={() => {
+          setShowUploadModal(!showUploadModal);
+        }}
+        onMouseEnter={() => {
+          setUploadNewImage(true);
+        }}
+        onMouseLeave={()=> {
+          setUploadNewImage(false);
+        }}>
+          {
+            uploadNewImage && <figcaption className='absolute w-20 h-4/5 bg-black/50 text-white text-center'>
+              Edit
+            </figcaption>
+          }
+          <img className='w-20' src={profileImage} alt="vendor profile pic"/>
+        </figure>
         <h1 className='text-xl ml-4'>{vendor.name}</h1>
         {
           (user.id == vendorId || user.isadmin ) &&
