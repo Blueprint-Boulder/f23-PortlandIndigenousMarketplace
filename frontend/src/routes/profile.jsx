@@ -196,7 +196,7 @@ export default function Profile({vendorService, violationService}) {
       </>
       {
         editModal && (
-          <EditProfileModal handleSubmit = {handleEditVendor} setEditModal = {setEditModal}
+          <EditProfileModal setShowUploadModal = {setShowUploadModal} handleSubmit = {handleEditVendor} setEditModal = {setEditModal}
             vendorData = {vendorData} setVendorData={setVendorData} user = {user}></EditProfileModal>
         )
       }
