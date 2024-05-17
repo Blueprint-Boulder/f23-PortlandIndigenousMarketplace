@@ -6,7 +6,7 @@ import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 
-export default function EditModal({handleSubmit, setEditModal, vendorData, setVendorData, user}) {
+export default function EditModal({handleSubmit, setEditModal, vendorData, setVendorData, user, setShowUploadModal}) {
   const [badLocal, setBadLocal] = useState(false);
   const [validEmail, setValidEmail] = useState(true);
   const [validWebsite, setValidWebsite] = useState(true);
@@ -74,7 +74,7 @@ export default function EditModal({handleSubmit, setEditModal, vendorData, setVe
 
 
   return (
-    <div className='absolute bg-white rounded-md p-2 drop-shadow-lg w-11/12 h-5/6 overflow-scroll'>
+    <div className='absolute bg-white rounded-md p-5 drop-shadow-lg w-11/12 h-5/6 overflow-scroll'>
       <div className='flex flex-col h-full'>
         <form action="" onSubmit={(e) => {
           if (badLocal) {
@@ -126,6 +126,10 @@ export default function EditModal({handleSubmit, setEditModal, vendorData, setVe
           <input type="text" id='tiktok' placeholder = {vendorData.tiktok} name='tiktok'onChange={(e) => setVendorData({...vendorData, tiktok: e.target.value})}/>
           <div className='flex justify-between bottom-0'>
             <button type={badLocal ? '': 'submit'} className={`${badLocal ? 'bg-grey-1': 'bg-blue'} text-white p-5 mt-8 mb-4`}>Save Changes</button>
+            <button className='bg-grey-1 text-black p-5 mt-8 mb-4' onClick={() => {
+              setEditModal(false);
+              setShowUploadModal(true);
+            }}>Upload Profile Photo</button>
             <button onClick={()=>{
               setEditModal(false);
             }} className='bg-red  text-white p-5 mt-8 mb-4 '>Cancel</button>
