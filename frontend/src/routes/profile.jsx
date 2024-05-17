@@ -137,8 +137,9 @@ export default function Profile({vendorService, violationService}) {
           setUploadNewImage(false);
         }}>
           {
-            uploadNewImage && <figcaption className='absolute w-20 h-4/5 bg-black/50 text-white text-center'>
-              Edit
+            // If hovering profile image, gray image and show "Upload" text. Only works on desktop
+            uploadNewImage && <figcaption className='absolute w-20 h-5/6 bg-black/50'>
+              <p className='text-white text-center top-0 transform translate-y-2/3'>Upload</p>
             </figcaption>
           }
           <img className='w-20' src={profileImage} alt="vendor profile pic"/>
