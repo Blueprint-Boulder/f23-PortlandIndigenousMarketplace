@@ -64,13 +64,13 @@ export default class VendorsRepository {
     }
   }
 
-  async uploadProfileImage(image) {
+  async uploadProfileImage(vendorId, image) {
     // Create a formdata object and add the Profile Image as "img"
     const formData = new FormData();
     formData.append('img', image);
 
     try {
-      const res = await this.httpClient.axiosInstance.post('/vendors/image', formData, {
+      const res = await this.httpClient.axiosInstance.post(`/vendors/${vendorId}/image`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
