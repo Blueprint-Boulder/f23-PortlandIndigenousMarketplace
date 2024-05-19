@@ -124,7 +124,7 @@ export default function Profile({vendorService, violationService}) {
   return (
     <div className='items-center w-screen flex flex-col z-1 space-y-4 items-center'>
       {
-        showUploadModal ? <UploadPhotoModal vendorService={vendorService} showUploadModal={showUploadModal} setShowUploadModal={setShowUploadModal}></UploadPhotoModal> : <></>
+        showUploadModal ? <UploadPhotoModal vendorId={vendorId} vendorService={vendorService} showUploadModal={showUploadModal} setShowUploadModal={setShowUploadModal}></UploadPhotoModal> : <></>
       }
       <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <figure className='w-20 h-fit align-middle' onClick={() => {

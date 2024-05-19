@@ -374,8 +374,8 @@ const updateVendor = async (req, res, next) => {
 
 // Upload a profile pic. If one exists for the vendor, remove it.
 const uploadProfilePic = (req, res, next) => {
-  console.log(req.body);
-  
+  console.log('called upload profile pic');
+    
   // img is the form field for the profile pic
   upload(req, res, async (err) => {
     if (err instanceof multer.MulterError){
@@ -389,11 +389,17 @@ const uploadProfilePic = (req, res, next) => {
     }
 
     // Vendor id for database entry
-    const vendor_id = res.locals.vendor['vendor_id'];
+    // const vendor_id = res.locals.vendor['vendor_id'];
+    const vendor_id = req.params.vendorId;
 
     // Get file name from request
     const uuid = req.uuid;
     const fileExt = req.fileExt;
+
+    if(vendor_id == undefined || uuid == undefined || fileExt == undefined){
+      console.log('Error - Missing fields for file upload.');
+      return res.status(500).json({message: 'Bad request - one or more fields were not sent.'});
+    }
 
     // Upload metadata to database
     try {
@@ -402,7 +408,7 @@ const uploadProfilePic = (req, res, next) => {
         [vendor_id, uuid, fileExt]);
     } catch (err) {
       // Duplicate emails are not allowed
-      if (err.code === '23505') {
+      if (err !== undefined && err.code === '23505') {
         // Get the old profile image
         const old_file = await db.oneOrNone(
           `SELECT * FROM ProfilePictures WHERE vendor_id = $1`,

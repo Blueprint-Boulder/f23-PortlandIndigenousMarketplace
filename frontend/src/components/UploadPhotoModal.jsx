@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function UploadPhotoModal({vendorService, showUploadModal, setShowUploadModal}) {
+export default function UploadPhotoModal({vendorId, vendorService, showUploadModal, setShowUploadModal}) {
   const toggle = () => {
     setShowUploadModal(!showUploadModal);
   };
@@ -10,7 +10,7 @@ export default function UploadPhotoModal({vendorService, showUploadModal, setSho
     const image = e.target.files[0];
     if (image != undefined) {
       // Call the vendor service handler
-      const res = vendorService.uploadVendorPhoto(image);
+      const res = vendorService.uploadVendorPhoto(vendorId, image);
 
       console.log(res);
     } else {

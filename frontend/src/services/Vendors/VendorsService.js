@@ -75,8 +75,8 @@ export default class VendorsService {
     return await this.vendorsRepository.createVendor(vendorData);
   }
 
-  async uploadVendorPhoto(image) {
-    return await this.vendorsRepository.uploadProfileImage(image);
+  async uploadVendorPhoto(vendorId, image) {
+    return await this.vendorsRepository.uploadProfileImage(vendorId, image);
   }
 
   async updateSelfVendor(vendor) {
