@@ -1,23 +1,32 @@
-import React from 'react';
+import React, {useContext} from 'react';
+
+import {Context} from '../services/context';
 
 export default function UploadPhotoModal({vendorId, vendorService, showUploadModal, setShowUploadModal}) {
+  const {setMessage, setBad} = useContext(Context);
+
   const toggle = () => {
     setShowUploadModal(!showUploadModal);
   };
 
-  const fileUpload = (e) => {
+  const fileUpload = async (e) => {
     // Extract the file
     const image = e.target.files[0];
     if (image != undefined) {
       // Call the vendor service handler
-      const res = vendorService.uploadVendorPhoto(vendorId, image);
+      const res = await vendorService.uploadVendorPhoto(vendorId, image);
 
-      console.log(res);
+      if (res == undefined) {
+        setBad(true);
+        setMessage('Failed to upload profile image.');
+        toggle();
+      } else {
+        setMessage('Uploaded profile image.');
+        toggle();
+      }
     } else {
       console.log('Error: No image found.');
     }
-
-    // TODO: close modal ; make a toast for success / error
   };
 
   return (<>
