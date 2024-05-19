@@ -118,4 +118,21 @@ const verify = (privilege) => {
   }
 };
 
-module.exports = {signToken, verifyToken, verifyAdminToken, signAdminToken, verify};
+const canEditVendor = (req, res, next) => {
+  // If token was verified, res.locals should contain one of these
+  const {admin, vendor} = res.locals;
+  if (admin === undefined) {
+    // Admin can edit vendor profiles
+    return next();
+  }
+  else if(vendor !== undefined && vendor.vendor_id === req.params.vendorId){
+    // If logged in user has same ID as route param, allow
+    return next();
+  }
+  else {
+    // If the user is not logged in or not the same vendor they're trying to edit, return forbidden.
+    return res.status(403).json({message: 'Forbidden'});
+  }
+}
+
+module.exports = {signToken, verifyToken, verifyAdminToken, signAdminToken, verify, canEditVendor};

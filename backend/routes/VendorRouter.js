@@ -22,6 +22,7 @@ const sendSuccessResponse = require('../middleware/successResponse');
 const {
   signToken,
   verify,
+  canEditVendor
 } = require('../controllers/AuthController');
 
 // Logs in vendor
@@ -52,7 +53,7 @@ router.get('/violations/:vendorId', verify('vendor'), verifyVendorHasSameVendorI
 router.put('/', verify('vendor'), updateAuthenticatedVendor, sendSuccessResponse);
 
 // Vendor upload photo for self
-router.post('/image', verify('vendor'), uploadProfilePic, sendSuccessResponse);
+router.post(':vendorId/image', verify('vendor'), canEditVendor, uploadProfilePic, sendSuccessResponse);
 
 // Upload Vendor Photo (probably for admin use)
 router.post('/:vendorId/image');
