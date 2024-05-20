@@ -89,7 +89,7 @@ export default function Vendors({vendorService}) {
     <div className="bg-white shadow-lg rounded-lg p-4 w-10/12 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
       <div className = 'flex justify-between'>
         <div className="mt-2 ">
-          <img src={vendor.image || '/Copy of PIM_logo_black.png'} alt={vendor.name} className="w-24 h-24 mx-auto rounded-full" />
+          <img src={`/profilepics/${vendor.image}` || '/Copy of PIM_logo_black.png'} alt={vendor.name} className="w-24 h-24 mx-auto rounded-full" />
         </div>
         <div className="mt-2 mx-2 w-6/12 truncate">
           <div className="text-lg font-semibold text-gray-900 truncate">{vendor.name}</div>
