@@ -37,7 +37,7 @@ export default function Event({eventService, vendorService}) {
     // }
     const fetchData = async () => {
       console.log('Event id', eventId);
-      const eventData = await eventService.getEventById(parseInt(eventId.slice(1)));
+      const eventData = await eventService.getEventById(parseInt(eventId));
       if (!eventData) {
         setMessage('Event not found');
         setBad(true);
@@ -45,24 +45,10 @@ export default function Event({eventService, vendorService}) {
       } else {
         setEvent(eventData);
       }
-      // try {
-      //   if (user.isadmin) {
-      //     const addtendingVendors = await eventService.getAttendingVendors(parseInt(eventId.slice(1)));
-      //     console.log('Attending vendors', addtendingVendors);
-      //     if (!addtendingVendors) {
-      //       setMessage('Failed to fetch attending vendors');
-      //       setBad(true);
-      //     } else {
-      //       setAttendingVendors(addtendingVendors);
-      //     }
-      //   }
-      // } catch (error) {
-      //   console.log('Error fetching attending vendors', error);
-      // }
 
       try {
         if (user.isadmin) {
-          const requests = await eventService.getEventRequests(parseInt(eventId.slice(1)));
+          const requests = await eventService.getEventRequests(parseInt(eventId));
           console.log('Requests', requests);
           if (!requests) {
             setMessage('Failed to fetch requests');
@@ -178,10 +164,10 @@ export default function Event({eventService, vendorService}) {
       <button
         className="mt-3 text-gray-800 font-semibold py-2 px-1 drop-shadow-xl rounded-md bg-white w-24 click:text-white"
         onClick={() => handleRegister()}
-      >Register</button> :
-      ('id' in user )?
-      <></> :
-      <div className='font-bold text-lg my-4'>Please login to request attendance</div>
+      >Register</button> : <></>
+      // ('id' in user )?
+      // <></> :
+      // <div className='font-bold text-lg my-4'>Please login to request attendance</div>
       }
       <hr className='mt-3 mb-2 border-t-2 border-gray-600 w-3/4' />
       {user && user.isadmin &&
