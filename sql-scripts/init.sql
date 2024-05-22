@@ -61,7 +61,8 @@ CREATE TABLE IF NOT EXISTS EventRequests (
     event_id INT REFERENCES Events(event_id),
     approved BOOLEAN DEFAULT NULL,
     requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    approved_at TIMESTAMP
+    approved_at TIMESTAMP,
+    UNIQUE(vendor_id, event_id)
 );
 
 -- Indexes (as per the diagram)
