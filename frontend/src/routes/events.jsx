@@ -149,7 +149,7 @@ export default function Events({eventService}) {
             </svg>
             {event.location}
           </div>
-          <Link to={`/events/:${event.eventId}`} className="mt-2 text-blue p-2 rounded-md inline-block">
+          <Link to={`/events/${event.eventId}`} className="mt-2 text-blue p-2 rounded-md inline-block">
             View Event Details
           </Link>
           {user && user.isadmin && <button onClick={() => {

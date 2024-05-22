@@ -31,20 +31,24 @@ export default class VendorsService {
 
   async getVendorById(vendorId) {
     const vendorData = await this.vendorsRepository.getVendorById(vendorId);
-    return new Vendor(
-        vendorData.vendor_id,
-        vendorData.name,
-        vendorData.email,
-        vendorData.website,
-        vendorData.phone_number,
-        vendorData.image,
-        vendorData.instagram,
-        vendorData.facebook,
-        vendorData.twitter,
-        vendorData.youtube,
-        vendorData.tiktok,
-        vendorData.pinterest,
-    );
+    if (vendorData) {
+      return new Vendor(
+          vendorData.vendor_id,
+          vendorData.name,
+          vendorData.email,
+          vendorData.website,
+          vendorData.phone_number,
+          vendorData.image,
+          vendorData.instagram,
+          vendorData.facebook,
+          vendorData.twitter,
+          vendorData.youtube,
+          vendorData.tiktok,
+          vendorData.pinterest,
+      );
+    } else {
+      return undefined;
+    }
   }
 
   async authenticateVendor(vendor) {
