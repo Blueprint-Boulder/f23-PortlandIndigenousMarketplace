@@ -158,8 +158,10 @@ export default function Event({eventService, vendorService}) {
           onClick={() => handleRegister()}
         >Register</button> : <></>
       }
-      <div className='flex flex-row items-center justify-between w-full px-4'>
-        <div className='w-28'>&nbsp;</div>
+      <div className={`flex flex-row items-center ${user && user.isadmin ? 'justify-between' : 'justify-center'} w-full px-4`}>
+        {
+          user && user.isadmin && <div className='w-28'>&nbsp;</div>
+        }
         <p className='text-2xl font-bold'>{showApproved ? 'Attending Vendors' : 'Pending Requests'} ({showApproved ? vendors.length : requests.filter((req) => !req.approved).length})</p>
         {
           user && user.isadmin && <button className='text-gray-800 drop-shadow-xl rounded-md bg-white click:text-white px-5 py-2'
