@@ -33,7 +33,7 @@ export default function Profile({vendorService, violationService}) {
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   // Used to refresh the profile image
-  const [profileImage, setProfileImage] = useState('/Copy of PIM_logo_black.png');
+  const [profileImage, setProfileImage] = useState('/profile.webp');
 
   // When true, the profile image is covered to show the edit button
   const [uploadNewImage, setUploadNewImage] = useState(false);
@@ -72,7 +72,7 @@ export default function Profile({vendorService, violationService}) {
   }, []);
 
   useEffect(() => {
-    setProfileImage(vendor.image == undefined ? '/Copy of PIM_logo_black.png' : `/profilepics/${vendor.image}`);
+    setProfileImage(vendor.image == undefined ? '/profile.webp' : `/profilepics/${vendor.image}`);
   }, [vendor.image]);
 
   const handleViolation = () => {
