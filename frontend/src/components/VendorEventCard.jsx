@@ -27,12 +27,12 @@ export default function VendorEventCard({vendor, request, eventService}) {
   const AdminButtons = () => {
     if (user && user.isadmin) {
       if (request && request.approved) { // Show buttons to reject or set to pending
-        return <div className='flex flex-row spacing-3'>
-          <button className='mt-3 text-gray-800 font-semibold drop-shadow-xl rounded-md bg-white w-24 click:text-white' onClick={() => updateRequest(false)}>Reject Request</button>
-          <button className='mt-3 text-gray-800 font-semibold drop-shadow-xl rounded-md bg-white w-24 click:text-white' onClick={() => updateRequest(undefined)}>Set Pending</button>
+        return <div className='flex flex-row gap-3'>
+          <button className='mt-3 text-white font-semibold drop-shadow-xl rounded-md bg-black w-24' onClick={() => updateRequest(false)}>Reject Request</button>
+          <button className='mt-3 text-white font-semibold drop-shadow-xl rounded-md bg-black w-24' onClick={() => updateRequest(undefined)}>Set Pending</button>
         </div>;
       } else { // Show buttons to reject or approve
-        return <div className='flex flex-row spacing-3'>
+        return <div className='flex flex-row gap-3'>
           <button className='mt-3 text-gray-800 font-semibold drop-shadow-xl rounded-md bg-white w-24 click:text-white' onClick={() => updateRequest(true)}>Approve</button>
           <button className='mt-3 text-gray-800 font-semibold drop-shadow-xl rounded-md bg-white w-24 click:text-white' onClick={() => updateRequest(false)}>Reject Request</button>
         </div>;
