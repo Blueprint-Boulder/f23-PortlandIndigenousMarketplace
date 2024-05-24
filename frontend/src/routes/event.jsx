@@ -10,7 +10,6 @@ import FooterPad from '../components/footerpad.jsx';
 import EventVendorsDisplay from '../components/EventVendorsDisplay.jsx';
 import User from '../objects/User.js';
 
-
 export default function Event({eventService, vendorService}) {
   const [event, setEvent] = useState(null);
   const [about, setAbout] = useState(false);
@@ -150,13 +149,16 @@ export default function Event({eventService, vendorService}) {
           onClick={() => handleRegister()}
         >Register</button> : <></>
       }
-      <hr className='mt-3 mb-2 border-t-2 border-gray-600 w-3/4' />
-      {
-        user && user.isadmin && <button className='mt-3 text-gray-800 font-semibold drop-shadow-xl rounded-md bg-white w-24 click:text-white'
-          onClick={() => {
-            setShowApproved(!showApproved);
-          }}>{showApproved ? 'RSVP\'d Vendors' : 'Pending Requests'}</button>
-      }
+      <div className='flex flex-row items-center justify-between w-full px-4'>
+        <div className='w-28'>&nbsp;</div>
+        <p className='text-2xl font-bold'>{showApproved ? 'Attending Vendors' : 'Pending Requests'} ({showApproved ? vendors.length : requests.filter((req) => !req.approved).length})</p>
+        {
+          user && user.isadmin && <button className='text-gray-800 drop-shadow-xl rounded-md bg-white click:text-white px-5 py-2'
+            onClick={() => {
+              setShowApproved(!showApproved);
+            }}>Show {showApproved ? 'Pending' : 'Attending'}</button>
+        }
+      </div>
       <EventVendorsDisplay showApproved={showApproved} vendors={vendors} requests={requests} eventService={eventService}></EventVendorsDisplay>
       <FooterPad />
     </div>

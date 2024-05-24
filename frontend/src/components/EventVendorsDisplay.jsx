@@ -1,16 +1,17 @@
 import React from 'react';
 import VendorEventCard from './VendorEventCard';
 
+
 export default function EventVendorsDisplay({showApproved, requests, vendors, eventService}) {
   const createCardsAdmin = (reqs) => {
     // console.log('create cards admin');
     return reqs.map((req) => {
-      console.log('Request:', req);
-      console.log('Vendors:', vendors);
+      // console.log('Request:', req);
+      // console.log('Vendors:', vendors);
 
       if (vendors.length === 0) return <></>;
       if (showApproved === true && req.approved !== true) return <></>;
-      // if (showApproved === false && req.approved !== null) return <></>;
+      if (showApproved === false && ( req.approved !== null || req.approved !== false) ) return <></>;
 
 
       // Fetch the vendor's profile
@@ -29,7 +30,7 @@ export default function EventVendorsDisplay({showApproved, requests, vendors, ev
     });
   };
 
-  return <div className='flex flex-wrap p-10'>
+  return <div className='flex flex-wrap p-5 gap-4 justify-center'>
     {
       requests.length > 0 ? createCardsAdmin(requests) : createCards(vendors)
     }
