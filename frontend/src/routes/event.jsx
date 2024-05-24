@@ -1,9 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
-// import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
 import {Context} from '../services/context.jsx';
 import FooterPad from '../components/footerpad.jsx';
@@ -13,7 +10,6 @@ import mapsicon from '../assets/mapsicon.png';
 
 export default function Event({eventService, vendorService}) {
   const [event, setEvent] = useState(null);
-  const [about, setAbout] = useState(false);
   const navigate = useNavigate();
   const {eventId} = useParams();
   const {user, setMessage, setBad} = useContext(Context);
@@ -132,26 +128,21 @@ export default function Event({eventService, vendorService}) {
   const googleMapDirectionLink = `https://www.google.com/maps/place/${encodedAddress}`;
 
   return (
-    <div id="Event-content" className="overflow-scroll w-full h-full flex flex-col items-center mt-2 py-2">
-      <div className='flex flex-row gap-4 px-10 py-6 bg-slate-100 w-10/12 rounded-md drop-shadow-md'>
+    <div id="Event-content" className="overflow-scroll w-full h-full flex flex-col gap-6 items-center py-2">
+      <div className='flex flex-row gap-4 px-10 py-6 bg-white w-10/12 rounded-md drop-shadow-md'>
         <img src={bLogo} alt="Event Logo" className="w-1/3 basis-1/3 bg-clip-padding bg-white drop-shadow-xl rounded-xl" />
         <div className='flex flex-col gap-1 basis-2/3 w-2/3'>
           <div className="text-4xl mt-2 font-bold tracking-wide">{name}</div>
-
           <a href={googleMapDirectionLink} className='flex flex-row gap-1'><img src={mapsicon} className='w-4 h-auto'></img>{location}</a>
           <div className='mr-2 mt-2'>{date} | {starttime} - {endtime}</div>
         </div>
       </div>
-
-
-      <div className='flex flex-row mt-2'>
-        <div className="mr-2">About</div>
-        <button onClick={() => setAbout(!about)}><FontAwesomeIcon icon={faCaretDown} /></button>
-      </div>
-      <div className={`${about ? 'relative text-gray-800 m-1 bg-opacity-100 bg-white drop-shadow-xl rounded-md p-2 w-2/3' : 'hidden'}`}>
-        {description}
-      </div>
-
+      {
+        description && <div className='flex flex-row justify-left gap-3 bg-white w-10/12 rounded-md drop-shadow-lg p-10'>
+          <p className='text-slate-500 font-semibold'>Description</p>
+          <p>{description}</p>
+        </div>
+      }
       {(user && !user.isadmin) ?
         <button
           className="mt-3 text-gray-800 font-semibold py-2 px-1 drop-shadow-xl rounded-md bg-white w-24 click:text-white"
