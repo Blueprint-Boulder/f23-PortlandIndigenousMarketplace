@@ -40,7 +40,7 @@ export default function Event({eventService, vendorService}) {
   useEffect(() => {
     (async () => {
       // Load the event data from database
-      console.log('Event id', eventId);
+      // console.log('Event id', eventId);
       const eventData = await eventService.getEventById(parseInt(eventId));
       if (!eventData) {
         setMessage('Event not found');
@@ -50,11 +50,11 @@ export default function Event({eventService, vendorService}) {
         setEvent(eventData);
       }
 
-      console.log('Event', eventData);
+      // console.log('Event', eventData);
 
       // Load all requests
       if (loggedUser && loggedUser.isadmin) {
-        console.log('Checking requests as admin.');
+        // console.log('Checking requests as admin.');
 
         let reqs;
         try {
@@ -65,19 +65,18 @@ export default function Event({eventService, vendorService}) {
         }
 
         if (!reqs) {
-          console.log('failed');
           setMessage('Failed to fetch requests for event.');
           setBad(true);
         } else {
           setRequests(reqs);
-          console.log('Requests', requests);
+          // console.log('Requests', requests);
 
           // Load vendors
           const vends = [];
           reqs.forEach(async (req) => {
             const vend = await vendorService.getVendorById(req.vendorId);
             if (!vend) {
-              console.log('This went wrong!');
+              console.log('Error: You should not be seeing this! There was an EventRequest for a vendor that couldn\'t be found.');
             } else {
               vends.push(vend);
             }
@@ -93,12 +92,13 @@ export default function Event({eventService, vendorService}) {
         try {
           reqs = await eventService.getAttendingVendors(parseInt(eventId));
         } catch (e) {
-          console.log('No reqs found.');
+          console.log('No eventRequests found.');
           return;
         }
-        console.log('AttendingVendors', reqs);
+
+        // console.log('AttendingVendors', reqs);
+
         if (!reqs) {
-          console.log('failed');
           setMessage('Failed to fetch requests for event.');
           setBad(true);
         } else {

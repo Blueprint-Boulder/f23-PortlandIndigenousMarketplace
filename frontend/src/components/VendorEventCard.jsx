@@ -7,7 +7,7 @@ export default function VendorEventCard({vendor, request, eventService}) {
   const {user, setMessage, setBad} = useContext(Context);
 
 
-  console.log('LoadingCard:', vendor, request);
+  // console.log('LoadingCard:', vendor, request);
 
   // Sets approved to value
   const updateRequest = async (value) => {
@@ -40,8 +40,8 @@ export default function VendorEventCard({vendor, request, eventService}) {
     }
   };
 
-  console.log('vendreq', request);
-  console.log('vendvend', vendor);
+  // console.log('vendreq', request);
+  // console.log('vendvend', vendor);
 
   return (
     <div className='flex flex-col p-10 basis-1/2 items-center'>

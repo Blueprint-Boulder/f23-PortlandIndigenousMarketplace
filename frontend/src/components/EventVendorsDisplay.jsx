@@ -3,7 +3,7 @@ import VendorEventCard from './VendorEventCard';
 
 export default function EventVendorsDisplay({showApproved, requests, vendors, eventService}) {
   const createCardsAdmin = (reqs) => {
-    console.log('create cards admin');
+    // console.log('create cards admin');
     return reqs.map((req) => {
       console.log('Request:', req);
       console.log('Vendors:', vendors);
@@ -15,7 +15,7 @@ export default function EventVendorsDisplay({showApproved, requests, vendors, ev
 
       // Fetch the vendor's profile
       const res = vendors.filter((v) => v.id === req.vendorId)[0];
-      console.log('Vendor:', res);
+      // console.log('Vendor:', res);
 
       // Return the card
       return <VendorEventCard key={res.id} vendor={res} request={req} eventService={eventService}></VendorEventCard>;
@@ -23,7 +23,7 @@ export default function EventVendorsDisplay({showApproved, requests, vendors, ev
   };
 
   const createCards = (vends) => {
-    console.log('create cards');
+    // console.log('create cards');
     return vends.map((vendor)=> {
       return <VendorEventCard key={vendor.id} vendor={vendor} request={undefined} eventService={eventService}></VendorEventCard>;
     });
