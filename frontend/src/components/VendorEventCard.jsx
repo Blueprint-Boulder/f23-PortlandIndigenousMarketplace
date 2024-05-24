@@ -1,10 +1,12 @@
 import React, {useContext} from 'react';
 
 import {Context} from '../services/context';
+import {useNavigate} from 'react-router-dom';
 
 
 export default function VendorEventCard({vendor, request, eventService}) {
   const {user, setMessage, setBad} = useContext(Context);
+  const navigate = useNavigate();
 
 
   // console.log('LoadingCard:', vendor, request);
@@ -44,7 +46,8 @@ export default function VendorEventCard({vendor, request, eventService}) {
   // console.log('vendvend', vendor);
 
   return (
-    <div className='flex flex-col p-10 basis-1/2 items-center'>
+    <div className='flex flex-col px-7 py-8 basis-1/2 gap-4 items-center bg-slate-50 rounded-lg drop-shadow-lg'
+      onClick={()=> navigate(`/vendors/${vendor.id}`)}>
       <img src={vendor.image ? `/profilepics/${vendor.image}` : '/profile.webp'}></img>
       <p className='text-center'>{vendor.name}</p>
       {

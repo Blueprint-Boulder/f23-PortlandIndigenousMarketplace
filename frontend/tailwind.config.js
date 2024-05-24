@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -21,7 +23,11 @@ module.exports = {
       'red': '#E96B67',
       'green': '#49C9B9',
     },
-    extend: {},
+    extend: {
+      colors: {
+        'slate': colors.slate,
+      },
+    },
   },
   plugins: [],
 };
