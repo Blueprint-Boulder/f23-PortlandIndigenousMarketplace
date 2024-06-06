@@ -46,6 +46,16 @@ CREATE TABLE IF NOT EXISTS Events (
     vendorCapacity INT NOT NULL
 );
 
+-- Event pictures table
+-- The order of images for an event matters
+-- File should be stored as image_key.file_ext in the filesystem.
+CREATE TABLE IF NOT EXISTS EventPictures (
+    event_id INT REFERENCES Events(event_id) NOT NULL,
+    image_order smallserial NOT NULL,
+    image_key VARCHAR(60) NOT NULL UNIQUE,
+    file_ext VARCHAR(10) NOT NULL
+);
+
 -- Violations table
 CREATE TABLE IF NOT EXISTS Violations (
     violation_id SERIAL PRIMARY KEY,
