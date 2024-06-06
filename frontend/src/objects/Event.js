@@ -7,10 +7,8 @@ export default class Event {
     this.name = name;
     this.location = location;
     this.date = starttime.toLocaleDateString();
-    this.starttime = starttime.toLocaleTimeString();
-    this.endtime = endtime.toLocaleTimeString();
-    this.startDate = starttime.toLocaleDateString();
-    this.endDate = endtime.toLocaleDateString();
+    this.starttime = starttime;
+    this.endtime = endtime;
     this.description = description;
     this.vendorCapacity = vendorCapacity;
   }
