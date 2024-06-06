@@ -8,6 +8,10 @@ import EventVendorsDisplay from '../components/EventVendorsDisplay.jsx';
 import User from '../objects/User.js';
 import mapsicon from '../assets/mapsicon.png';
 
+import EditEventModal from '../components/EditEventModal.jsx';
+
+const adminButtonClasses = `text-white font-semibold py-2 px-1 drop-shadow-xl rounded-md bg-black`;
+
 export default function Event({eventService, vendorService}) {
   const [event, setEvent] = useState(null);
   const navigate = useNavigate();
@@ -22,6 +26,9 @@ export default function Event({eventService, vendorService}) {
 
   // eslint-disable-next-line
   const [loggedUser, setLoggedUser] = useState(User.getLoggedInUser());
+
+  // When true, the edit event modal will be shown
+  const [showEditModal, setShowEditModal] = useState(false);
 
   /*
     Make location a link that on click redirects to that same
@@ -46,7 +53,7 @@ export default function Event({eventService, vendorService}) {
         setEvent(eventData);
       }
 
-      // console.log('Event', eventData);
+      console.log('Event', eventData);
 
       // Load all requests
       if (loggedUser && loggedUser.isadmin) {
@@ -108,7 +115,13 @@ export default function Event({eventService, vendorService}) {
     return <div>Event Not Found</div>;
   }
 
-  const {name, location, date, starttime, endtime, description} = event;
+  const {name, location, starttime, endtime, description} = event;
+
+  // Parses the start / end time to a human readable format
+  const timeFormat = new Intl.DateTimeFormat('en', {
+    timeStyle: 'short',
+    dateStyle: 'short',
+  });
 
   async function handleRegister() {
     const res = await eventService.createEventRequest(event.eventId, user.id);
@@ -127,14 +140,24 @@ export default function Event({eventService, vendorService}) {
   // just append the encode address to the place route
   const googleMapDirectionLink = `https://www.google.com/maps/place/${encodedAddress}`;
 
-  return (
-    <div id="Event-content" className="overflow-scroll w-full h-full flex flex-col gap-6 items-center py-2">
-      <div className='flex flex-row gap-4 px-10 py-6 bg-white w-10/12 rounded-md drop-shadow-md'>
+  return (<>
+    {showEditModal && <EditEventModal event={event} eventService={eventService} setShowEditModal={setShowEditModal} />}
+    <div id="Event-content" className="overflow-y-scroll w-full h-full flex flex-col gap-6 items-center py-2">
+      <div className='flex flex-row gap-4 px-10 py-6 bg-white w-10/12 rounded-md drop-shadow-md items-center'>
         <img src={bLogo} alt="Event Logo" className="w-1/3 basis-1/3 bg-clip-padding bg-white drop-shadow-xl rounded-xl" />
         <div className='flex flex-col gap-1 basis-2/3 w-2/3'>
-          <div className="text-4xl mt-2 font-bold tracking-wide">{name}</div>
+          <div className={`flex flex-row ${loggedUser && loggedUser.isadmin ? 'justify-between' : 'justify-left'}`}>
+            <div className="text-4xl mt-2 font-bold tracking-wide">{name}</div>
+            {
+              loggedUser && loggedUser.isadmin && <button className={`${adminButtonClasses} p-1 h-min -translate-y-3 translate-x-4`} onClick={()=>{
+                setShowEditModal(true);
+              }}>
+              Edit Event
+              </button>
+            }
+          </div>
           <a href={googleMapDirectionLink} className='flex flex-row gap-1'><img src={mapsicon} className='w-4 h-auto'></img>{location}</a>
-          <div className='mr-2 mt-2'>{date} | {starttime} - {endtime}</div>
+          <div className='mr-2 mt-2'>{`${timeFormat.format(starttime)} - ${timeFormat.format(endtime)}`}</div>
         </div>
       </div>
       {
@@ -145,17 +168,14 @@ export default function Event({eventService, vendorService}) {
       }
       {(user && !user.isadmin) ?
         <button
-          className="mt-3 text-gray-800 font-semibold py-2 px-1 drop-shadow-xl rounded-md bg-white w-24 click:text-white"
+          className={`${adminButtonClasses} py-2 px-1 w-24`}
           onClick={() => handleRegister()}
         >Register</button> : <></>
       }
-      <div className={`flex flex-row items-center ${user && user.isadmin ? 'justify-between' : 'justify-center'} w-full px-4`}>
-        {
-          user && user.isadmin && <div className='w-28'>&nbsp;</div>
-        }
+      <div className='flex flex-col gap-3 items-center'>
         <p className='text-2xl font-bold'>{showApproved ? 'Attending Vendors' : 'Pending Requests'} ({showApproved ? vendors.length : requests.filter((req) => !req.approved).length})</p>
         {
-          user && user.isadmin && <button className='text-gray-800 drop-shadow-xl rounded-md bg-white click:text-white px-5 py-2'
+          user && user.isadmin && <button className={`${adminButtonClasses} px-5 py-2 w-4/6`}
             onClick={() => {
               setShowApproved(!showApproved);
             }}>Show {showApproved ? 'Pending' : 'Attending'}</button>
@@ -164,7 +184,7 @@ export default function Event({eventService, vendorService}) {
       <EventVendorsDisplay showApproved={showApproved} vendors={vendors} requests={requests} eventService={eventService}></EventVendorsDisplay>
       <FooterPad />
     </div>
-
+  </>
   );
 }
 
