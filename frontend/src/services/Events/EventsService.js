@@ -24,6 +24,7 @@ export default class EventsService {
 
   async getEventById(eventId) {
     const eventData = await this.eventsRepository.getEventById(eventId);
+    console.log(eventData);
     return new Event(
         eventData.event_id,
         eventData.name,
@@ -31,7 +32,7 @@ export default class EventsService {
         new Date(eventData.starttime),
         new Date(eventData.endtime),
         eventData.description,
-        eventData.vendorCapacity,
+        eventData.vendorcapacity,
     );
   }
 
