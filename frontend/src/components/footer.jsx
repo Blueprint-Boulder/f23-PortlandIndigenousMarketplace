@@ -23,7 +23,6 @@ export default function Footer() {
             </div>
           </Link>
         </div>
-
         {user && !user.isadmin ? (
           <div className="footer-section">
             <Link to={`/vendors/${user.id}`} className="text-blue-500">
@@ -34,18 +33,14 @@ export default function Footer() {
             </Link>
           </div>
         ) : null}
-
-        {user && user.isadmin ? (
-          <div className="footer-section">
-            <Link to="/vendors" className="text-blue-500 ">
-              <FontAwesomeIcon icon={faUserGroup} />
-              <div className="icon-text">
-                <span className="section-text">Vendors</span>
-              </div>
-            </Link>
-          </div>
-        ) : null}
-
+        <div className="footer-section">
+          <Link to="/vendors" className="text-blue-500 ">
+            <FontAwesomeIcon icon={faUserGroup} />
+            <div className="icon-text">
+              <span className="section-text">Vendors</span>
+            </div>
+          </Link>
+        </div>
         {user ? (
           <div className="footer-section">
             <Link to="/logout" className="text-blue-500">
