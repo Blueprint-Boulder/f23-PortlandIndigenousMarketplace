@@ -46,23 +46,6 @@ export default class VendorsService {
     ));
   }
 
-  async getPublicVendors() {
-    const vendorsData = await this.vendorsRepository.getPublicVendors();
-    if (vendorsData == undefined) {
-      return undefined;
-    }
-
-    return vendorsData.map((data) => new Vendor(
-        data.vendor_id,
-        data.name,
-        data.email,
-        data.website,
-        data.phone_number,
-        data.image,
-        data.is_public,
-    ));
-  }
-
   async getVendorById(vendorId) {
     const vendorData = await this.vendorsRepository.getVendorById(vendorId);
     if (vendorData) {
@@ -140,7 +123,7 @@ export default class VendorsService {
       youtube: vendor.youtube,
       tiktok: vendor.tiktok,
       pinterest: vendor.pinterest,
-      is_public: data.is_public,
+      is_public: vendor.is_public,
     };
     return await this.vendorsRepository.createVendor(vendorData);
   }
