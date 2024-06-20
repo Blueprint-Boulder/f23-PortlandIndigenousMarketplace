@@ -190,7 +190,7 @@ export default function Profile({vendorService, violationService}) {
       </div>
       <>
         {openViolation && (
-          <ViolationModal closeModal={setOpenViolation} vendorId={id} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
+          <ViolationModal closeModal={setOpenViolation} vendorId={vendorId} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
         )}
         <div className={`${openViolation ? 'blur' : ''} w-full h-full mx-auto pb-16`}></div>
       </>
