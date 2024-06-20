@@ -105,12 +105,13 @@ const getAttendingVendors = async (req, res, next) => {
     const vendors = await db.manyOrNone(`
     SELECT 
         V.vendor_id,
-        V.name AS vendor_name,
+        V.name,
         V.phone_number,
         V.website,
-        V.email
+        V.email,
+        V.image
     FROM 
-        Vendors V
+        vendor_full V
     JOIN 
         EventRequests ER ON V.vendor_id = ER.vendor_id
     WHERE 

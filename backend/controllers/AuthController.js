@@ -15,7 +15,7 @@ const signToken = async (req, res, next) => {
   // Return the token in a cookie
   res.cookie('auth', token, {secure: false});
 
-  console.log('Token:', token);
+  // console.log('Token:', token);
 
   next();
 };
@@ -105,17 +105,52 @@ const verifyAdminToken = async (req, res, next) => {
 // Returns a middleware to verify the user has the correct permissions.
 // Setting a route that only admins can access.
 // USAGE: router.get('/route', verify('admin'), controller.method);
-const verify = (privilege) => {
+const verify = (privilege) => {  
   if (privilege === 'admin') {
     // Check the admin token
     return verifyAdminToken;
   } else if (privilege === 'vendor') {
-    // Check the vendor token
-    return verifyToken;
+    /*
+    Needed to make routes protected by 'vendor' allow admins to edit, or the logged in vendor.
+
+    Returns this middleware which will first check if the admin cookie exists, 
+      and if not checks the logged in vendor.
+    */
+    return (req, res, next) => {
+      if( req.cookies.auth_pim === undefined ){
+        return verifyToken(req, res, next);
+      } 
+
+      return verifyAdminToken(req, res, next);
+    }
   } else {
     // You shouldn't need to set privilege for any other use case.
     throw new Error('Privilege should be either vendor or admin.');
   }
 };
 
-module.exports = {signToken, verifyToken, verifyAdminToken, signAdminToken, verify};
+const canEditVendor = (req, res, next) => {
+  // If token was verified, res.locals should contain one of these
+  const {admin, vendor} = res.locals;
+
+  if (admin !== undefined) {
+    // Admin can edit vendor profiles
+
+    // console.log('Admin - allowing to edit.');
+    next();
+  }
+  else if(vendor !== undefined && vendor.vendor_id === parseInt(req.params.vendorId)){
+    // If logged in user has same ID as route param, allow
+
+    // console.log('VendorId matches param Id - allowing to edit.');
+    next();
+  }
+  else {
+    // If the user is not logged in or not the same vendor they're trying to edit, return forbidden.
+
+    // console.log('User shouldn\'t have access.');
+    return res.status(403).json({message: 'Forbidden'});
+  }
+}
+
+module.exports = {signToken, verifyToken, verifyAdminToken, signAdminToken, verify, canEditVendor};

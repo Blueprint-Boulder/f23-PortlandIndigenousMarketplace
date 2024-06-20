@@ -31,5 +31,6 @@ module.exports = {
     'require-jsdoc': 0,
     'max-len': 'off',
     'linebreak-style': 'off',
+    'react/prop-types': 'off',
   },
 };

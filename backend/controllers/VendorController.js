@@ -10,6 +10,9 @@ const {v4} = require('uuid');
 const mime = require('mime-types');
 const multer  = require('multer');
 
+// Delete old profile image
+const { unlink } = require('node:fs/promises');
+
 // TODO: add file upload limits
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -21,7 +24,7 @@ const storage = multer.diskStorage({
     const fileExt = mime.extension(file.mimetype);
     const fileName = `${uuid}.${fileExt}`;
 
-    console.log("Filename called");
+    console.log(`Filename: ${fileName}`);
 
     req.uuid = uuid;
     req.fileExt = fileExt;
@@ -188,16 +191,18 @@ const getSelfVendor = async (req, res, next) => {
 // Registers the vendor in the database
 const createVendor = async (req, res, next) => {
   // Get the values from the request body
-  const {name, email, phoneNumber, password, website, is_public} = req.body;
+  const {name, email, phoneNumber, password, website, instagram, facebook, twitter, tiktok, youtube, pinterest, is_public} = req.body;
 
-  // Checks if the required fields are present
-  if (!password || !email || !name) {
+  // Checks if the required fields are present, password is no longer required
+  if (!email || !name) {
     console.log(req.body);
     return res.status(400).json({
       error: 'Missing required fields',
       data: req.body,
     });
   }
+
+  // Don't think we necessarily need to change the password everytime, so I made it conditional
 
   // Hashes the password using bcrypt
   let passwordHash;
@@ -209,8 +214,6 @@ const createVendor = async (req, res, next) => {
     res.status(495).json({error: "Error hashing password"});
     return;
   }
-
-  // Inserts the vendor into the database
   try {
     await db.none(
         'INSERT INTO Vendors (\
@@ -219,9 +222,15 @@ const createVendor = async (req, res, next) => {
                 phone_number, \
                 password, \
                 website, \
-                is_public\
-            ) VALUES ($1, $2, $3, $4, $5, $6)',
-        [name, email, phoneNumber, passwordHash, website, is_public],
+                is_public,\
+                instagram, \
+                facebook, \
+                twitter, \
+                tiktok, \
+                youtube,\
+                pinterest \
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
+        [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pinterest, is_public],
     );
   } catch (err) {
     // Duplicate emails are not allowed
@@ -239,6 +248,9 @@ const createVendor = async (req, res, next) => {
   }
 
   next();
+ 
+  // Inserts the vendor into the database
+  
 };
 
 const createEventRequest = async (req, res, next) => {
@@ -325,12 +337,19 @@ const updateAuthenticatedVendor = async (req, res, next) => {
 
 const updateVendor = async (req, res, next) => {
   const {vendorId} = req.params;
+  console.log('request body: ', req.body);
   const {
     name,
     email,
-    phone_number,
-    password,
+    phoneNumber,
     website,
+    instagram,
+    facebook,
+    twitter,
+    tiktok,
+    youtube,
+    pinterest,
+    id,
     is_public,
   } = req.body;
 
@@ -375,8 +394,8 @@ const updateVendor = async (req, res, next) => {
 
 // Upload a profile pic. If one exists for the vendor, remove it.
 const uploadProfilePic = (req, res, next) => {
-  console.log(req.body);
-  
+  console.log('called upload profile pic');
+    
   // img is the form field for the profile pic
   upload(req, res, async (err) => {
     if (err instanceof multer.MulterError){
@@ -390,11 +409,17 @@ const uploadProfilePic = (req, res, next) => {
     }
 
     // Vendor id for database entry
-    const vendor_id = res.locals.vendor['vendor_id'];
+    // const vendor_id = res.locals.vendor['vendor_id'];
+    const vendor_id = req.params.vendorId;
 
     // Get file name from request
     const uuid = req.uuid;
     const fileExt = req.fileExt;
+
+    if(vendor_id == undefined || uuid == undefined || fileExt == undefined){
+      console.log('Error - Missing fields for file upload.');
+      return res.status(500).json({message: 'Bad request - one or more fields were not sent.'});
+    }
 
     // Upload metadata to database
     try {
@@ -403,17 +428,55 @@ const uploadProfilePic = (req, res, next) => {
         [vendor_id, uuid, fileExt]);
     } catch (err) {
       // Duplicate emails are not allowed
-      if (err.code === '23505') {
-        res.status(400).json({error: 'This vendor already has a profile pic, or the UUID creation failed to be unique.'});
-        return;
+      if (err !== undefined && err.code === '23505') {
+        // Get the old profile image
+        const old_file = await db.oneOrNone(
+          `SELECT * FROM ProfilePictures WHERE vendor_id = $1`,
+          [vendor_id]
+        )
+
+        // Delete old profile image in filesystem
+        // https://nodejs.org/api/fs.html#promise-example
+        const deleteStatus = (async function(path) {
+          try {
+            await unlink(path);
+            console.log(`successfully deleted ${path}`);
+
+            return true;
+          } catch (error) {
+            console.error('Failed to delete old profile image: ', error.message);
+            res.status(500).json({msg: "Failed to delete old profile image", error: err});
+            return false;
+          }
+        })(`/profilepics/${old_file['image_key']}.${old_file['file_ext']}`);
+
+        if(deleteStatus){
+          try{
+            // Retry file upload
+            await db.none(
+              `INSERT INTO ProfilePictures (vendor_id, image_key, file_ext) VALUES ($1, $2, $3) ON CONFLICT (vendor_id) DO UPDATE SET vendor_id=$1, image_key=$2, file_ext=$3`,
+              [vendor_id, uuid, fileExt]);
+
+            console.log("Uploaded new image.");
+            res.status(200).send();
+          } catch (error){
+            console.log(error);
+            res.status(500).json({error: error});
+            return;
+          }
+          
+        } else {
+          return;
+        }
       }
 
-      // TODO: If database entry fails, delete photo from filesystem!
-
-      // Other internal error
-      console.log(err);
-      res.status(500).json({error: err});
-      return;
+      // If we didn't send a response by now, send generic fail?
+      if(err != undefined && !res.headersSent){
+        // Other internal error
+        console.log(err);
+        res.status(500).json({error: err});
+        return;
+      }
     }
 
     next();
@@ -423,14 +486,14 @@ const uploadProfilePic = (req, res, next) => {
 const verifyVendorHasSameVendorId = async (req, res, next) => {
   const vendor = res.locals.vendor;
   const vendorId = Number(req.params.vendorId);
-  console.log("Vendor:", vendor);
-  console.log("Vendor ID:", vendorId);
+  // console.log("Vendor:", vendor);
+  // console.log("Vendor ID:", vendorId);
 
   if (vendor.vendor_id === vendorId) {
-    console.log("Vendor has same vendor ID");
+    // console.log("Vendor has same vendor ID");
     next();
   } else {
-    console.log("TruthValue:", vendor.vendor_id === vendorId)
+    console.log("Vendor trying to edit someone else");
     res.status(403).json({error: 'Forbidden'});
   }
 }

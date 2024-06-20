@@ -17,7 +17,13 @@ CREATE TABLE IF NOT EXISTS Vendors (
     phone_number VARCHAR(31),
     website VARCHAR(2083),
     email VARCHAR(320) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,  -- Remember to hash the passwords before storing
+    password VARCHAR(255) NOT NULL,,  -- Remember to hash the passwords before storing
+    instagram VARCHAR(255),
+    facebook VARCHAR(255),
+    twitter VARCHAR(255),
+    tiktok VARCHAR(255),
+    youtube VARCHAR(255),
+    pinterest VARCHAR(255)
     is_public BOOLEAN DEFAULT FALSE
 );
 
@@ -56,7 +62,8 @@ CREATE TABLE IF NOT EXISTS EventRequests (
     event_id INT REFERENCES Events(event_id),
     approved BOOLEAN DEFAULT NULL,
     requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    approved_at TIMESTAMP
+    approved_at TIMESTAMP,
+    UNIQUE(vendor_id, event_id)
 );
 
 -- Indexes (as per the diagram)
@@ -65,10 +72,15 @@ CREATE INDEX idx_vendor_email ON Vendors(email);
 
 -- Insert initial admin user - Uncomment and modify for initial setup
 INSERT INTO Admins (name, email, password)
+
 VALUES ('Admin', 'admin@pim.com', crypt('pim', gen_salt('bf')));
+
+INSERT INTO Vendors (name, email, password, instagram, facebook, twitter, tiktok, youtube, pinterest)
+VALUES ('Vendor', 'vendor@pim.com', crypt('pim', gen_salt('bf')), 'www.instagram.com', 'www.facebook.com', 'www.twitter.com', 'www.tiktok.com', 'www.youtube.com', 'www.pinterest.com');
 
 CREATE VIEW vendor_full AS
     SELECT A.*, NULLIF(CONCAT(B.image_key, '.', B.file_ext), '.') AS image 
     FROM Vendors AS A  
     LEFT JOIN ProfilePictures AS B
     ON A.vendor_id = B.vendor_id;
+

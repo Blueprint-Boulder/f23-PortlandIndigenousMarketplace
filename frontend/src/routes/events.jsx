@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Context} from '../services/context';
 import {Link} from 'react-router-dom';
 import FooterPad from '../components/footerpad';
+// import moment from 'moment';
 
 
 import DatePicker from 'react-datepicker';
@@ -22,7 +23,6 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
 
 
   return (
-
     <form action="" className='grid z-50 gap-2 p-4 lg:grid-cols-12 grid-cols-3 left-0 right-0 top-0 bottom-0 mt-auto mb-auto h-4/6 lg:ml-auto lg:mr-auto rounded-sm lg:w-8/12 w-full fixed bg-grey-1'
       onSubmit={() => handleSubmit(eventInfo)}>
       <div className='lg:col-span-2 col-span-1 my-auto'>Event Name:</div>
@@ -43,7 +43,7 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
         wrapperClassName='lg:col-span-10 col-span-2 rounded-md shadow-md p-2 bg-white '
         className='lg:col-span-10 w-full rounded-md h-max  absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
         timeCaption="Time"
-        dateFormat="MMMM d, yyyy h:mm aa"
+        dateFormat="MMMM d, yyyy h:mm"
       />
       <div className='lg:col-span-2 col-span-1 my-auto'>End Time:</div>
       <DatePicker
@@ -57,7 +57,7 @@ function EventModal({editEvent, handleSubmit, closeModal, currEvent}) {
         className='lg:col-span-10 w-full h-max rounded-md absolute top-0 bottom-0 bg-white mt-auto mb-auto p-1'
         required
         timeCaption="Time"
-        dateFormat="MMMM d, yyyy h:mm aa"
+        dateFormat="MMMM d, yyyy h:mm"
       />
       <div className='lg:col-span-2 col-span-1 my-auto'>Capacity:</div>
       <input className='lg:col-span-10 col-span-2 rounded-md shadow-md p-1' type="text" id='vendor-capacity' name='location' value={eventInfo.vendorCapacity} onChange={(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})} />
@@ -131,28 +131,35 @@ export default function Events({eventService}) {
     setModal(false);
   }
 
-  const eventDisplay = (event) => (
-    <div className="bg-white shadow-lg relative rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
-      <div className="mt-2">
-        <div className="text-lg font-semibold text-gray-900">{event.name}</div>
-        <div className="text-grey-5">{event.description}</div>
-        <div className="mt-3 text-grey-5">{event.date} • {event.starttime} - {event.endtime}</div>
-        <div className="mt-1 text-sm text-grey-5 relative">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8C15 9.65685 13.6569 11 12 11Z" />
-          </svg>
-          {event.location}
+  const eventDisplay = (event) => {
+    const start = new Date(`${event.startDate} ${event.starttime}`);
+    const end = new Date(`${event.endDate} ${event.endtime}`);
 
+    return (
+      <div className="bg-white shadow-lg right-0 left-0 rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
+        <div className="mt-2">
+          <div className="text-lg font-semibold text-gray-900">{event.name}</div>
+          <div className="text-grey-5">{event.description}</div>
+          <div className="mt-3 text-grey-5">
+            {event.date} • {start.toLocaleTimeString('en-US', {timeStyle: 'short'})} - {end.toLocaleTimeString('en-US', {timeStyle: 'short'})}
+          </div>
+          <div className="mt-1 text-sm text-grey-5 relative">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8C15 9.65685 13.6569 11 12 11Z" />
+            </svg>
+            {event.location}
+          </div>
+          <Link to={`/events/${event.eventId}`} className="mt-2 text-blue p-2 rounded-md inline-block">
+            View Event Details
+          </Link>
+          {user && user.isadmin && <button onClick={() => {
+            setEditEvent(true); setModal(true); setCurrEvent(event);
+          }} className='hover:bg-blue absolute right-0 bottom-0 mr-6 mb-6 text-md text-blue px-1  bg-white'>Edit</button>}
         </div>
-        <Link to={`/events/:${event.eventId}`} className="mt-2 text-blue p-2 rounded-md inline-block">
-          View Event Details
-        </Link>
-        {user && user.isadmin && <button onClick={() => {
-          setEditEvent(true); setModal(true); setCurrEvent(event);
-        }} className='hover:bg-blue absolute right-0 bottom-0 mr-6 mb-6 text-md text-blue px-1  bg-white'>Edit</button>}
       </div>
-    </div>
-  );
+    );
+  };
+
 
   if (error) {
     return (
@@ -174,7 +181,7 @@ export default function Events({eventService}) {
       {modal && (
         <EventModal editEvent={editEvent} handleSubmit={handleSubmit} closeModal={closeModal} currEvent={currEvent}/>
       )}
-      <div className={`${modal && 'blur'} w-full mx-auto flex flex-col justify-center pb-16`}>
+      <div className={`${modal && 'blur-sm'} w-full mx-auto flex flex-col justify-center pb-16`}>
         <div className='static'>
           {!modal && user && user.isadmin && <button className='bg-white hover:bg-blue shadow-sm absolute right-0 text-black w-max m-2 p-2 rounded-lg'
             onClick={() => {

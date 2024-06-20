@@ -1,24 +1,34 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCaretDown, faCheck, faXmark} from '@fortawesome/free-solid-svg-icons';
-// import logo from '../assets/PIM_logo_white.png';
 import bLogo from '../assets/PIM_logo_black.png';
 import {Context} from '../services/context.jsx';
 import FooterPad from '../components/footerpad.jsx';
+import EventVendorsDisplay from '../components/EventVendorsDisplay.jsx';
+import User from '../objects/User.js';
+import mapsicon from '../assets/mapsicon.png';
+
+import EditEventModal from '../components/EditEventModal.jsx';
+
+const adminButtonClasses = `text-white font-semibold py-2 px-1 drop-shadow-xl rounded-md bg-black`;
 
 export default function Event({eventService, vendorService}) {
   const [event, setEvent] = useState(null);
-  const [about, setAbout] = useState(false);
   const navigate = useNavigate();
   const {eventId} = useParams();
   const {user, setMessage, setBad} = useContext(Context);
-  const [requests, setRequests] = useState([]);
-  const [approved, setApproved] = useState([]);
-  const [pending, setPending] = useState([]);
-  const [update, setUpdate] = useState(false);
 
+  const [requests, setRequests] = useState([]);
+  const [vendors, setVendors] = useState([]);
+
+  // When true, shows the approved vendors to attend an event. On false, shows the requested vendors.
+  const [showApproved, setShowApproved] = useState(true);
+
+  // eslint-disable-next-line
+  const [loggedUser, setLoggedUser] = useState(User.getLoggedInUser());
+
+  // When true, the edit event modal will be shown
+  const [showEditModal, setShowEditModal] = useState(false);
 
   /*
     Make location a link that on click redirects to that same
@@ -29,15 +39,12 @@ export default function Event({eventService, vendorService}) {
    let googleMapsDirectionLink = https://www.google.com/maps/dir/?api=1&destination=?{encodedAdress};
   */
 
+
   useEffect(() => {
-    // if (!user) {
-    //   setMessage('Please log in');
-    //   setBad(true);
-    //   navigate('/');
-    // }
-    const fetchData = async () => {
-      console.log('Event id', eventId);
-      const eventData = await eventService.getEventById(parseInt(eventId.slice(1)));
+    (async () => {
+      // Load the event data from database
+      // console.log('Event id', eventId);
+      const eventData = await eventService.getEventById(parseInt(eventId));
       if (!eventData) {
         setMessage('Event not found');
         setBad(true);
@@ -45,71 +52,76 @@ export default function Event({eventService, vendorService}) {
       } else {
         setEvent(eventData);
       }
-      // try {
-      //   if (user.isadmin) {
-      //     const addtendingVendors = await eventService.getAttendingVendors(parseInt(eventId.slice(1)));
-      //     console.log('Attending vendors', addtendingVendors);
-      //     if (!addtendingVendors) {
-      //       setMessage('Failed to fetch attending vendors');
-      //       setBad(true);
-      //     } else {
-      //       setAttendingVendors(addtendingVendors);
-      //     }
-      //   }
-      // } catch (error) {
-      //   console.log('Error fetching attending vendors', error);
-      // }
 
-      try {
-        if (user.isadmin) {
-          const requests = await eventService.getEventRequests(parseInt(eventId.slice(1)));
-          console.log('Requests', requests);
-          if (!requests) {
-            setMessage('Failed to fetch requests');
-            setBad(true);
-          } else {
-            setRequests(requests);
-            console.log('Requests', requests);
-            const newapproved = [];
-            const newpending = [];
-            for (let i = 0; i < requests.length; i++) {
-              if (requests[i].approved) {
-                newapproved.push(requests[i]);
-              } else {
-                newpending.push(requests[i]);
-              }
-            }
-            for (let i = 0; i < newapproved.length; i++) {
-              const vendor = await vendorService.getVendorById(newapproved[i].vendorId);
-              newapproved[i] = vendor;
-            }
-            for (let i = 0; i < newpending.length; i++) {
-              const vendor = await vendorService.getVendorById(newpending[i].vendorId);
-              newpending[i] = vendor;
-            }
-            setApproved(newapproved);
-            setPending(newpending);
-          }
+      console.log('Event', eventData);
+
+      // Load all requests
+      if (loggedUser && loggedUser.isadmin) {
+        // console.log('Checking requests as admin.');
+
+        let reqs;
+        try {
+          reqs = await eventService.getEventRequests(parseInt(eventId));
+        } catch (e) {
+          console.log('No requests found.');
+          return;
         }
-      } catch (error) {
-        console.log('Error fetching requests', error);
+
+        if (!reqs) {
+          setMessage('Failed to fetch requests for event.');
+          setBad(true);
+        } else {
+          setRequests(reqs);
+          // console.log('Requests', requests);
+
+          // Load vendors
+          const vends = [];
+          reqs.forEach(async (req) => {
+            const vend = await vendorService.getVendorById(req.vendorId);
+            if (!vend) {
+              console.log('Error: You should not be seeing this! There was an EventRequest for a vendor that couldn\'t be found.');
+            } else {
+              vends.push(vend);
+            }
+          });
+
+          setVendors(vends);
+        }
+      } else { // Load only approved vendors
+        console.log('Checking requests as vendor');
+        setRequests([]);
+
+        let reqs;
+        try {
+          reqs = await eventService.getAttendingVendors(parseInt(eventId));
+        } catch (e) {
+          console.log('No eventRequests found.');
+          return;
+        }
+
+        // console.log('AttendingVendors', reqs);
+
+        if (!reqs) {
+          setMessage('Failed to fetch requests for event.');
+          setBad(true);
+        } else {
+          setVendors(reqs);
+        }
       }
-    };
-    fetchData();
-  }, [update]);
+    })();
+  }, [loggedUser]);
 
   if (!event) {
     return <div>Event Not Found</div>;
   }
 
-  const {name, location, date, starttime, endtime, description} = event;
-  // const vendorImages = attendingVendors.map((vendor) => {
-  //   'image' in vendor && vendor.image;
-  // });
+  const {name, location, starttime, endtime, description} = event;
 
-  // const toggleVendor = () => {
-  //   setVendorOpen(!vendorOpen); // Ensure `vendorOpen` state is used properly
-  // };
+  // Parses the start / end time to a human readable format
+  const timeFormat = new Intl.DateTimeFormat('en', {
+    timeStyle: 'short',
+    dateStyle: 'short',
+  });
 
   async function handleRegister() {
     const res = await eventService.createEventRequest(event.eventId, user.id);
@@ -122,102 +134,57 @@ export default function Event({eventService, vendorService}) {
     }
   }
 
-  async function updateRequest(vendorId) {
-    let reqId = requests.filter((req) => req.vendorId === vendorId);
-    const approved = !reqId[0].approved;
-    reqId = reqId[0].requestId;
-    console.log('Req id', reqId);
-    const res = await eventService.updateEventRequest(reqId, {approved: approved});
-    console.log('Res status', res);
-    if (!res) {
-      setMessage('Failed to update request');
-      setBad(true);
-    } else {
-      setMessage('Request Updated');
-    }
-    setUpdate(!update);
-  }
-
-  // function mapRequests() {
-  //   if (requests.length === 0) {
-  //     return;
-  //   }
-  //   return requests.map((request) => {
-  //     return (
-  //       <div key={request.request_id} className="flex flex-row justify-between">
-  //         <div>{request.vendorId}</div>
-  //         <div>{request.approved ? 'Approved' : 'Pending'}</div>
-  //       </div>
-  //     );
-  //   });
-
-
   const encodedAddress = encodeURIComponent(location);
   // one below pulls up directions
   // const googleMapsDirectionLink =`https://www.google.com/maps/dir/?api=1&destination=?${encodedAddress}`;
   // just append the encode address to the place route
   const googleMapDirectionLink = `https://www.google.com/maps/place/${encodedAddress}`;
 
-  return (
-    <div id="Event-content" className="overflow-scroll w-full h-full flex flex-col items-center mt-2">
-      {/* <button className="self-start ml-2 fixed" onClick={() => navigate(-1)}>
-        <FontAwesomeIcon icon={faAnglesLeft} />
-      </button> */}
-      <img src={bLogo} alt="Event Logo" className="w-2/3 lg:w-1/3 md:w-1/3 py-0 bg-clip-padding bg-white drop-shadow-xl rounded-xl" />
-      <div className="text-2xl mt-2 font-bold tracking-wide">{name}</div>
-      <div className='flex flex-row mt-2'>
-        <div className="mr-2">About</div>
-        <button onClick={() => setAbout(!about)}><FontAwesomeIcon icon={faCaretDown} /></button>
-      </div>
-      <div className={`${about ? 'relative text-gray-800 m-1 bg-opacity-100 bg-white drop-shadow-xl rounded-md p-2 w-2/3' : 'hidden'}`}>
-        {description}
-      </div>
-      <div className='mr-1 mt-2'><a href={googleMapDirectionLink}>{location}</a></div>
-      <div className='mr-2 mt-2'>{date} | {starttime} - {endtime}</div>
-      {(user && !user.isadmin) ?
-      <button
-        className="mt-3 text-gray-800 font-semibold py-2 px-1 drop-shadow-xl rounded-md bg-white w-24 click:text-white"
-        onClick={() => handleRegister()}
-      >Register</button> :
-      ('id' in user )?
-      <></> :
-      <div className='font-bold text-lg my-4'>Please login to request attendance</div>
-      }
-      <hr className='mt-3 mb-2 border-t-2 border-gray-600 w-3/4' />
-      {user && user.isadmin &&
-      <>
-        <div className='grid grid-cols-2 divide-x '>
-
-          <div alt='Attending Vendors' className='mt-1 text-base p-2 font-medium italic tracking-wide border-b'>Approved Requests</div>
-          <div className='mt-1 text-base font-medium italic tracking-wide p-2 border-b'>Pending Requests</div>
-          <div alt='vendorImages' className='border-none'>
-            {approved.map((vendor) => (
-              // <div key={vendor.id} className='flex flex-row justify-between w-full mx-4 items-center'>
-              //   <img key={vendor.image} src={vendor.image} alt='vendors image' onClick={toggleVendor} className='w-12 h-12 bg-white rounded-md drop-shadow-xl' />
-              //   <div className='text-xl' onClick={() => updateRequest(vendor.id)}><FontAwesomeIcon icon={faXmark} /></div>
-              // </div>
-              <div key={vendor.request_id} className='flex flex-row justify-between p-2'>
-                <div>{vendor.name}</div>
-                <div className='text-xl' onClick={() => updateRequest(vendor.id)}><FontAwesomeIcon icon={faXmark} /></div>
-              </div>
-            ))}
+  return (<>
+    {showEditModal && <EditEventModal event={event} eventService={eventService} setShowEditModal={setShowEditModal} />}
+    <div id="Event-content" className="overflow-y-scroll w-full h-full flex flex-col gap-6 items-center py-2">
+      <div className='flex flex-row gap-4 px-10 py-6 bg-white w-10/12 rounded-md drop-shadow-md items-center'>
+        <img src={bLogo} alt="Event Logo" className="w-1/3 basis-1/3 bg-clip-padding bg-white drop-shadow-xl rounded-xl" />
+        <div className='flex flex-col gap-1 basis-2/3 w-2/3'>
+          <div className={`flex flex-row ${loggedUser && loggedUser.isadmin ? 'justify-between' : 'justify-left'}`}>
+            <div className="text-4xl mt-2 font-bold tracking-wide">{name}</div>
+            {
+              loggedUser && loggedUser.isadmin && <button className={`${adminButtonClasses} p-1 h-min -translate-y-3 translate-x-4`} onClick={()=>{
+                setShowEditModal(true);
+              }}>
+              Edit Event
+              </button>
+            }
           </div>
-          <div className='mr-4'>
-            {pending.map((vendor) => {
-              return (
-                <div key={vendor.request_id} className='flex flex-row justify-between p-2'>
-                  <div>{vendor.name}</div>
-                  <div className='text-xl' onClick={() => updateRequest(vendor.id)}><FontAwesomeIcon icon={faCheck} /></div>
-                </div>
-              );
-            })}
-          </div>
+          <a href={googleMapDirectionLink} className='flex flex-row gap-1'><img src={mapsicon} className='w-4 h-auto'></img>{location}</a>
+          <div className='mr-2 mt-2'>{`${timeFormat.format(starttime)} - ${timeFormat.format(endtime)}`}</div>
         </div>
-      </>
+      </div>
+      {
+        description && <div className='flex flex-row justify-left gap-3 bg-white w-10/12 rounded-md drop-shadow-lg p-10'>
+          <p className='text-slate-500 font-semibold'>Description</p>
+          <p>{description}</p>
+        </div>
       }
-      <FooterPad/>
+      {(user && !user.isadmin) ?
+        <button
+          className={`${adminButtonClasses} py-2 px-1 w-24`}
+          onClick={() => handleRegister()}
+        >Register</button> : <></>
+      }
+      <div className='flex flex-col gap-3 items-center'>
+        <p className='text-2xl font-bold'>{showApproved ? 'Attending Vendors' : 'Pending Requests'} ({showApproved ? vendors.length : requests.filter((req) => !req.approved).length})</p>
+        {
+          user && user.isadmin && <button className={`${adminButtonClasses} px-5 py-2 w-4/6`}
+            onClick={() => {
+              setShowApproved(!showApproved);
+            }}>Show {showApproved ? 'Pending' : 'Attending'}</button>
+        }
+      </div>
+      <EventVendorsDisplay showApproved={showApproved} vendors={vendors} requests={requests} eventService={eventService}></EventVendorsDisplay>
+      <FooterPad />
     </div>
-
+  </>
   );
 }
 
