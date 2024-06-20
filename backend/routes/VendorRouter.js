@@ -3,8 +3,11 @@ const router = express.Router();
 const {
   getVendor,
   getVendors,
+  getPublicVendors,
   createVendor,
   getVendorById,
+  getPublicVendorById,
+  getSelfVendor,
   authenticateVendor,
   createEventRequest,
   getEventRequest,
@@ -29,10 +32,19 @@ const {
 router.post('/login', getVendor, authenticateVendor, signToken, sendSuccessResponse);
 
 // Fetches all vendors
-router.get('/', getVendors, sendSuccessResponse);
+router.get('/', verify('admin'), getVendors, sendSuccessResponse);
+
+// Fetches public vendors
+router.get('/public', getPublicVendors, sendSuccessResponse);
 
 // Fetches a single vendor by ID
 router.get('/:vendorId', getVendorById, sendSuccessResponse);
+
+// Fetches a single vendor by ID that is public
+router.get('/public/:vendorId', verify('admin'), getPublicVendorById, sendSuccessResponse);
+
+// Fetches vendor that is self
+router.get('/self', verify('vendor'), getSelfVendor, sendSuccessResponse);
 
 // Creates a new vendor
 router.post('/', createVendor, sendSuccessResponse);

@@ -13,12 +13,42 @@ export default class VendorsRepository {
     }
   }
 
+  async getPublicVendors() {
+    try {
+      const response = await this.httpClient.axiosInstance.get('/vendors/public');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching public vendors');
+      return undefined;
+    }
+  }
+
   async getVendorById(vendorId) {
     try {
       const response = await this.httpClient.axiosInstance.get(`/vendors/${vendorId}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching vendor with ID ${vendorId}:`);
+      return undefined;
+    }
+  }
+
+  async getPublicVendorById(vendorId) {
+    try {
+      const response = await this.httpClient.axiosInstance.get(`/vendors/public/${vendorId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching public vendor with ID ${vendorId}:`);
+      return undefined;
+    }
+  }
+
+  async getSelfVendor() {
+    try {
+      const response = await this.httpClient.axiosInstance.get('/vendors/self');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching self vendor:');
       return undefined;
     }
   }

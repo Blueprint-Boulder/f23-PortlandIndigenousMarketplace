@@ -105,6 +105,26 @@ const getVendors = async (req, res, next) => {
   }
 };
 
+const getPublicVendors = async (req, res, next) => {
+  try {
+    // Retrieve all public vendors from the database
+    const vendors = await db.manyOrNone(
+        'SELECT * FROM vendor_full WHERE is_public = TRUE',
+    );
+    // If vendors are found, add them to res.locals.data
+    if (vendors.length) {
+      res.locals.data = vendors;
+      next(); // Proceed to the next middleware or route handler
+    } else {
+      // If no vendors are found, send a message indicating this
+      res.status(404).json({message: 'No vendors found'});
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: 'Internal Server Error'});
+  }
+};
+
 const getVendorById = async (req, res, next) => {
   const {vendorId} = req.params;
 
@@ -126,10 +146,52 @@ const getVendorById = async (req, res, next) => {
   }
 };
 
+const getPublicVendorById = async (req, res, next) => {
+  const {vendorId} = req.params;
+
+  try {
+    const vendor = await db.oneOrNone(
+        'SELECT * FROM vendor_full WHERE vendor_id = $1 AND is_public = TRUE',
+        [vendorId],
+    );
+    if (vendor) {
+      // Store the vendor data in res.locals.data for the middleware
+      res.locals.data = vendor;
+      next(); // Pass control to the next middleware
+    } else {
+      res.status(404).json({message: 'Vendor not found'});
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({error: 'Internal Server Error'});
+  }
+};
+
+const getSelfVendor = async (req, res, next) => {
+  const vendor = res.locals.vendor;
+
+  try {
+    const selfVendor = await db.oneOrNone(
+        'SELECT * FROM vendor_full WHERE vendor_id = $1',
+        [vendor.vendor_id],
+    );
+    if (selfVendor) {
+      // Store the vendor data in res.locals.data for the middleware
+      res.locals.data = selfVendor;
+      next(); // Pass control to the next middleware
+    } else {
+      res.status(404).json({message: 'Vendor not found'});
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({error: 'Internal Server Error'});
+  }
+};
+
 // Registers the vendor in the database
 const createVendor = async (req, res, next) => {
   // Get the values from the request body
-  const {name, email, phoneNumber, password, website, instagram, facebook, twitter, tiktok, youtube, pinterest} = req.body;
+  const {name, email, phoneNumber, password, website, instagram, facebook, twitter, tiktok, youtube, pinterest, is_public} = req.body;
 
   // Checks if the required fields are present, password is no longer required
   if (!email || !name) {
@@ -159,15 +221,16 @@ const createVendor = async (req, res, next) => {
                 email, \
                 phone_number, \
                 password, \
-                website,\
+                website, \
+                is_public,\
                 instagram, \
                 facebook, \
                 twitter, \
                 tiktok, \
                 youtube,\
                 pinterest \
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
-        [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pinterest],
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
+        [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pinterest, is_public],
     );
   } catch (err) {
     // Duplicate emails are not allowed
@@ -287,89 +350,46 @@ const updateVendor = async (req, res, next) => {
     youtube,
     pinterest,
     id,
+    is_public,
   } = req.body;
 
- 
-  if('password' in req.body){
-    // Hashes the password using bcrypt
-    const {password} = req.body;
-    let passwordHash;
-    try {
-      const salt = await genSalt(10);
-      passwordHash = await hash(password, salt);
-    } catch (err) {
-      console.log(err);
-      res.status(495).json({error: "Error hashing password"});
-      return;
-    }
-    try {
-      await db.none(
-          'UPDATE Vendors SET\
-                  name = $1, \
-                  email = $2, \
-                  phone_number = $3, \
-                  password = $4, \
-                  website = $5,\
-                  instagram = $6, \
-                  facebook = $7, \
-                  twitter = $8, \
-                  tiktok = $9, \
-                  youtube = $10,\
-                  pinterest = $11 \
-              WHERE vendor_id = $12',
-          [name, email, phoneNumber, passwordHash, website, instagram, facebook, twitter, tiktok, youtube, pinterest, id],
-      );
-    } catch (err) {
-      // Duplicate emails are not allowed
-      if (err.code === '23505') {
-        res
-            .status(400)
-            .json({error: 'A vendor with that email already exists'});
-        return;
-      }
-  
-      // Other internal error
-      console.log(err);
-      res.status(500).json({error: "Internal Server Error"});
-      return;
-    }
-  
-    next();
-  } else {
-    try {
-      await db.none(
-        'UPDATE Vendors SET\
-          name = $1, \
-          email = $2, \
-          phone_number = $3, \
-          website = $4,\
-          instagram = $5, \
-          facebook = $6, \
-          twitter = $7, \
-          tiktok = $8, \
-          youtube = $9,\
-          pinterest = $10 \
-      WHERE vendor_id = $11',
-      [name, email, phoneNumber, website, instagram, facebook, twitter, tiktok, youtube, pinterest, id],
-      );
-    } catch (err) {
-      // Duplicate emails are not allowed
-      if (err.code === '23505') {
-        res
-            .status(400)
-            .json({error: 'A vendor with that email already exists'});
-        return;
-      }
-  
-      // Other internal error
-      console.log(err);
-      res.status(500).json({error: "Internal Server Error"});
-      return;
-    }
-  
-    next();
+  // Hashes the password using bcrypt
+  let passwordHash;
+  try {
+    const salt = await genSalt(10);
+    passwordHash = await hash(password, salt);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({error: err});
+    return;
   }
 
+  try {
+    await db.none(
+        'UPDATE Vendors SET \
+                name = $1, \
+                email = $2, \
+                phone_number = $3, \
+                password = $4, \
+                website = $5, \
+                is_public = $6 \
+            WHERE vendor_id = $7',
+        [name, email, phone_number, passwordHash, website, is_public, vendorId],
+    );
+  } catch (err) {
+    // Duplicate emails are not allowed
+    if (err.code === '23505') {
+      res.status(400).json({error: 'A vendor with that email already exists'});
+      return;
+    }
+
+    // Other internal error
+    console.log(err);
+    res.status(500).json({error: err});
+    return;
+  }
+
+  next();
 };
 
 // Upload a profile pic. If one exists for the vendor, remove it.
@@ -481,8 +501,11 @@ const verifyVendorHasSameVendorId = async (req, res, next) => {
 module.exports = {
   getVendor,
   getVendors,
+  getPublicVendors,
   createVendor,
   getVendorById,
+  getPublicVendorById,
+  getSelfVendor,
   authenticateVendor,
   createEventRequest,
   getEventRequest,

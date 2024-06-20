@@ -29,6 +29,40 @@ export default class VendorsService {
     ));
   }
 
+  async getPublicVendors() {
+    const vendorsData = await this.vendorsRepository.getPublicVendors();
+    if (vendorsData == undefined) {
+      return undefined;
+    }
+
+    return vendorsData.map((data) => new Vendor(
+        data.vendor_id,
+        data.name,
+        data.email,
+        data.website,
+        data.phone_number,
+        data.image,
+        data.is_public,
+    ));
+  }
+
+  async getPublicVendors() {
+    const vendorsData = await this.vendorsRepository.getPublicVendors();
+    if (vendorsData == undefined) {
+      return undefined;
+    }
+
+    return vendorsData.map((data) => new Vendor(
+        data.vendor_id,
+        data.name,
+        data.email,
+        data.website,
+        data.phone_number,
+        data.image,
+        data.is_public,
+    ));
+  }
+
   async getVendorById(vendorId) {
     const vendorData = await this.vendorsRepository.getVendorById(vendorId);
     if (vendorData) {
@@ -39,6 +73,37 @@ export default class VendorsService {
           vendorData.website,
           vendorData.phone_number,
           vendorData.image,
+          vendorData.is_public,
+      );
+    };
+
+    return undefined;
+  }
+
+  async getPublicVendorById(vendorId) {
+    const vendorData = await this.vendorsRepository.getVendorById(vendorId);
+    return new Vendor(
+        vendorData.vendor_id,
+        vendorData.name,
+        vendorData.email,
+        vendorData.website,
+        vendorData.phone_number,
+        vendorData.image,
+        vendorData.is_public,
+    );
+  }
+
+  async getSelfVendor() {
+    const vendorData = await this.vendorsRepository.getOwnProfile();
+    if (vendorData) {
+      return new Vendor(
+          vendorData.vendor_id,
+          vendorData.name,
+          vendorData.email,
+          vendorData.website,
+          vendorData.phone_number,
+          vendorData.image,
+          vendorData.is_public,
           vendorData.instagram,
           vendorData.facebook,
           vendorData.twitter,
@@ -75,6 +140,7 @@ export default class VendorsService {
       youtube: vendor.youtube,
       tiktok: vendor.tiktok,
       pinterest: vendor.pinterest,
+      is_public: data.is_public,
     };
     return await this.vendorsRepository.createVendor(vendorData);
   }
@@ -95,26 +161,21 @@ export default class VendorsService {
       youtube: vendor.youtube,
       tiktok: vendor.tiktok,
       pinterest: vendor.pinterest,
+      is_public: vendor.is_public,
     };
     return await this.vendorsRepository.updateSelfVendor(vendorData);
   }
 
   async updateVendor(vendor) {
-    // const vendorData = {
-    //   name: vendor.name,
-    //   email: vendor.email,
-    //   website: vendor.website,
-    //   phoneNumber: vendor.phoneNumber,
-    //   image: vendor.image,
-    //   instagram: vendor.instagram,
-    //   facebook: vendor.facebook,
-    //   twitter: vendor.twitter,
-    //   youtube: vendor.youtube,
-    //   tiktok: vendor.tiktok,
-    //   pinterest: vendor.pinterest,
-
-    // };
-    return await this.vendorsRepository.updateVendor(vendor.id, vendor);
+    const vendorData = {
+      name: vendor.name,
+      email: vendor.email,
+      website: vendor.website,
+      phoneNumber: vendor.phoneNumber,
+      image: vendor.image,
+      is_public: vendor.is_public,
+    };
+    return await this.vendorsRepository.updateVendor(vendor.vendorId, vendorData);
   }
 
   async deleteVendor(vendorId) {

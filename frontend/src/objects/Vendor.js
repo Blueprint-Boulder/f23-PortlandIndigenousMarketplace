@@ -10,7 +10,7 @@ export default class Vendor {
     phone_number: string - (Optional) phone number of the vendor.
     */
   constructor(id, name, email, website = undefined, phoneNumber = undefined, image = undefined, instagram = undefined,
-      facebook = undefined, twitter = undefined, youtube = undefined, tiktok = undefined, pinterest = undefined) {
+      facebook = undefined, twitter = undefined, youtube = undefined, tiktok = undefined, pinterest = undefined, isPublic = false) {
     this.id = id;
     this.name = name;
     this.email = email;
@@ -23,6 +23,7 @@ export default class Vendor {
     this.youtube = youtube;
     this.tiktok = tiktok;
     this.pinterest = pinterest;
+    this.is_public = isPublic;
   }
 
   // Create a vendor object from json representation
