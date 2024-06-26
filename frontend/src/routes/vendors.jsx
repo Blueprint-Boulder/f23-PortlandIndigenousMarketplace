@@ -20,7 +20,7 @@ export default function Vendors({vendorService}) {
   const [vendors, setVendors] = useState(false);
   // const [vendor, setVendor] = useState({});
   // const [openModal, setOpenModal] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(false);   
   const navigate = useNavigate();
   const {setMessage, setBad, user} = useContext(Context);
 
@@ -28,7 +28,7 @@ export default function Vendors({vendorService}) {
     const fetchVendors = async () => {
       if (!vendors) {
         try {
-          const fetchedVendors = await vendorService.getVendors();
+          const fetchedVendors = await vendorService.getPublicVendors();
           if (fetchedVendors.length === 0) {
             console.error('No vendors found');
           } else {
