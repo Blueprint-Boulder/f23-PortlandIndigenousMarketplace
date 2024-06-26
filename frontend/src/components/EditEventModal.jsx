@@ -1,4 +1,5 @@
 import React, {useState, useContext} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Modal from '../components/Modal';
 import DatePicker from 'react-datepicker';
@@ -8,6 +9,7 @@ import {Context} from '../services/context';
 export default function EditEventModal({event, eventService, setShowEditModal}) {
   const [eventInfo, setEventInfo] = useState(event);
   const {setBad, setMessage} = useContext(Context);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +24,20 @@ export default function EditEventModal({event, eventService, setShowEditModal}) 
       setMessage('Failed to update event');
     }
   };
+
+  const handleDelete = async () => {
+    // deleteEvent controller uses the event id to delete
+    const res = await eventService.deleteEvent(event.eventId)
+
+    if(res !== undefined) {
+      setMessage('Event deleted successfully');
+      setShowEditModal(false);
+      navigate('/events');
+    } else {
+      setBad(true);
+      setMessage('Failed to delete event');
+    }
+  }
 
   console.log('event', eventInfo);
   // console.log(`${eventInfo.startDate} ${eventInfo.starttime}`);
@@ -87,7 +103,10 @@ export default function EditEventModal({event, eventService, setShowEditModal}) 
             Capacity
             <input className={`${fieldNames}`} type='text' value={eventInfo.vendorCapacity} onChange={(e) => setEventInfo({...eventInfo, vendorCapacity: e.target.value})} />
           </label>
-          <input type="submit" value="Submit" className='bg-blue mt-8 w-1/3 self-center rounded drop-shadow-lg py-1'/>
+          <div className="flex flex-row justify-evenly">
+            <input type="submit" value="Submit" className='bg-blue mt-8 w-1/3 text-center rounded drop-shadow-lg py-1'/>
+            <input value="Delete" onClick={() => handleDelete()} className='bg-red mt-8 w-1/3 text-center rounded drop-shadow-lg py-1'/>
+          </div>
         </form>
       </div>
     </Modal>
