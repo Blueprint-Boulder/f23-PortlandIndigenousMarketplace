@@ -170,7 +170,8 @@ export default function Profile({vendorService, violationService}) {
         <h1 className='text-xl'>Upcoming Events</h1>
         <p>Insert upcoming events modal/reference here</p>
       </div>
-      { user && <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
+      { /* Only show policy modal if user is logged in*/
+      user && <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <div className='flex flex-row justify-between'>
           <h1 className='flex-1'>Violations: {numViolations}</h1>
           {user.isadmin && (
