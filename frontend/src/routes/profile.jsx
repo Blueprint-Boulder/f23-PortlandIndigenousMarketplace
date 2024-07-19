@@ -170,7 +170,7 @@ export default function Profile({vendorService, violationService}) {
         <h1 className='text-xl'>Upcoming Events</h1>
         <p>Insert upcoming events modal/reference here</p>
       </div>
-      <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
+      { user && <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <div className='flex flex-row justify-between'>
           <h1 className='flex-1'>Violations: {numViolations}</h1>
           {user.isadmin && (
@@ -186,7 +186,7 @@ export default function Profile({vendorService, violationService}) {
 
           <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
         </div>
-      </div>
+      </div>}
       <>
         {openViolation && (
           <ViolationModal closeModal={setOpenViolation} vendorId={vendorId} vendorName={vendor.name}handleSubmit={handleViolationSubmit} />
