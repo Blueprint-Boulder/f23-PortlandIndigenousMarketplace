@@ -75,8 +75,8 @@ INSERT INTO Admins (name, email, password)
 
 VALUES ('Admin', 'admin@pim.com', crypt('pim', gen_salt('bf')));
 
-INSERT INTO Vendors (name, email, password, instagram, facebook, twitter, tiktok, youtube, pinterest, is_public)
-VALUES ('Vendor', 'vendor@pim.com', crypt('pim', gen_salt('bf')), 'www.instagram.com', 'www.facebook.com', 'www.twitter.com', 'www.tiktok.com', 'www.youtube.com', 'www.pinterest.com', TRUE);
+INSERT INTO Vendors (name, email, password, phone_number, website, instagram, facebook, twitter, tiktok, youtube, pinterest, is_public)
+VALUES ('Vendor', 'vendor@pim.com', crypt('pim', gen_salt('bf')), '111-222-3344', 'www.google.com', 'www.instagram.com', 'www.facebook.com', 'www.twitter.com', 'www.tiktok.com', 'www.youtube.com', 'www.pinterest.com', TRUE);
 
 CREATE VIEW vendor_full AS
     SELECT A.*, NULLIF(CONCAT(B.image_key, '.', B.file_ext), '.') AS image 
