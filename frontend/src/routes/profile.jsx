@@ -152,7 +152,6 @@ export default function Profile({vendorService, violationService}) {
           }}>Edit</button>
         }
       </div>
-      <hr className='bg-grey-1 w-9/12 drop-shadow-lg'/>
       <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4'>
         <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.email}</li>
         <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.phoneNumber}</li>

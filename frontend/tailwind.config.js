@@ -26,6 +26,7 @@ module.exports = {
     extend: {
       colors: {
         'slate': colors.slate,
+        'stone': colors.stone,
       },
     },
   },
