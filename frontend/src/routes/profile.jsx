@@ -11,6 +11,7 @@ import {faXTwitter} from '@fortawesome/free-brands-svg-icons';
 import {faYoutube} from '@fortawesome/free-brands-svg-icons';
 import {faPinterest} from '@fortawesome/free-brands-svg-icons';
 import {faTiktok} from '@fortawesome/free-brands-svg-icons';
+import LeavingPageIcon from '../components/LeavingPageIcon';
 
 // Import the Modal used for uploading a new profile picture
 import UploadPhotoModal from '../components/UploadPhotoModal';
@@ -40,8 +41,6 @@ export default function Profile({vendorService, violationService}) {
 
 
   const navigate = useNavigate();
-
-  console.log(user);
 
   useEffect(() => {
     // if (!user) {
@@ -119,52 +118,60 @@ export default function Profile({vendorService, violationService}) {
     setNumViolations(numViolations + 1);
   };
 
-  console.log('Image: ', vendor.image);
-
   return (
     <div className='items-center w-screen flex flex-col z-1 space-y-4 items-center'>
       {
         showUploadModal ? <UploadPhotoModal vendorId={vendorId} vendorService={vendorService} showUploadModal={showUploadModal} setShowUploadModal={setShowUploadModal}></UploadPhotoModal> : <></>
       }
-      <div className='flex flex-row items-center bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
-        <figure className='w-20 h-fit align-middle' onClick={() => {
-          setShowUploadModal(!showUploadModal);
-        }}
-        onMouseEnter={() => {
-          setUploadNewImage(true);
-        }}
-        onMouseLeave={()=> {
-          setUploadNewImage(false);
-        }}>
-          {
-            // If hovering profile image, gray image and show "Upload" text. Only works on desktop
-            uploadNewImage && <figcaption className='absolute w-20 h-5/6 bg-black/50'>
-              <p className='text-white text-center top-0 transform translate-y-2/3'>Upload</p>
-            </figcaption>
-          }
-          <img className='w-20' src={profileImage} alt="vendor profile pic"/>
-        </figure>
-        <h1 className='text-xl ml-4'>{vendor.name}</h1>
-        {
-          (user.id == vendorId || user.isadmin ) &&
-          <button className='ml-auto' onClick={() => {
-            setEditModal(true);
-          }}>Edit</button>
-        }
-      </div>
-      <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4'>
-        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.email}</li>
-        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.phoneNumber}</li>
-        <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>{vendor.website}</li>
-        {/* <li className='[list-style:none] bg-white rounded-full p-2 drop-shadow-lg'>Location</li> dont think this is necessary */}
-      </div>
-      <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
-        {vendor.instagram && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.instagram} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faInstagram} size="2x"/></a></li>}
-        {vendor.twitter && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.twitter} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faXTwitter} size="2x"/></a></li>}
-        {vendor.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.facebook} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faFacebook} size="2x"/></a></li>}
-        {vendor.youtube && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.youtube} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faYoutube} size="2x"/></a></li>}
-        {vendor.pinterest && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.pinterest} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faPinterest} size="2x"/></a></li>}
-        {vendor.tiktok && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.tiktok} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faTiktok} size="2x"/></a></li>}
+      <div className='flex flex-col bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
+        <div className='flex flex-row items-center'>
+            <figure className='w-20 h-fit align-middle' onClick={() => {
+              setShowUploadModal(!showUploadModal);
+            }}
+            onMouseEnter={() => {
+              setUploadNewImage(true);
+            }}
+            onMouseLeave={()=> {
+              setUploadNewImage(false);
+            }}>
+              {
+                // If hovering profile image, gray image and show "Upload" text. Only works on desktop
+                uploadNewImage && <figcaption className='absolute w-20 h-5/6 bg-black/50'>
+                  <p className='text-white text-center top-0 transform translate-y-2/3'>Upload</p>
+                </figcaption>
+              }
+              <img className='w-20' src={profileImage} alt="vendor profile pic"/>
+            </figure>
+            <>
+              <div className='flex flex-col'>
+                {(() => {
+                  return vendor.website ? 
+                  <a className='flex flex-row gap-2' href={'https://' + vendor.website} target='_blank' rel="noreferrer">
+                    <h1 className='text-3xl ml-4'>{vendor.name}</h1>
+                    <LeavingPageIcon />
+                  </a> : vendor.name;
+              })()}<p className='px-4 text-m text-slate-500'>
+                { vendor.email && <li className='[list-style:none]'>{<a href={vendor.email}>{vendor.email}</a>}</li> }
+                { vendor.phoneNumber && <li className='[list-style:none]'>{vendor.phoneNumber}</li> }
+                { vendor.website && <li className='[list-style:none]'>{<a href={'https://' + vendor.website}>{vendor.website}</a>}</li> }
+              </p>
+              </div>
+              </>
+            {
+              (user.id == vendorId || user.isadmin ) &&
+              <button className='ml-auto' onClick={() => {
+                setEditModal(true);
+              }}>Edit</button>
+            }
+          </div>
+          <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
+            {vendor.instagram && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.instagram} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faInstagram} size="2x"/></a></li>}
+            {vendor.twitter && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.twitter} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faXTwitter} size="2x"/></a></li>}
+            {vendor.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.facebook} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faFacebook} size="2x"/></a></li>}
+            {vendor.youtube && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.youtube} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faYoutube} size="2x"/></a></li>}
+            {vendor.pinterest && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.pinterest} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faPinterest} size="2x"/></a></li>}
+            {vendor.tiktok && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.tiktok} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faTiktok} size="2x"/></a></li>}
+          </div>
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <h1 className='text-xl'>Upcoming Events</h1>
