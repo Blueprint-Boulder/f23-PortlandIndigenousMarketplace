@@ -173,7 +173,7 @@ export default function Event({eventService, vendorService}) {
         >Register</button> : <></>
       }
       <div className='flex flex-col gap-3 items-center'>
-        <p className='text-2xl font-bold'>{showApproved ? 'Attending Vendors' : 'Pending Requests'} ({showApproved ? vendors.length : requests.filter((req) => !req.approved).length})</p>
+        <p className='text-2xl font-bold'>{showApproved ? 'Attending Vendors' : 'Pending Requests'} ({showApproved ? user && user.isadmin ? requests.filter((req) => req.approved).length : vendors.length : requests.filter((req) => !req.approved).length})</p>
         {
           user && user.isadmin && <button className={`${adminButtonClasses} px-5 py-2 w-4/6`}
             onClick={() => {
