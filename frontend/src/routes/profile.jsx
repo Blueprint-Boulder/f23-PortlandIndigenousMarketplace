@@ -119,11 +119,11 @@ export default function Profile({vendorService, violationService}) {
   };
 
   return (
-    <div className='items-center w-screen flex flex-col z-1 space-y-4 items-center'>
+    <div className='items-center w-screen flex flex-col z-1 space-y-4 items-center gap-3'>
       {
         showUploadModal ? <UploadPhotoModal vendorId={vendorId} vendorService={vendorService} showUploadModal={showUploadModal} setShowUploadModal={setShowUploadModal}></UploadPhotoModal> : <></>
       }
-      <div className='flex flex-col bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
+      <div className='flex flex-col gap-2 bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='flex flex-row items-center'>
             <figure className='w-20 h-fit align-middle' onClick={() => {
               setShowUploadModal(!showUploadModal);
@@ -158,13 +158,14 @@ export default function Profile({vendorService, violationService}) {
               </div>
               </>
             {
-              (user.id == vendorId || user.isadmin ) &&
+              (user.id === vendorId || user.isadmin ) &&
               <button className='ml-auto' onClick={() => {
                 setEditModal(true);
               }}>Edit</button>
             }
           </div>
-          <div className='grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
+          <hr className="h-px mt-3 w-5/6 border-0 bg-black self-center opacity-25"></hr>
+          <div className='flex flex-row gap-4 justify-center'>
             {vendor.instagram && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.instagram} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faInstagram} size="2x"/></a></li>}
             {vendor.twitter && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.twitter} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faXTwitter} size="2x"/></a></li>}
             {vendor.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.facebook} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faFacebook} size="2x"/></a></li>}
