@@ -4,17 +4,39 @@ const {hash, genSalt} = require('bcryptjs');
 const bcrypt = require('bcryptjs');
 
 const getAllEvents = async (req, res, next) => {
-  try {
-    const events = await db.manyOrNone('SELECT * FROM Events');
-    if (events.length) {
-      res.locals.data = events;
-      next();
-    } else {
-      res.status(404).json({message: 'No events found'});
+  // If vendorId is non-null, return only events that the vendor is attending
+  const vendorId = req.query.vendorId;
+  
+  // The query to use if vendorId !== null
+  const vendor_querystr = `SELECT E.* FROM Events AS E \
+  LEFT JOIN EventRequests AS R ON E.event_id = R.event_id \
+  WHERE R.vendor_id = $1 AND R.approved = true`;
+
+  let events = undefined;
+  
+  // Execute query
+  if(vendorId){
+    try {
+      events = await db.manyOrNone(vendor_querystr, vendorId);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({error: 'Failed to retrieve events for vendor.'});
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({error: 'Internal Server Error'});
+  } else {
+    try {
+      events = await db.manyOrNone("SELECT * FROM Events");
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({error: 'Failed to retrieve events.'});
+    }
+  }
+
+  // Check the number of events returned
+  if (events.length) {
+    res.locals.data = events;
+    next();
+  } else {
+    res.status(404).json({message: 'No events found'});
   }
 };
 

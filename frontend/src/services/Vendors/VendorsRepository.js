@@ -113,6 +113,16 @@ export default class VendorsRepository {
     }
   }
 
+  async getVendorEvents(vendorId) {
+    try {
+      const response = await this.httpClient.axiosInstance.get(`/events?vendorId=${vendorId}`);
+      return response.data;
+    } catch(error){
+      console.error(`Error fetching events for vendor with ID ${vendorId}`);
+      return undefined;
+    }
+  }
+
   async deleteVendor(vendorId) {
     try {
       const response = await this.httpClient.axiosInstance.delete(`/vendors/${vendorId}`);

@@ -18,6 +18,7 @@ import UploadPhotoModal from '../components/UploadPhotoModal';
 import ViolationModal from '../components/violationmodal';
 import EditProfileModal from '../components/EditProfileModal';
 import PolicyModal from '../components/PolicyModal';
+import AttendingEvents from '../components/AttendingEvents.jsx';
 
 
 export default function Profile({vendorService, violationService}) {
@@ -176,7 +177,7 @@ export default function Profile({vendorService, violationService}) {
       </div>
       <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <h1 className='text-xl'>Upcoming Events</h1>
-        <p>Insert upcoming events modal/reference here</p>
+        <AttendingEvents vendorService={vendorService} vendorId={vendorId}></AttendingEvents>
       </div>
       { /* Only show policy modal if user is logged in*/
       user && <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>

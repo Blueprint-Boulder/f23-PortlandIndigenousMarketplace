@@ -161,6 +161,11 @@ export default class VendorsService {
     return await this.vendorsRepository.updateVendor(vendor.vendorId, vendorData);
   }
 
+  // Returns event objects if vendor is approved to attend
+  async getVendorEvents(vendorId) {
+    return await this.vendorsRepository.getVendorEvents(vendorId);
+  }
+
   async deleteVendor(vendorId) {
     return await this.vendorsRepository.deleteVendor(vendorId);
   }
