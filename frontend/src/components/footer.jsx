@@ -13,7 +13,7 @@ export default function Footer() {
   const {user} = useContext(Context);
 
   return (
-    <div className="fixed bottom-0 " id="Footer">
+    <div className="flex flex-row w-full h-fit fixed bottom-0 bg-cambridge" id="Footer">
       <div id="Footer-content" className="flex justify-around items-center p-4">
         <div className="footer-section">
           <Link to="/events" className="text-blue-500">

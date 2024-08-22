@@ -86,7 +86,7 @@ export default function Vendors({vendorService}) {
   // };
 
   const vendorDisplay = (vendor) => (
-    <div className="bg-white shadow-lg rounded-lg p-4 w-10/12 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
+    <div className="bg-greywhite shadow-lg rounded-lg p-4 w-10/12 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
       <div className = 'flex justify-between'>
         <div className="mt-2 ">
           <img src={vendor.image ? `/profilepics/${vendor.image}` : '/profile.webp'} alt={vendor.name} className="w-24 h-24 mx-auto rounded-full" />

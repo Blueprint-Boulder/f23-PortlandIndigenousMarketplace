@@ -136,7 +136,7 @@ export default function Events({eventService}) {
     const end = new Date(`${event.endDate} ${event.endtime}`);
 
     return (
-      <div className="bg-white shadow-lg right-0 left-0 rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
+      <div className="bg-greywhite shadow-lg right-0 left-0 rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
         <div className="mt-2">
           <div className="text-lg font-semibold text-gray-900">{event.name}</div>
           <div className="text-grey-5">{event.description}</div>

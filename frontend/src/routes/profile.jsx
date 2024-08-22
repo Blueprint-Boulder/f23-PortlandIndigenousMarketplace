@@ -120,7 +120,7 @@ export default function Profile({vendorService, violationService}) {
   };
 
   return (
-    <div className='items-center w-screen flex flex-col z-1 space-y-4 items-center gap-3'>
+    <div className='items-center w-screen mt-12 flex flex-col z-1 space-y-4 items-center gap-3'>
       {
         showUploadModal ? <UploadPhotoModal vendorId={vendorId} vendorService={vendorService} showUploadModal={showUploadModal} setShowUploadModal={setShowUploadModal}></UploadPhotoModal> : <></>
       }

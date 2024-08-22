@@ -39,7 +39,7 @@ export default function Root() {
 
   return (
     <Context.Provider value = {{message, setMessage, bad, setBad, user, setUser}}>
-      <div className="bg-gradient-to-b from-stone-300 from-15% w-screen flex min-h-screen flex-col pt-10">
+      <div className="w-screen flex min-h-screen flex-col pt-10 bg-snow">
         {message && <Alert content = {message} bad ={bad}/>}
         {/* <Header /> */}
         <BackButton/>

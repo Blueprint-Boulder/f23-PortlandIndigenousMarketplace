@@ -143,7 +143,7 @@ export default function Event({eventService, vendorService}) {
   return (<>
     {showEditModal && <EditEventModal event={event} eventService={eventService} setShowEditModal={setShowEditModal} />}
     <div id="Event-content" className="overflow-y-scroll w-full h-full flex flex-col gap-6 items-center py-2">
-      <div className='flex flex-row gap-4 px-10 py-6 bg-white w-10/12 rounded-md drop-shadow-md items-center'>
+      <div className='flex flex-row gap-4 px-10 py-6 bg-greywhite w-10/12 rounded-md drop-shadow-md items-center'>
         <img src={bLogo} alt="Event Logo" className="w-1/3 basis-1/3 bg-clip-padding bg-white drop-shadow-xl rounded-xl" />
         <div className='flex flex-col gap-1 basis-2/3 w-2/3'>
           <div className={`flex flex-row ${loggedUser && loggedUser.isadmin ? 'justify-between' : 'justify-left'}`}>
@@ -161,7 +161,7 @@ export default function Event({eventService, vendorService}) {
         </div>
       </div>
       {
-        description && <div className='flex flex-row justify-left gap-3 bg-white w-10/12 rounded-md drop-shadow-lg p-10'>
+        description && <div className='flex flex-row justify-left gap-3 bg-greywhite w-10/12 rounded-md drop-shadow-lg p-10'>
           <p className='text-slate-500 font-semibold'>Description</p>
           <p>{description}</p>
         </div>
