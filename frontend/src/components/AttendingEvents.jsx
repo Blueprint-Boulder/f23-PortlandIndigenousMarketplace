@@ -2,8 +2,6 @@ import React, {useState, useContext, useEffect} from 'react';
 import {Context} from '../services/context';
 import LeavingPageIcon from '../components/LeavingPageIcon';
 
-
-
 export default function AttendingEvents({vendorId, vendorService}){
     const [events, setEvents] = useState([]);
 
@@ -19,17 +17,14 @@ export default function AttendingEvents({vendorId, vendorService}){
         })();
     }, [vendorId, vendorService]);
     
-    return <>
+    return <table className='w-full my-2'><tbody>
         {
-            events.map((event) => {
-                console.log("Event: ", event);
-
-                return <a href={`/events/${event.event_id}`} className='flex flex-row justify-around mx-3 my-1'>
-                    <p className='font-bold'>{event.name}</p>
-                    <p>{timeFormat.format(Date.parse(event.starttime))}</p>
-                    <LeavingPageIcon />
-                </a>;
-            })
+            events !== undefined ? events.map((event) => {
+                return <tr className='border-b border-black border-opacity-30'>
+                    <td><a className='py-1 flex flex-row justify-around' href={`/events/${event.event_id}`}><p>{event.name}</p><LeavingPageIcon/></a></td>
+                    <td align='right' className='py-1 content-end'>{timeFormat.format(Date.parse(event.starttime))}</td>
+                </tr>
+            }) : <></>
         }
-    </>
+    </tbody></table>
 }
