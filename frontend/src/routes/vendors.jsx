@@ -94,7 +94,7 @@ export default function Vendors({vendorService}) {
         <div className="mt-2 mx-2 w-6/12 truncate">
           <div className="text-lg font-semibold text-gray-900 truncate">{vendor.name}</div>
           <div className="text-blue underline truncate">{vendor.website}</div>
-          <div className="mt-1 text-grey-5 truncate">{vendor.phoneNumber && `(${vendor.phoneNumber.slice(0, 3)}) ${vendor.phoneNumber.slice(3, 6)}-${vendor.phoneNumber.slice(6, 10)}`}</div>
+          <div className="mt-1 text-grey-5 truncate">{vendor.phoneNumber && `${vendor.phoneNumber}`}</div>
           <div className="mt-1 text-grey-5 relative truncate">
             {vendor.email}
           </div>
