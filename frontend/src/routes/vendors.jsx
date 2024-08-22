@@ -116,7 +116,7 @@ export default function Vendors({vendorService}) {
       <div className='static'>
         <h1 className='color-white text-2xl text-center my-3 font-semibold'>Vendors</h1>
       </div>
-      <input type='text' placeholder='Search for a vendor' className='w-11/12 mx-auto my-2 rounded p-2' onChange={(e) => handleSearch(e.target.value)}></input>
+      <input type='text' placeholder='Search for a vendor' className='border-2 w-9/12 mx-auto my-2 rounded p-2' onChange={(e) => handleSearch(e.target.value)}></input>
 
       <div className='flex flex-col space-y-4 mt-2'>
         {
