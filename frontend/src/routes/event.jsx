@@ -142,7 +142,7 @@ export default function Event({eventService, vendorService}) {
   const googleMapDirectionLink = `https://www.google.com/maps/place/${encodedAddress}`;
 
   return (<>
-    {showEditModal && <EditEventModal event={event} eventService={eventService} setShowEditModal={setShowEditModal} />}
+    {showEditModal && <EditEventModal event={event} eventService={eventService} setShowEditModal={setShowEditModal} isNewEvent={false} />}
     <div id="Event-content" className="overflow-y-scroll w-full h-full flex flex-col gap-6 items-center py-2">
       <div className='flex flex-row gap-4 px-10 py-6 bg-greywhite w-10/12 rounded-md drop-shadow-md items-center'>
         <img src={bLogo} alt="Event Logo" className="w-1/3 basis-1/3 bg-clip-padding bg-white drop-shadow-xl rounded-xl" />

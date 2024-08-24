@@ -5,18 +5,26 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {Context} from '../services/context';
 
-export default function EditEventModal({event, eventService, setShowEditModal}) {
+export default function EditEventModal({event, eventService, setShowEditModal, isNewEvent}) {
   const [eventInfo, setEventInfo] = useState(event);
   const {setBad, setMessage} = useContext(Context);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Call your event service here to update the event
 
-    const res = await eventService.updateEvent(event.eventId, eventInfo);
+    // Handle adding or updating the event
+    let res;
+    if (isNewEvent) {
+      res = await eventService.createEvent(eventInfo);
+    } else {
+      res = await eventService.updateEvent(event.eventId, eventInfo);
+    }
+
     if (res !== undefined) {
       // Toast with success message
       setMessage('Event updated successfully');
+      // Close modal
+      setShowEditModal(false);
     } else {
       setBad(true);
       setMessage('Failed to update event');
@@ -34,7 +42,7 @@ export default function EditEventModal({event, eventService, setShowEditModal}) 
       <div className='w-80'>
         <div className='flex flex-row justify-between items-center w-full mb-4'>
           <div className='w-5'>&nbsp;</div>
-          <p className='font-bold'>Edit Event</p>
+          <p className='font-bold'>{isNewEvent ? "Add" : "Edit"} Event</p>
           <button className='w-5 bg-black text-white drop-shadow-xl' onClick={()=>setShowEditModal(false)}>X</button>
         </div>
         <form className='w-full text-left items-left flex flex-col gap-4' onSubmit={handleSubmit}>
