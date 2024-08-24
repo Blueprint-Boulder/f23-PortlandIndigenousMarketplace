@@ -16,6 +16,7 @@ export default function Event({eventService, vendorService}) {
   const [event, setEvent] = useState(null);
   const navigate = useNavigate();
   const {eventId} = useParams();
+
   const {user, setMessage, setBad} = useContext(Context);
 
   const [requests, setRequests] = useState([]);
@@ -143,7 +144,7 @@ export default function Event({eventService, vendorService}) {
   return (<>
     {showEditModal && <EditEventModal event={event} eventService={eventService} setShowEditModal={setShowEditModal} />}
     <div id="Event-content" className="overflow-y-scroll w-full h-full flex flex-col gap-6 items-center py-2">
-      <div className='flex flex-row gap-4 px-10 py-6 bg-white w-10/12 rounded-md drop-shadow-md items-center'>
+      <div className='flex flex-row gap-4 px-10 py-6 bg-greywhite w-10/12 rounded-md drop-shadow-md items-center'>
         <img src={bLogo} alt="Event Logo" className="w-1/3 basis-1/3 bg-clip-padding bg-white drop-shadow-xl rounded-xl" />
         <div className='flex flex-col gap-1 basis-2/3 w-2/3'>
           <div className={`flex flex-row ${loggedUser && loggedUser.isadmin ? 'justify-between' : 'justify-left'}`}>
@@ -161,7 +162,7 @@ export default function Event({eventService, vendorService}) {
         </div>
       </div>
       {
-        description && <div className='flex flex-row justify-left gap-3 bg-white w-10/12 rounded-md drop-shadow-lg p-10'>
+        description && <div className='flex flex-row justify-left gap-3 bg-greywhite w-10/12 rounded-md drop-shadow-lg p-10'>
           <p className='text-slate-500 font-semibold'>Description</p>
           <p>{description}</p>
         </div>
@@ -173,7 +174,7 @@ export default function Event({eventService, vendorService}) {
         >Register</button> : <></>
       }
       <div className='flex flex-col gap-3 items-center'>
-        <p className='text-2xl font-bold'>{showApproved ? 'Attending Vendors' : 'Pending Requests'} ({showApproved ? vendors.length : requests.filter((req) => !req.approved).length})</p>
+        <p className='text-2xl font-bold'>{showApproved ? 'Attending Vendors' : 'Pending Requests'} ({showApproved ? user && user.isadmin ? requests.filter((req) => req.approved).length : vendors.length : requests.filter((req) => !req.approved).length})</p>
         {
           user && user.isadmin && <button className={`${adminButtonClasses} px-5 py-2 w-4/6`}
             onClick={() => {
@@ -181,7 +182,7 @@ export default function Event({eventService, vendorService}) {
             }}>Show {showApproved ? 'Pending' : 'Attending'}</button>
         }
       </div>
-      <EventVendorsDisplay showApproved={showApproved} vendors={vendors} requests={requests} eventService={eventService}></EventVendorsDisplay>
+      <EventVendorsDisplay user={user} showApproved={showApproved} vendors={vendors} requests={requests} eventService={eventService}></EventVendorsDisplay>
       <FooterPad />
     </div>
   </>

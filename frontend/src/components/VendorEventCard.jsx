@@ -46,7 +46,7 @@ export default function VendorEventCard({vendor, request, eventService}) {
   // console.log('vendvend', vendor);
 
   return (
-    <div className='flex flex-col px-7 py-8 basis-2/5 gap-4 items-center bg-slate-50 rounded-lg drop-shadow-lg'>
+    <div className='flex flex-col px-7 py-8 basis-2/5 gap-4 items-center bg-greywhite rounded-lg drop-shadow-lg'>
       <img src={vendor.image ? `/profilepics/${vendor.image}` : '/profile.webp'} onClick={()=> navigate(`/vendors/${vendor.id}`)}></img>
       <p className='text-center'>{vendor.name}</p>
       {

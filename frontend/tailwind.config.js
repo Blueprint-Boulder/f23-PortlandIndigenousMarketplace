@@ -22,10 +22,14 @@ module.exports = {
       'white': '#F8F6F6',
       'red': '#E96B67',
       'green': '#49C9B9',
+      'snow': '#FBF5F3',
+      'cambridge': '#8DAA9D',
+      'greywhite': '#fcfdff',
     },
     extend: {
       colors: {
         'slate': colors.slate,
+        'stone': colors.stone,
       },
     },
   },

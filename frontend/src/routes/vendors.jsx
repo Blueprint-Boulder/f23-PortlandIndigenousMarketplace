@@ -86,7 +86,7 @@ export default function Vendors({vendorService}) {
   // };
 
   const vendorDisplay = (vendor) => (
-    <div className="bg-white shadow-lg rounded-lg p-4 w-10/12 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
+    <div className="bg-greywhite shadow-lg rounded-lg p-4 w-10/12 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
       <div className = 'flex justify-between'>
         <div className="mt-2 ">
           <img src={vendor.image ? `/profilepics/${vendor.image}` : '/profile.webp'} alt={vendor.name} className="w-24 h-24 mx-auto rounded-full" />
@@ -94,7 +94,7 @@ export default function Vendors({vendorService}) {
         <div className="mt-2 mx-2 w-6/12 truncate">
           <div className="text-lg font-semibold text-gray-900 truncate">{vendor.name}</div>
           <div className="text-blue underline truncate">{vendor.website}</div>
-          <div className="mt-1 text-grey-5 truncate">{vendor.phoneNumber && `(${vendor.phoneNumber.slice(0, 3)}) ${vendor.phoneNumber.slice(3, 6)}-${vendor.phoneNumber.slice(6, 10)}`}</div>
+          <div className="mt-1 text-grey-5 truncate">{vendor.phoneNumber && `${vendor.phoneNumber}`}</div>
           <div className="mt-1 text-grey-5 relative truncate">
             {vendor.email}
           </div>
@@ -116,7 +116,7 @@ export default function Vendors({vendorService}) {
       <div className='static'>
         <h1 className='color-white text-2xl text-center my-3 font-semibold'>Vendors</h1>
       </div>
-      <input type='text' placeholder='Search for a vendor' className='w-11/12 mx-auto my-2 rounded p-2' onChange={(e) => handleSearch(e.target.value)}></input>
+      <input type='text' placeholder='Search for a vendor' className='border-2 w-9/12 mx-auto my-2 rounded p-2' onChange={(e) => handleSearch(e.target.value)}></input>
 
       <div className='flex flex-col space-y-4 mt-2'>
         {

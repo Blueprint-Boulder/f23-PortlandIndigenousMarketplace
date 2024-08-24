@@ -136,25 +136,28 @@ export default function Events({eventService}) {
     const end = new Date(`${event.endDate} ${event.endtime}`);
 
     return (
-      <div className="bg-white shadow-lg right-0 left-0 rounded-lg p-4 max-w-sm ml-4 mr-4 bm-4">
-        <div className="mt-2">
-          <div className="text-lg font-semibold text-gray-900">{event.name}</div>
-          <div className="text-grey-5">{event.description}</div>
-          <div className="mt-3 text-grey-5">
-            {event.date} • {start.toLocaleTimeString('en-US', {timeStyle: 'short'})} - {end.toLocaleTimeString('en-US', {timeStyle: 'short'})}
-          </div>
-          <div className="mt-1 text-sm text-grey-5 relative">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8C15 9.65685 13.6569 11 12 11Z" />
-            </svg>
-            {event.location}
-          </div>
-          <Link to={`/events/${event.eventId}`} className="mt-2 text-blue p-2 rounded-md inline-block">
+      <div className="flex flex-col gap-2 bg-greywhite text-grey-5 shadow-lg rounded-lg p-4 max-w-sm mx-4">
+        <div className="text-lg font-bold text-gray-900">{event.name}</div>
+        <div className='font-semibold'>{event.description}</div>
+        <div className='flex flex-row gap-4 align-center'>
+          <p>{event.date}</p>
+          <p>{start.toLocaleTimeString('en-US', {timeStyle: 'short'})} - {end.toLocaleTimeString('en-US', {timeStyle: 'short'})}</p>
+        </div>
+        <div className="mt-1 text-sm relative">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2C8.13401 2 5 5.13401 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13401 15.866 2 12 2ZM12 11C10.3431 11 9 9.65685 9 8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8C15 9.65685 13.6569 11 12 11Z" />
+          </svg>
+          {event.location}
+        </div>
+        <div className="flex flex-row justify-between align-center">
+          <Link to={`/events/${event.eventId}`} className="text-blue p-2 rounded-md inline-block">
             View Event Details
           </Link>
-          {user && user.isadmin && <button onClick={() => {
-            setEditEvent(true); setModal(true); setCurrEvent(event);
-          }} className='hover:bg-blue absolute right-0 bottom-0 mr-6 mb-6 text-md text-blue px-1  bg-white'>Edit</button>}
+          {
+            user && user.isadmin && <button onClick={() => {
+              setEditEvent(true); setModal(true); setCurrEvent(event);
+            }} className='text-blue text-md p-2'>Edit</button>
+          }
         </div>
       </div>
     );
@@ -182,8 +185,9 @@ export default function Events({eventService}) {
         <EventModal editEvent={editEvent} handleSubmit={handleSubmit} closeModal={closeModal} currEvent={currEvent}/>
       )}
       <div className={`${modal && 'blur-sm'} w-full mx-auto flex flex-col justify-center pb-16`}>
-        <div className='static'>
-          {!modal && user && user.isadmin && <button className='bg-white hover:bg-blue shadow-sm absolute right-0 text-black w-max m-2 p-2 rounded-lg'
+        
+        <div className={`flex flex-row ${user && user.isadmin ? 'justify-around' : 'justify-center'}`}>
+          {!modal && user && user.isadmin && <button className='bg-greywhite hover:bg-blue shadow-sm absolute right-0 text-black w-max m-2 p-2 rounded-lg'
             onClick={() => {
               setEditEvent(false); setModal(true);
             }}>Add Event</button>}
