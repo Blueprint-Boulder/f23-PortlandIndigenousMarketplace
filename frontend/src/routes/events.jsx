@@ -185,8 +185,9 @@ export default function Events({eventService}) {
         <EventModal editEvent={editEvent} handleSubmit={handleSubmit} closeModal={closeModal} currEvent={currEvent}/>
       )}
       <div className={`${modal && 'blur-sm'} w-full mx-auto flex flex-col justify-center pb-16`}>
-        <div className='static'>
-          {!modal && user && user.isadmin && <button className='bg-white hover:bg-blue shadow-sm absolute right-0 text-black w-max m-2 p-2 rounded-lg'
+        
+        <div className={`flex flex-row ${user && user.isadmin ? 'justify-around' : 'justify-center'}`}>
+          {!modal && user && user.isadmin && <button className='bg-greywhite hover:bg-blue shadow-sm absolute right-0 text-black w-max m-2 p-2 rounded-lg'
             onClick={() => {
               setEditEvent(false); setModal(true);
             }}>Add Event</button>}
