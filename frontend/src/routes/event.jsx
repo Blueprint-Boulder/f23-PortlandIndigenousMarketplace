@@ -16,6 +16,7 @@ export default function Event({eventService, vendorService}) {
   const [event, setEvent] = useState(null);
   const navigate = useNavigate();
   const {eventId} = useParams();
+
   const {user, setMessage, setBad} = useContext(Context);
 
   const [requests, setRequests] = useState([]);
@@ -181,7 +182,7 @@ export default function Event({eventService, vendorService}) {
             }}>Show {showApproved ? 'Pending' : 'Attending'}</button>
         }
       </div>
-      <EventVendorsDisplay showApproved={showApproved} vendors={vendors} requests={requests} eventService={eventService}></EventVendorsDisplay>
+      <EventVendorsDisplay user={user} showApproved={showApproved} vendors={vendors} requests={requests} eventService={eventService}></EventVendorsDisplay>
       <FooterPad />
     </div>
   </>

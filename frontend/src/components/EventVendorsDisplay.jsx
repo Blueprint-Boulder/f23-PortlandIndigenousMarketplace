@@ -2,13 +2,18 @@ import React from 'react';
 import VendorEventCard from './VendorEventCard';
 
 
-export default function EventVendorsDisplay({showApproved, requests, vendors, eventService}) {
+export default function EventVendorsDisplay({user, showApproved, requests, vendors, eventService}) {
+  console.log('EventVendorsDisplay Debug info: ', {
+    showApproved,
+    requests,
+    vendors,
+    eventService,
+    user
+  });
+
   const createCardsAdmin = (reqs) => {
     // console.log('create cards admin');
     return reqs.map((req) => {
-      console.log('Request:', req);
-      console.log('Vendors:', vendors);
-
       // No vendors have requested to attend this event
       if (vendors.length === 0) return <></>;
       
@@ -18,10 +23,12 @@ export default function EventVendorsDisplay({showApproved, requests, vendors, ev
       // Returning pending only - The request is not pending
       if (showApproved === false && ( req.approved !== null ) ) return <></>;
 
-
       // Fetch the vendor's profile
       const res = vendors.filter((v) => v.id === req.vendorId)[0];
-      console.log('Vendor Value:', res);
+      if (!res) {
+        console.error("Vendor's id not found - even though it should have been.");
+        return <></>;
+      }
 
       // Return the card
       return <VendorEventCard key={res.id} vendor={res} request={req} eventService={eventService}></VendorEventCard>;
@@ -37,7 +44,7 @@ export default function EventVendorsDisplay({showApproved, requests, vendors, ev
 
   return <div className='flex flex-wrap p-5 gap-4 justify-center'>
     {
-      requests.length > 0 ? createCardsAdmin(requests) : createCards(vendors)
+      user && user.isadmin ? createCardsAdmin(requests) : createCards(vendors)
     }
   </div>;
 }
