@@ -18,7 +18,7 @@ export default class EventsService {
         new Date(data.starttime),
         new Date(data.endtime),
         data.description,
-        data.vendorCapacity,
+        data.vendorcapacity,
     ));
   }
 
