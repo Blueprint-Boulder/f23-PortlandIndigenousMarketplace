@@ -124,7 +124,7 @@ export default function Profile({vendorService, violationService}) {
       {
         showUploadModal ? <UploadPhotoModal vendorId={vendorId} vendorService={vendorService} showUploadModal={showUploadModal} setShowUploadModal={setShowUploadModal}></UploadPhotoModal> : <></>
       }
-      <div className='flex flex-col gap-2 bg-white p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
+      <div className='flex flex-col gap-2 bg-greywhite p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='flex flex-row items-center'>
             <figure className='w-20 h-fit align-middle' onClick={() => {
               setShowUploadModal(!showUploadModal);
@@ -151,13 +151,14 @@ export default function Profile({vendorService, violationService}) {
                     <h1 className='text-3xl ml-4'>{vendor.name}</h1>
                     <LeavingPageIcon />
                   </a> : vendor.name;
-              })()}<p className='px-4 text-m text-slate-500'>
-                { vendor.email && <li className='[list-style:none]'>{<a href={vendor.email}>{vendor.email}</a>}</li> }
-                { vendor.phoneNumber && <li className='[list-style:none]'>{vendor.phoneNumber}</li> }
-                { vendor.website && <li className='[list-style:none]'>{<a href={'https://' + vendor.website}>{vendor.website}</a>}</li> }
-              </p>
+                })()}
+                <p className='px-4 text-m text-slate-500'>
+                  { vendor.email && <li className='[list-style:none]'>{<a href={vendor.email}>{vendor.email}</a>}</li> }
+                  { vendor.phoneNumber && <li className='[list-style:none]'>{vendor.phoneNumber}</li> }
+                  { vendor.website && <li className='[list-style:none]'>{<a href={'https://' + vendor.website}>{vendor.website}</a>}</li> }
+                </p>
               </div>
-              </>
+            </>
             {
               (user.id === vendorId || user.isadmin ) &&
               <button className='ml-auto' onClick={() => {
@@ -175,12 +176,12 @@ export default function Profile({vendorService, violationService}) {
             {vendor.tiktok && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.tiktok} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faTiktok} size="2x"/></a></li>}
           </div>
       </div>
-      <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
+      <div className='bg-greywhite w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <h1 className='text-xl'>Upcoming Events</h1>
         <AttendingEvents vendorService={vendorService} vendorId={vendorId}></AttendingEvents>
       </div>
       { /* Only show policy modal if user is logged in*/
-      user && <div className='bg-white w-10/12 p-2 rounded-lg drop-shadow-lg'>
+      user && <div className='bg-greywhite w-10/12 p-2 rounded-lg drop-shadow-lg'>
         <div className='flex flex-row justify-between'>
           <h1 className='flex-1'>Violations: {numViolations}</h1>
           {user.isadmin && (
