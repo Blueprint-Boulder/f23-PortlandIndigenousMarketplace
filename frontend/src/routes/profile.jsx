@@ -168,12 +168,12 @@ export default function Profile({vendorService, violationService}) {
           </div>
           <hr className="h-px mt-3 w-5/6 border-0 bg-black self-center opacity-25"></hr>
           <div className='flex flex-row gap-4 justify-center'>
-            {vendor.instagram && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.instagram} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faInstagram} size="2x"/></a></li>}
-            {vendor.twitter && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.twitter} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faXTwitter} size="2x"/></a></li>}
-            {vendor.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.facebook} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faFacebook} size="2x"/></a></li>}
-            {vendor.youtube && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.youtube} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faYoutube} size="2x"/></a></li>}
-            {vendor.pinterest && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.pinterest} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faPinterest} size="2x"/></a></li>}
-            {vendor.tiktok && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={vendor.tiktok} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faTiktok} size="2x"/></a></li>}
+            {vendor.instagram && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={`https://${vendor.instagram}`} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faInstagram} size="2x"/></a></li>}
+            {vendor.twitter && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={`https://${vendor.twitter}`} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faXTwitter} size="2x"/></a></li>}
+            {vendor.facebook && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={`https://${vendor.facebook}`} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faFacebook} size="2x"/></a></li>}
+            {vendor.youtube && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={`https://${vendor.youtube}`} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faYoutube} size="2x"/></a></li>}
+            {vendor.pinterest && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={`https://${vendor.pinterest}`} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faPinterest} size="2x"/></a></li>}
+            {vendor.tiktok && <li className='[list-style:none] p-2 drop-shadow-lg'><a href={`https://${vendor.tiktok}`} target="_blank" rel="noreferrer"><FontAwesomeIcon icon={faTiktok} size="2x"/></a></li>}
           </div>
       </div>
       <div className='bg-greywhite w-10/12 p-2 rounded-lg drop-shadow-lg'>
