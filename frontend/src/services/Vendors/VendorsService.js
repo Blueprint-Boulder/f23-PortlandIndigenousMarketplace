@@ -13,19 +13,20 @@ export default class VendorsService {
       return undefined;
     }
 
-    return vendorsData.map((data) => new Vendor(
-        data.vendor_id,
-        data.name,
-        data.email,
-        data.website,
-        data.phone_number,
-        data.image,
-        data.instagram,
-        data.facebook,
-        data.twitter,
-        data.youtube,
-        data.tiktok,
-        data.pinterest,
+    return vendorsData.map((vendorData) => new Vendor(
+        vendorData.vendor_id,
+        vendorData.name,
+        vendorData.email,
+        vendorData.website,
+        vendorData.phone_number,
+        vendorData.image,
+        vendorData.instagram,
+        vendorData.facebook,
+        vendorData.twitter,
+        vendorData.youtube,
+        vendorData.tiktok,
+        vendorData.pinterest,
+        vendorData.is_public
     ));
   }
 
@@ -35,14 +36,20 @@ export default class VendorsService {
       return undefined;
     }
 
-    return vendorsData.map((data) => new Vendor(
-        data.vendor_id,
-        data.name,
-        data.email,
-        data.website,
-        data.phone_number,
-        data.image,
-        data.is_public,
+    return vendorsData.map((vendorData) => new Vendor(
+        vendorData.vendor_id,
+        vendorData.name,
+        vendorData.email,
+        vendorData.website,
+        vendorData.phone_number,
+        vendorData.image,
+        vendorData.instagram,
+        vendorData.facebook,
+        vendorData.twitter,
+        vendorData.youtube,
+        vendorData.tiktok,
+        vendorData.pinterest,
+        vendorData.is_public
     ));
   }
 
@@ -56,7 +63,13 @@ export default class VendorsService {
           vendorData.website,
           vendorData.phone_number,
           vendorData.image,
-          vendorData.is_public,
+          vendorData.instagram,
+          vendorData.facebook,
+          vendorData.twitter,
+          vendorData.youtube,
+          vendorData.tiktok,
+          vendorData.pinterest,
+          vendorData.is_public
       );
     };
 
@@ -72,7 +85,13 @@ export default class VendorsService {
         vendorData.website,
         vendorData.phone_number,
         vendorData.image,
-        vendorData.is_public,
+        vendorData.instagram,
+        vendorData.facebook,
+        vendorData.twitter,
+        vendorData.youtube,
+        vendorData.tiktok,
+        vendorData.pinterest,
+        vendorData.is_public
     );
   }
 
@@ -86,13 +105,13 @@ export default class VendorsService {
           vendorData.website,
           vendorData.phone_number,
           vendorData.image,
-          vendorData.is_public,
           vendorData.instagram,
           vendorData.facebook,
           vendorData.twitter,
           vendorData.youtube,
           vendorData.tiktok,
           vendorData.pinterest,
+          vendorData.is_public
       );
     } else {
       return undefined;
