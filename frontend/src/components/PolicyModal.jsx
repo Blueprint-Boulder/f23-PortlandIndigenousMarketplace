@@ -16,7 +16,7 @@ export default function PolicyModal({ setPolicyModal }) {
   }
 
   return <>
-    <Modal backgroundColor={`bg-greywhite w-3/4 h-[70vh]`} blurOnClick={() => setPolicyModal(false)}>
+    <Modal backgroundColor={`bg-greywhite w-3/4 h-[70vh] overflow-x-clip`} blurOnClick={() => setPolicyModal(false)}>
       <div className='flex flex-col'>
         <h1 className='font-bold text-2xl text-center'>Portland Indigenous Marketplace Vendor Policy Handbook</h1>
         <h2 className='font-bold text-md text-center text-slate-400'>Updated Aug 2024</h2>

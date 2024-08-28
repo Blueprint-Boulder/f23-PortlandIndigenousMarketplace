@@ -129,6 +129,12 @@ export default function Profile({ vendorService, violationService }) {
     {
       showUploadModal ? <UploadPhotoModal vendorId={vendorId} vendorService={vendorService} showUploadModal={showUploadModal} setShowUploadModal={setShowUploadModal}></UploadPhotoModal> : <></>
     }
+    {
+      openViolation && <ViolationModal closeModal={setOpenViolation} vendorId={vendorId} vendorName={vendor.name} handleSubmit={handleViolationSubmit} />
+    }
+    {
+      policyModal && (<PolicyModal setPolicyModal={setPolicyModal}></PolicyModal>)
+    }
     <div className='items-center w-screen mt-12 flex flex-col z-1 space-y-4 items-center gap-3'>
       <div className='flex flex-col gap-2 bg-greywhite p-2 px-5 w-10/12 rounded-lg drop-shadow-xl'>
         <div className='flex flex-row items-center'>
@@ -204,15 +210,6 @@ export default function Profile({ vendorService, violationService }) {
             <h1 className='text-xl w-auto font-bold'>Policy Handbook</h1>
           </div>
         </div>}
-      <>
-        {openViolation && (
-          <ViolationModal closeModal={setOpenViolation} vendorId={vendorId} vendorName={vendor.name} handleSubmit={handleViolationSubmit} />
-        )}
-        <div className={`${openViolation ? 'blur' : ''} w-full h-full mx-auto pb-16`}></div>
-      </>
-      {
-        policyModal && (<PolicyModal setPolicyModal={setPolicyModal}></PolicyModal>)
-      }
       <FooterPad />
     </div>
   </>
