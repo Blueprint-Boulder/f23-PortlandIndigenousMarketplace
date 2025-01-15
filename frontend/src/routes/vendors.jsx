@@ -17,12 +17,13 @@ function VendorButton({content, onClick}) {
 }
 
 export default function Vendors({vendorService}) {
-  const [vendors, setVendors] = useState(false);
+  const [vendors, setVendors] = useState(null);
   // const [vendor, setVendor] = useState({});
   // const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState(false);   
   const navigate = useNavigate();
   const {setMessage, setBad, user} = useContext(Context);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -44,46 +45,83 @@ export default function Vendors({vendorService}) {
     };
 
     fetchVendors();
-    if (user === undefined) {
-      setMessage('Please log in');
-      setBad(true);
-      navigate('/');
-    }
   }, [vendorService, user, vendors]);
 
-  const handleSearch = (vendor) => {
-    const newvendors = vendors;
-    const hammingDistance = (str1, str2) => {
-      if (str1.length === 0 || str2.length === 0) {
-        setVendors(false); // should trigger useEffect, but doesnt :(
+  /**
+   * Calculate the Hamming Distance between two strings, ignoring spaces.
+   * @param {string} str1 - First string
+   * @param {string} str2 - Second string
+   * @returns {number} Hamming Distance between the two strings
+   */
+  const hammingDistance = (str1, str2) => {
+    if (str1.length === 0 || str2.length === 0) {
+      return 0;
+    }
+    if (str1.length !== str2.length) {
+      (str1.length < str2.length) ?// normalize length
+        str1 += ' '.repeat(str2.length - str1.length) :
+        str2 += ' '.repeat(str1.length - str2.length);
+    }
+    let distance = 0;
+    for (let i = 0; i < str1.length; i += 1) { // get hamming distance
+      if (str1[i] !== str2[i]) {
+        if (str1[i] === ' ' || str2[i] === ' ') continue; // ignore spaces
+        distance += 1;
       }
-      if (str1.length !== str2.length) {
-        (str1.length < str2.length) ?// normalize length
-          str1 += ' '.repeat(str2.length - str1.length) :
-          str2 += ' '.repeat(str1.length - str2.length);
-      }
-      let distance = 0;
-      for (let i = 0; i < str1.length; i += 1) { // get hamming distance
-        if (str1[i] !== str2[i]) {
-          if (str1[i] === ' ' || str2[i] === ' ') continue; // ignore spaces
-          distance += 1;
-        }
-      }
-      console.log(distance);
-      return distance;
-    };
-    // dont look at this part ;) (sorting by hamming distance)
-    const distances = newvendors.map((v) => hammingDistance(v.name, vendor));
-    const zipped = newvendors.map((v, i) => [v, distances[i]]);
-    zipped.sort((a, b) => a[1] - b[1]);
-    const unzipped = zipped.map((z) => z[0]);
-    setVendors(unzipped);
+    }
+    return distance;
   };
 
-  // const handleMessage = (vendor) => {
-  //   setVendor(vendor);
-  //   setOpenModal(true);
-  // };
+  /*
+  Given vendors a and b, calculates an aggregate hamming distance between the
+  words in the vendor's name, and the words in the search term.
+
+  Used to sort vendors after initial pass by filter method below.
+  */
+  const sortVendors = (a, b) => {
+    // Split Search term by words
+    const searchTerms = searchTerm.split(' ');
+
+    // Split each vendor name by words
+    const vendorA = a.name.split(' ');
+    const vendorB = b.name.split(' ');
+
+    let distanceA = 0;
+    let distanceB = 0;
+
+    // Calculate hamming distance of each word in search term to each word of vendor name
+    for (const term of searchTerms) {
+      for (const word of vendorA) {
+        distanceA += hammingDistance(word.toLowerCase(), term.toLowerCase());
+      }
+
+      for (const word of vendorB) {
+        distanceB += hammingDistance(word.toLowerCase(), term.toLowerCase());
+      }
+    }
+
+    return distanceA - distanceB;
+  } 
+
+  // Returns true if search term makes up at least part of the vendor's name
+  const filterVendors = (vendor) => {
+    // Split search term by words
+    const searchTerms = searchTerm.split(' ');
+
+    // Split each vendor name by words
+    const vendorName = vendor.name.split(' ');
+
+    // Check if any word in search term is included in any string in vendor name
+    for (const term of searchTerms) {
+      for (const word of vendorName) {
+        if (word.toLowerCase().includes(term.toLowerCase())) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
 
   const vendorDisplay = (vendor) => (
     <div className="bg-greywhite shadow-lg rounded-lg p-4 w-10/12 max-w-sm mx-auto bm-4" onClick={() => navigate(`/vendors/${vendor.id}`)}>
@@ -116,31 +154,17 @@ export default function Vendors({vendorService}) {
       <div className='static'>
         <h1 className='color-white text-2xl text-center my-3 font-semibold'>Vendors</h1>
       </div>
-      <input type='text' placeholder='Search for a vendor' className='border-2 w-9/12 mx-auto my-2 rounded p-2' onChange={(e) => handleSearch(e.target.value)}></input>
+      <input type='text' placeholder='Search for a vendor' className='border-2 w-9/12 mx-auto my-2 rounded p-2' onChange={(e) => setSearchTerm(e.target.value)}></input>
 
       <div className='flex flex-col space-y-4 mt-2'>
         {
-          vendors && (Array.isArray(vendors) ? vendors.map((vendor, i) => (
+          vendors && (Array.isArray(vendors) ? vendors.filter((vendor) => filterVendors(vendor)).sort(sortVendors).map((vendor, i) => (
             <li className='[list-style:none]' key={i}>{vendorDisplay(vendor)}</li>
           )) : vendorDisplay(vendors))
         }
       </div>
       <FooterPad/>
     </div>
-    // <div className=' w-screen pl-2 pr-2 flex flex-col items-left justify-between gap-2'>
-    //   <h1 className='color-white text-xl'>Vendors</h1>
-    //   <input type='text' placeholder='Search for a vendor' className='w-11/12 rounded p-2' onChange={(e) => handleSearch(e.target.value)}></input>
-    //   <div className='grid grid-cols-2 gap-x-2 overflow-scroll h-full'>
-    //     {
-    //       vendors && (Array.isArray(vendors) ? vendors.map((vendor, i) => (
-    //         <li className='[list-style:none]' key={i}>{vendorDisplay(vendor)}</li>
-    //       )) : vendorDisplay(vendors))
-    //     }
-    //   </div>
-    //   {/* {openModal && <MessageModal closeModal={setOpenModal} vendor={vendor} />} */}
-    //   <FooterPad />
-    // </div>
-
   );
 }
 
